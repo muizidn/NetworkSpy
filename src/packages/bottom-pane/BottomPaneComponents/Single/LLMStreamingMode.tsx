@@ -1,18 +1,15 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { FiZap, FiSettings, FiActivity, FiTerminal, FiDatabase, FiLayers } from "react-icons/fi";
+import { FiZap, FiSettings, FiActivity } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import { useTrafficListContext } from "@src/packages/main-content/context/TrafficList";
 import { useAppProvider } from "@src/packages/app-env";
 import { parseSSE, parseSSEChunks, ToolCall } from "../../utils/bodyUtils";
 
-interface SSEChunk {
-  id: string;
-  event: string;
-  data: string;
-  content: string;
-  timestamp: string;
-  elapsedMs: number;
-}
+import { Placeholder } from "./LLMViewer/shared/Placeholder";
+import { ChunkList } from "./LLMViewer/LLMStreamingMode/ChunkList";
+import { AccumulatedOutput } from "./LLMViewer/LLMStreamingMode/AccumulatedOutput";
+
+import { SSEChunk } from "./LLMViewer/LLMStreamingMode/types";
 
 export const LLMStreamingMode = () => {
   const { provider } = useAppProvider();
@@ -25,6 +22,7 @@ export const LLMStreamingMode = () => {
   const [hoveredChunkId, setHoveredChunkId] = useState<string | null>(null);
   const [targetChoiceIndex, setTargetChoiceIndex] = useState(0);
   const [isBeautified, setIsBeautified] = useState(false);
+  const [isSSE, setIsSSE] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const startTimeRef = useRef<number>(0);
 
@@ -38,7 +36,13 @@ export const LLMStreamingMode = () => {
     startTimeRef.current = Date.now();
 
     // 1. Pre-populate from existing response body if any
-    provider.getResponsePairData(String(selected.id)).then(res => {
+    provider.getResponsePairData(String(selected.id)).then((res: any) => {
+      const contentType = (res?.content_type || "").toLowerCase();
+      const isActuallySSE = contentType.includes('text/event-stream') || 
+                          contentType.includes('stream') ||
+                          (res?.headers || []).some((h: any) => h.key.toLowerCase() === 'content-type' && h.value.toLowerCase().includes('text/event-stream'));
+      setIsSSE(isActuallySSE);
+
       if (res?.body) {
         const { content, toolCalls: sseToolCalls } = parseSSE(res.body);
         const storedChunks = parseSSEChunks(res.body).map(c => ({
@@ -49,6 +53,7 @@ export const LLMStreamingMode = () => {
         }));
 
         if (storedChunks.length > 0) {
+          setIsSSE(true); // If we found chunks, it's definitely SSE
           setChunks(storedChunks);
           setAccumulatedText(content);
           setToolCalls(sseToolCalls);
@@ -56,9 +61,15 @@ export const LLMStreamingMode = () => {
           // If the last stored chunk is [DONE], we can stop streaming status
           const hasDone = storedChunks.some(c => c.event === 'control' && c.data.includes('[DONE]'));
           if (hasDone) setIsStreaming(false);
+        } else if (!isActuallySSE) {
+          setIsStreaming(false);
         }
+      } else if (!isActuallySSE) {
+        setIsStreaming(false);
       }
-    }).catch(() => { });
+    }).catch(() => { 
+      setIsSSE(false);
+    });
 
     // 2. Listen for live updates
     const cleanup = provider.listenSSE(String(selected.id), (rawData) => {
@@ -168,7 +179,16 @@ export const LLMStreamingMode = () => {
     return max;
   }, [chunks]);
 
-  if (!selected) return <div className="h-full flex items-center justify-center text-zinc-500 italic">Select a stream to inspect</div>;
+  if (!selected) return <Placeholder text="Select a request to inspect streaming data" icon={<FiActivity size={32} />} />;
+
+  if (!isSSE && chunks.length === 0) {
+    return (
+      <Placeholder 
+        icon={<FiZap size={48} className="text-zinc-800" />}
+        text="No Server-Sent Events (SSE) detected in this request. This tab is designed for live LLM streaming data."
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col h-full bg-[#15181a] text-zinc-300 font-sans overflow-hidden">
@@ -225,174 +245,22 @@ export const LLMStreamingMode = () => {
 
       {/* Main Container: Split View */}
       <div className="flex-1 flex overflow-hidden">
-
-        {/* Left: Stream List */}
-        <div className="w-1/2 border-r border-zinc-900 flex flex-col bg-black/10">
-          <div className="px-4 py-2 bg-zinc-900/40 border-b border-zinc-800 shrink-0 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <FiTerminal size={12} className="text-zinc-500" />
-              <span className="text-[10px] font-bold text-zinc-400 tracking-widest">Raw Chunks</span>
-            </div>
-            <button
-              onClick={() => setIsBeautified(!isBeautified)}
-              className={twMerge(
-                "px-2 py-0.5 rounded text-[9px] font-black tracking-widest transition-all",
-                isBeautified ? "bg-amber-600 text-white shadow-lg" : "bg-zinc-800 text-zinc-500 hover:text-zinc-300"
-              )}
-            >
-              {isBeautified ? "Raw" : "Beautify"}
-            </button>
-          </div>
-
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-2 space-y-1 custom-scrollbar scroll-smooth">
-            {chunks.map((chunk, i) => (
-              <div
-                id={`chunk-${chunk.id}`}
-                key={chunk.id}
-                onMouseEnter={() => {
-                  setHoveredChunkId(chunk.id);
-                  document.getElementById(`text-${chunk.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }}
-                onMouseLeave={() => setHoveredChunkId(null)}
-                className={twMerge(
-                  "group p-3 rounded-lg border flex flex-col gap-1 transition-all animate-in slide-in-from-left-2 duration-200",
-                  chunk.event === 'control'
-                    ? "bg-amber-950/20 border-amber-900/30"
-                    : hoveredChunkId === chunk.id
-                      ? "bg-blue-600/20 border-blue-500 shadow-lg shadow-blue-500/10 scale-[1.02]"
-                      : "bg-[#1e1e1e] border-zinc-800/50 hover:border-zinc-700"
-                )}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <span className={twMerge(
-                      "text-[9px] px-1.5 py-0.5 rounded font-bold",
-                      chunk.event === 'control' ? "bg-amber-500/20 text-amber-500" : "bg-blue-500/20 text-blue-400"
-                    )}>
-                      {chunk.event}
-                    </span>
-                    <span className="text-[9px] font-mono text-zinc-600">+{chunk.elapsedMs}ms</span>
-                  </div>
-                  <span className="text-[9px] font-mono text-zinc-600 opacity-0 group-hover:opacity-100 italic transition-opacity">
-                    {chunk.timestamp}
-                  </span>
-                </div>
-                <div className="text-[11px] font-mono text-zinc-300 break-all bg-black/20 p-2 rounded border border-white/5 overflow-x-auto">
-                  {(() => {
-                    if (!isBeautified) return chunk.data;
-                    try {
-                      const raw = chunk.data.replace(/^data:\s*/, '').trim();
-                      if (raw === '[DONE]') return chunk.data;
-                      return (
-                        <pre className="whitespace-pre">
-                          {JSON.stringify(JSON.parse(raw), null, 2)}
-                        </pre>
-                      );
-                    } catch (e) {
-                      return chunk.data;
-                    }
-                  })()}
-                </div>
-              </div>
-            ))}
-            {chunks.length === 0 && (
-              <div className="h-full flex flex-col items-center justify-center opacity-30 gap-3 grayscale">
-                <FiLayers size={48} />
-                <p className="text-xs italic">Waiting for events...</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right: Consolidated Output */}
-        <div className="w-1/2 flex flex-col bg-[#111314]">
-          <div className="px-4 py-2 bg-zinc-900/40 border-b border-zinc-800 shrink-0 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <FiDatabase size={12} className="text-zinc-500" />
-              <span className="text-[10px] font-bold text-zinc-400 tracking-widest">Accumulated Output</span>
-            </div>
-            <span className="text-[10px] font-mono text-zinc-600">{accumulatedText.length} bytes</span>
-          </div>
-
-          <div className="flex-1 overflow-y-auto p-8 custom-scrollbar relative">
-            <div className="max-w-prose mx-auto">
-              <div className="text-sm leading-relaxed text-zinc-200 whitespace-pre-wrap font-sans transition-all">
-                {chunks.map(chunk => (
-                  <span
-                    id={`text-${chunk.id}`}
-                    key={chunk.id}
-                    onMouseEnter={() => {
-                      setHoveredChunkId(chunk.id);
-                      document.getElementById(`chunk-${chunk.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }}
-                    onMouseLeave={() => setHoveredChunkId(null)}
-                    className={twMerge(
-                      "transition-all duration-150 rounded-sm px-0.5 -mx-0.5",
-                      hoveredChunkId === chunk.id ? "bg-blue-600 text-white shadow-sm ring-1 ring-blue-400" : "hover:bg-zinc-800"
-                    )}
-                  >
-                    {chunk.content}
-                  </span>
-                ))}
-
-                {toolCalls.length > 0 && (
-                  <div className="mt-8 space-y-4 border-t border-zinc-800 pt-6">
-                    <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-500 tracking-widest">
-                      <FiZap size={12} className="text-amber-500" /> Tool Calls
-                    </div>
-                    {toolCalls.map((tc, idx) => {
-                      if (!tc) return null;
-                      return (
-                        <div key={idx} className="bg-zinc-900/50 rounded-lg border border-zinc-800 p-3 font-mono">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-[11px] font-bold text-amber-500">{tc.function?.name || "unnamed"}()</span>
-                            <span className="text-[9px] text-zinc-600">ID: {tc.id || idx}</span>
-                          </div>
-                          <pre className="text-[10px] text-zinc-400 overflow-x-auto bg-black/30 p-2 rounded">
-                            {(() => {
-                              try {
-                                return JSON.stringify(JSON.parse(tc.function?.arguments || "{}"), null, 2);
-                              } catch (e) {
-                                return tc.function?.arguments || "{}";
-                              }
-                            })()}
-                          </pre>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {isStreaming && (
-                  <span className="inline-block w-2 h-4 bg-blue-500 ml-1 animate-pulse rounded-sm align-middle" />
-                )}
-              </div>
-            </div>
-            {!accumulatedText && !isStreaming && (
-              <div className="h-full flex flex-col items-center justify-center text-zinc-600">
-                <p className="text-xs tracking-widest font-bold">No output generated</p>
-              </div>
-            )}
-          </div>
-
-          {/* Prompt / Details Footer */}
-          <div className="p-4 bg-black/20 border-t border-zinc-800">
-            <div className="flex justify-between items-center text-[10px] text-zinc-500 font-mono">
-              <div className="flex gap-4">
-                <span>TOKENS: {accumulatedText.split(/\s+/).filter(x => x.length > 0).length}</span>
-                <span>CHAR: {accumulatedText.length}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className={twMerge(
-                  "w-2 h-2 rounded-full",
-                  isStreaming ? "bg-amber-500 animate-pulse" : "bg-emerald-500"
-                )} />
-                <span>{isStreaming ? "LIVE STREAM" : "COMPLETED"}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <ChunkList 
+          chunks={chunks}
+          isBeautified={isBeautified}
+          setIsBeautified={setIsBeautified}
+          hoveredChunkId={hoveredChunkId}
+          setHoveredChunkId={setHoveredChunkId}
+          scrollRef={scrollRef}
+        />
+        <AccumulatedOutput 
+          chunks={chunks}
+          accumulatedText={accumulatedText}
+          toolCalls={toolCalls}
+          isStreaming={isStreaming}
+          hoveredChunkId={hoveredChunkId}
+          setHoveredChunkId={setHoveredChunkId}
+        />
       </div>
     </div>
   );
