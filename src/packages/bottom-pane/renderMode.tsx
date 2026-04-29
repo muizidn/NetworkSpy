@@ -51,10 +51,7 @@ import { RabbitMQViewerMode } from "./BottomPaneComponents/Single/Protocols/Rabb
 import { KafkaViewerMode } from "./BottomPaneComponents/Single/Protocols/KafkaViewerMode";
 import { QueryParamsMode } from "./BottomPaneComponents/Single/QueryParamsMode";
 import { CookieViewerMode } from "./BottomPaneComponents/Single/CookieViewerMode";
-import { FirebaseMode } from "./BottomPaneComponents/Single/FirebaseMode";
-import { SupabaseMode } from "./BottomPaneComponents/Single/SupabaseMode";
-import { AppwriteMode } from "./BottomPaneComponents/Single/AppwriteMode";
-import { AdsViewerMode } from "./BottomPaneComponents/Single/AdsViewerMode";
+
 import { MultipartFormDataMode } from "./BottomPaneComponents/Single/MultipartFormDataMode";
 import { URLEncodedMode } from "./BottomPaneComponents/Single/URLEncodedMode";
 import { CustomViewerMode } from "@src/packages/bottom-pane/BottomPaneComponents/Single/CustomViewerMode";
@@ -134,17 +131,7 @@ export const renderMode = (
     case "cookies":
       return <CookieViewerMode />;
 
-    case "firebase_viewer":
-      return <FirebaseMode />;
 
-    case "supabase_viewer":
-      return <SupabaseMode />;
-
-    case "appwrite_viewer":
-      return <AppwriteMode />;
-
-    case "ads_viewer":
-      return <AdsViewerMode />;
 
     case "replay":
       return <ReplayMode />;

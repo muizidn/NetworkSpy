@@ -65,10 +65,6 @@ export type SingleMode =
     | "security_static"
     | "query_params"
     | "cookies"
-    | "firebase_viewer"
-    | "supabase_viewer"
-    | "appwrite_viewer"
-    | "ads_viewer"
     | "urlencoded"
     | "multipart_form";
 
