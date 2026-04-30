@@ -46,9 +46,7 @@ import { JSONTransformerMode } from "./BottomPaneComponents/Single/JSONTransform
 import { JSONSchemaMode } from "./BottomPaneComponents/Single/JSONSchemaMode";
 import { SOAPViewerMode } from "./BottomPaneComponents/Single/Protocols/SOAPViewerMode";
 import { ProtobufViewerMode } from "./BottomPaneComponents/Single/Protocols/ProtobufViewerMode";
-import { GRPCViewerMode } from "./BottomPaneComponents/Single/Protocols/GRPCViewerMode";
-import { RabbitMQViewerMode } from "./BottomPaneComponents/Single/Protocols/RabbitMQViewerMode";
-import { KafkaViewerMode } from "./BottomPaneComponents/Single/Protocols/KafkaViewerMode";
+
 import { QueryParamsMode } from "./BottomPaneComponents/Single/QueryParamsMode";
 import { CookieViewerMode } from "./BottomPaneComponents/Single/CookieViewerMode";
 
@@ -223,14 +221,7 @@ export const renderMode = (
     case "protobuf_viewer":
       return <ProtobufViewerMode />;
 
-    case "grpc_viewer":
-      return <GRPCViewerMode />;
 
-    case "rabbitmq_viewer":
-      return <RabbitMQViewerMode />;
-
-    case "kafka_viewer":
-      return <KafkaViewerMode />;
 
     case "multipart_form":
       return <MultipartFormDataMode />;
