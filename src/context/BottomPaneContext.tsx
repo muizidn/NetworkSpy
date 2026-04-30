@@ -55,7 +55,6 @@ export type SingleMode =
     | "ts_viewer"
     | "soap_viewer"
     | "protobuf_viewer"
-    | "protobuf_viewer"
     | "json_transformer"
     | "json_schema"
     | "security_owasp"

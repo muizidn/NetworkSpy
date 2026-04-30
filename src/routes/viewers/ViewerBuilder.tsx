@@ -105,6 +105,7 @@ const ViewerBuilder: React.FC<ViewerBuilderProps> = ({ viewer: initialViewer, on
 
     const reorderBlocks = (ids: string[]) => {
         setBlocks(prev => {
+            if (!prev) return prev;
             const newBlocks = ids.map(id => prev.find(b => b.id === id)).filter(Boolean) as ViewerBlock[];
             const remainingBlocks = prev.filter(b => !ids.includes(b.id));
             return [...newBlocks, ...remainingBlocks];
