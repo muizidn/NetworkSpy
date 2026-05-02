@@ -79,7 +79,8 @@ export type MultipleMode =
     | "security_scan"
     | "ai_investigate"
     | "ai_security"
-    | "diff";
+    | "diff"
+    | "swagger";
 
 export type CustomSingleMode = { type: "viewer"; id: string };
 

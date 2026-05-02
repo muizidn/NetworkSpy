@@ -30,6 +30,7 @@ import { EndpointSummaryMode } from "./BottomPaneComponents/Multiple/EndpointSum
 import { SecurityScanMode } from "./BottomPaneComponents/Multiple/SecurityScanMode";
 import { AIInvestigateMode } from "./BottomPaneComponents/Multiple/AIInvestigateMode";
 import { AISecurityMode } from "./BottomPaneComponents/Multiple/AISecurityMode";
+import { SwaggerMode } from "./BottomPaneComponents/Multiple/SwaggerMode";
 import { JWTDecoderMode } from "./BottomPaneComponents/Single/JWTDecoderMode";
 import { LLMStreamingMode } from "./BottomPaneComponents/Single/LLMStreamingMode";
 import { SSEViewerMode } from "./BottomPaneComponents/Single/SSEViewerMode";
@@ -113,6 +114,9 @@ export const renderMode = (
 
     case "diff":
       return <DiffMode />;
+      
+    case "swagger":
+      return <SwaggerMode />;
 
     case "security_owasp":
       return <OWASPMode />;

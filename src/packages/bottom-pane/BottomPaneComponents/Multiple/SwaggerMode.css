@@ -1,0 +1,58 @@
+.swagger-dark-theme {
+    background: #0c0c0c;
+    color: #d4d4d8;
+}
+
+.swagger-dark-theme .swagger-ui {
+    filter: invert(90%) hue-rotate(180deg) brightness(1.2) contrast(0.9);
+    padding: 20px;
+}
+
+/* Background fixes after inversion */
+.swagger-dark-theme .swagger-ui .info .title,
+.swagger-dark-theme .swagger-ui .info p,
+.swagger-dark-theme .swagger-ui .opblock-tag,
+.swagger-dark-theme .swagger-ui .opblock .opblock-summary-path,
+.swagger-dark-theme .swagger-ui .opblock .opblock-summary-description,
+.swagger-dark-theme .swagger-ui .tabli button,
+.swagger-dark-theme .swagger-ui .response-col_status,
+.swagger-dark-theme .swagger-ui .response-col_description,
+.swagger-dark-theme .swagger-ui section.models h4,
+.swagger-dark-theme .swagger-ui .model-title,
+.swagger-dark-theme .swagger-ui .parameter__name,
+.swagger-dark-theme .swagger-ui .parameter__type,
+.swagger-dark-theme .swagger-ui .parameter__in {
+    color: #111 !important;
+}
+
+.swagger-dark-theme .swagger-ui .opblock {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    background: rgba(0,0,0,0.02) !important;
+}
+
+.swagger-dark-theme .swagger-ui .scheme-container {
+    background: transparent;
+    box-shadow: none;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding: 0 0 20px 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #0c0c0c;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #27272a;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
+}
