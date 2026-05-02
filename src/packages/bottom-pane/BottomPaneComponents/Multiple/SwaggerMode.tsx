@@ -5,6 +5,7 @@ import "swagger-ui-react/swagger-ui.css";
 import "./SwaggerMode.css";
 import { useAppProvider } from "@src/packages/app-env";
 import { FiCopy, FiCheck, FiDownload } from "react-icons/fi";
+import { Traffic } from "@src/models/Traffic";
 
 export const SwaggerMode = () => {
     const { selections, trafficSet } = useTrafficListContext();
@@ -12,13 +13,23 @@ export const SwaggerMode = () => {
     const [spec, setSpec] = useState<any>(null);
     const [copied, setCopied] = useState(false);
 
-    const selectedItems = useMemo(() => {
+    const selectedIdsStr = useMemo(() => {
         const items = selections.others || [];
-        if (items.length === 0 && selections.firstSelected) {
-            return [selections.firstSelected];
-        }
-        return items.map(item => trafficSet[item.id as string] || item);
-    }, [selections.others, selections.firstSelected, trafficSet]);
+        const firstId = selections.firstSelected?.id;
+        if (items.length === 0 && firstId) return String(firstId);
+        return items.map(item => String(item.id)).sort().join(',');
+    }, [selections.others, selections.firstSelected]);
+
+    const selectedItems = useMemo<Traffic[]>(() => {
+        if (!selectedIdsStr) return [];
+        const ids = selectedIdsStr.split(',');
+        return ids.map(id => {
+            const latest = trafficSet[id];
+            if (latest) return latest;
+            if (selections.firstSelected && String(selections.firstSelected.id) === id) return selections.firstSelected;
+            return selections.others?.find(o => String(o.id) === id);
+        }).filter((item): item is Traffic => !!item);
+    }, [selectedIdsStr]);
 
     useEffect(() => {
         if (selectedItems.length === 0) {
@@ -28,10 +39,10 @@ export const SwaggerMode = () => {
 
         const generateSpec = async () => {
             const paths: any = {};
-            
+
             for (const item of selectedItems) {
                 try {
-                    const urlStr = item.url || item.uri;
+                    const urlStr = item.uri;
                     if (!urlStr) continue;
 
                     const url = new URL(urlStr);
@@ -43,8 +54,8 @@ export const SwaggerMode = () => {
                     }
 
                     // Get request/response data
-                    const reqData = await provider.getRequestPairData(item.id as string);
-                    const resData = await provider.getResponsePairData(item.id as string);
+                    const reqData = await provider.getRequestPairData(item.id);
+                    const resData = await provider.getResponsePairData(item.id);
 
                     // Infer schema from body example
                     const reqBodyParsed = tryParseJSON(reqData?.body);
@@ -55,7 +66,7 @@ export const SwaggerMode = () => {
                         tags: [url.hostname],
                         description: `Traffic captured from ${url.hostname} on ${new Date(item.timestamp || Date.now()).toLocaleString()}`,
                         responses: {
-                            [item.status || 200]: {
+                            [item.response?.status_code || 200]: {
                                 description: "Successful response",
                                 content: resBodyParsed ? {
                                     "application/json": {
