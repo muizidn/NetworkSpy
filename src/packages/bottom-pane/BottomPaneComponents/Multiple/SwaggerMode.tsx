@@ -128,17 +128,26 @@ export const SwaggerMode = () => {
 
     if (selectedItems.length === 0) {
         return (
-            <div className="h-full flex flex-col items-center justify-center text-zinc-500 bg-[#0c0c0c] p-8 text-center">
-                <div className="w-20 h-20 mb-6 rounded-3xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/5 shadow-2xl">
-                    <FiDownload className="text-3xl text-blue-400 opacity-50" />
-                </div>
-                <h3 className="text-lg font-bold text-zinc-200 mb-2">Swagger API Viewer</h3>
-                <p className="text-[11px] text-zinc-500 max-w-xs leading-relaxed">
-                    Select multiple network requests to automatically generate a complete Swagger/OpenAPI specification.
-                </p>
-                <div className="mt-8 flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] text-zinc-400">Shift + Click</span>
-                    <span className="text-[10px] text-zinc-600">to select multiple</span>
+            <div className="h-full flex flex-col items-center justify-center text-zinc-500 bg-[#0c0c0c] p-8 text-center relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+                
+                <div className="relative z-10 animate-premium-fade-in max-w-md w-full">
+                    <div className="bg-zinc-900/40 backdrop-blur-xl border border-zinc-800/50 rounded-3xl p-10 shadow-2xl shadow-black/50">
+                        <div className="w-20 h-20 mb-8 mx-auto rounded-2xl bg-gradient-to-br from-blue-500/20 via-cyan-500/20 to-indigo-500/20 flex items-center justify-center border border-white/10 shadow-lg group hover:scale-110 transition-transform duration-500">
+                            <FiDownload className="text-3xl text-blue-400 group-hover:-translate-y-1 transition-transform duration-500" />
+                        </div>
+                        <h3 className="text-xl font-black text-white mb-3 tracking-tight uppercase italic">Swagger API Viewer</h3>
+                        <p className="text-[12px] text-zinc-400 leading-relaxed font-medium mb-8">
+                            Automatically generate OpenAPI 3.0 specifications from captured traffic.
+                        </p>
+                        
+                        <div className="flex flex-col gap-3">
+                            <div className="px-4 py-3 rounded-xl bg-black/40 border border-zinc-800/50 text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex items-center justify-between">
+                                <span>Multi-Select</span>
+                                <span className="px-2 py-1 rounded bg-zinc-800 text-zinc-300">Shift + Click</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

@@ -31,6 +31,7 @@ import { SecurityScanMode } from "./BottomPaneComponents/Multiple/SecurityScanMo
 import { AIInvestigateMode } from "./BottomPaneComponents/Multiple/AIInvestigateMode";
 import { AISecurityMode } from "./BottomPaneComponents/Multiple/AISecurityMode";
 import { SwaggerMode } from "./BottomPaneComponents/Multiple/SwaggerMode";
+import { GraphQLDocMode } from "./BottomPaneComponents/Multiple/GraphQLDocMode";
 import { JWTDecoderMode } from "./BottomPaneComponents/Single/JWTDecoderMode";
 import { LLMStreamingMode } from "./BottomPaneComponents/Single/LLMStreamingMode";
 import { SSEViewerMode } from "./BottomPaneComponents/Single/SSEViewerMode";
@@ -117,6 +118,9 @@ export const renderMode = (
       
     case "swagger":
       return <SwaggerMode />;
+      
+    case "graphql_doc":
+      return <GraphQLDocMode />;
 
     case "security_owasp":
       return <OWASPMode />;

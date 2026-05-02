@@ -80,7 +80,8 @@ export type MultipleMode =
     | "ai_investigate"
     | "ai_security"
     | "diff"
-    | "swagger";
+    | "swagger"
+    | "graphql_doc";
 
 export type CustomSingleMode = { type: "viewer"; id: string };
 

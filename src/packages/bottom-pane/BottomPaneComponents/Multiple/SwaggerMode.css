@@ -56,3 +56,18 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #3f3f46;
 }
+
+@keyframes premium-fade-in {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.animate-premium-fade-in {
+    animation: premium-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

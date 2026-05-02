@@ -241,6 +241,7 @@ export const BottomPaneOptions = () => {
       { id: "ai_summary", title: "AI Summary" },
       { id: "ai_investigate", title: "AI Investigate" },
       { id: "swagger", title: "Swagger API" },
+      { id: "graphql_doc", title: "GraphQL Documentation" },
     ],
   };
 
