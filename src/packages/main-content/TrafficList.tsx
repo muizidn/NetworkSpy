@@ -14,7 +14,7 @@ import { listen, emit } from "@tauri-apps/api/event";
 import { save } from "@tauri-apps/plugin-dialog";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { FiLock, FiUnlock, FiZap } from "react-icons/fi";
-import { Menu, MenuItem, Submenu } from "@tauri-apps/api/menu";
+import { Menu, MenuItem, Submenu, PredefinedMenuItem, IconMenuItem } from "@tauri-apps/api/menu";
 import { Image } from "@tauri-apps/api/image";
 
 type TauriInvokeFn = <T>(cmd: string, args?: any) => Promise<T>;
@@ -270,8 +270,8 @@ class TrafficListContextMenuRenderer
         this.getIcon(this.icons.trash)
       ]);
 
-      const menuItems: any[] = [
-        {
+      const menuItems = await Promise.all([
+        IconMenuItem.new({
           id: "copy_url",
           text: "Copy URL",
           icon: iLink,
@@ -279,8 +279,8 @@ class TrafficListContextMenuRenderer
           action: () => {
             if (firstItem?.url) navigator.clipboard.writeText(String(firstItem.url));
           }
-        },
-        {
+        }),
+        IconMenuItem.new({
           id: "copy_curl",
           text: "Copy as cURL",
           icon: iTerminal,
@@ -296,8 +296,8 @@ class TrafficListContextMenuRenderer
             if (body) command += ` \\\n  -d ${escapeShellArg(body)}`;
             navigator.clipboard.writeText(command);
           }
-        },
-        {
+        }),
+        IconMenuItem.new({
           id: "copy_cell",
           text: "Copy Cell Value",
           icon: iClipboard,
@@ -310,13 +310,12 @@ class TrafficListContextMenuRenderer
               navigator.clipboard.writeText(Array.isArray(val) ? val.join(", ") : String(val));
             }
           }
-        },
-        {
-          id: "copy_as",
+        }),
+        Submenu.new({
           text: "Copy as...",
           icon: iCopy,
-          items: [
-            {
+          items: await Promise.all([
+            IconMenuItem.new({
               id: "copy_req_header",
               text: "Request Headers",
               icon: iFileText,
@@ -325,8 +324,8 @@ class TrafficListContextMenuRenderer
                 const data = await this.getRequestData(String(firstItem.id));
                 navigator.clipboard.writeText(data.headers.map((h: any) => `${h.key}: ${h.value}`).join("\n"));
               }
-            },
-            {
+            }),
+            IconMenuItem.new({
               id: "copy_req_cookie",
               text: "Request Cookies",
               icon: iDatabase,
@@ -336,8 +335,8 @@ class TrafficListContextMenuRenderer
                 const cookie = data.headers.find((h: any) => h.key.toLowerCase() === "cookie");
                 if (cookie) navigator.clipboard.writeText(cookie.value);
               }
-            },
-            {
+            }),
+            IconMenuItem.new({
               id: "copy_req_body",
               text: "Request Body",
               icon: iFile,
@@ -346,9 +345,9 @@ class TrafficListContextMenuRenderer
                 const data = await this.getRequestData(String(firstItem.id));
                 navigator.clipboard.writeText(this.decodeBody(data.body));
               }
-            },
-            { item: "Separator" },
-            {
+            }),
+            PredefinedMenuItem.new({ item: "Separator" }),
+            IconMenuItem.new({
               id: "copy_res_header",
               text: "Response Headers",
               icon: iFileText,
@@ -357,8 +356,8 @@ class TrafficListContextMenuRenderer
                 const data = await this.getResponseData(String(firstItem.id));
                 navigator.clipboard.writeText(data.headers.map((h: any) => `${h.key}: ${h.value}`).join("\n"));
               }
-            },
-            {
+            }),
+            IconMenuItem.new({
               id: "copy_res_cookie",
               text: "Response Cookies",
               icon: iDatabase,
@@ -368,8 +367,8 @@ class TrafficListContextMenuRenderer
                 const cookie = data.headers.find((h: any) => h.key.toLowerCase() === "set-cookie");
                 if (cookie) navigator.clipboard.writeText(cookie.value);
               }
-            },
-            {
+            }),
+            IconMenuItem.new({
               id: "copy_res_body",
               text: "Response Body",
               icon: iFile,
@@ -378,9 +377,9 @@ class TrafficListContextMenuRenderer
                 const data = await this.getResponseData(String(firstItem.id));
                 navigator.clipboard.writeText(this.decodeBody(data.body));
               }
-            },
-            { item: "Separator" },
-            {
+            }),
+            PredefinedMenuItem.new({ item: "Separator" }),
+            IconMenuItem.new({
               id: "copy_markdown",
               text: "Markdown Table",
               icon: iTable,
@@ -391,8 +390,8 @@ class TrafficListContextMenuRenderer
                 const table = `| ${headers.join(" | ")} |\n| ${headers.map(() => "---").join(" | ")} |\n${rows.join("\n")}`;
                 navigator.clipboard.writeText(table);
               }
-            },
-            {
+            }),
+            IconMenuItem.new({
               id: "copy_csv",
               text: "CSV",
               icon: iFile,
@@ -403,35 +402,34 @@ class TrafficListContextMenuRenderer
                 const csv = `${headers.map(h => `"${h}"`).join(",")}\n${rows.join("\n")}`;
                 navigator.clipboard.writeText(csv);
               }
-            }
-          ]
-        },
-        { item: "Separator" },
-        {
+            })
+          ])
+        }),
+        PredefinedMenuItem.new({ item: "Separator" }),
+        IconMenuItem.new({
           id: "repeat",
           text: "Repeat",
           icon: iRefresh,
-          enabled: items.length === 1,
+          enabled: items.length === 1 && !!firstItem.intercepted,
           action: async () => {
             await this.invoke("repeat_request", { trafficId: String(firstItem.id) });
           }
-        },
-        {
+        }),
+        IconMenuItem.new({
           id: "edit_repeat",
           text: "Edit & Repeat",
           icon: iEdit,
-          enabled: items.length === 1,
+          enabled: items.length === 1 && !!firstItem.intercepted,
           action: async () => {
             await this.invoke("open_new_window", { context: `repeat:${firstItem.id}`, title: "Edit & Repeat" });
           }
-        },
-        { item: "Separator" },
-        {
-          id: "tools_menu",
+        }),
+        PredefinedMenuItem.new({ item: "Separator" }),
+        Submenu.new({
           text: "Tools",
           icon: iTool,
-          items: [
-            {
+          items: await Promise.all([
+            IconMenuItem.new({
               id: "tool_breakpoint",
               text: "Breakpoint",
               icon: iZap,
@@ -439,11 +437,11 @@ class TrafficListContextMenuRenderer
               action: async () => {
                 await this.invoke("open_new_window", { context: `breakpoint:${firstItem.id}`, title: "Breakpoint Editor" });
               }
-            }
-          ]
-        },
-        { item: "Separator" },
-        {
+            })
+          ])
+        }),
+        PredefinedMenuItem.new({ item: "Separator" }),
+        IconMenuItem.new({
           id: "export_selected",
           text: `Export ${items.length} items to HAR`,
           icon: iDownload,
@@ -451,8 +449,8 @@ class TrafficListContextMenuRenderer
           action: () => {
             emit("export_selected", { ids });
           },
-        },
-        {
+        }),
+        IconMenuItem.new({
           id: "add_to_proxy_domain",
           text: "Add to Proxy List (Domain)",
           icon: iGlobe,
@@ -475,16 +473,16 @@ class TrafficListContextMenuRenderer
               }
             });
           }
-        },
-        (() => {
+        }),
+        (async () => {
           const item = items[0];
-          if (!item || !item.client) return { id: "add_to_proxy_client", text: "Add to Proxy List (Client)", icon: iSmartphone, enabled: false };
+          if (!item || !item.client) return IconMenuItem.new({ id: "add_to_proxy_client", text: "Add to Proxy List (Client)", icon: iSmartphone, enabled: false });
 
           try {
             const clientInfo = JSON.parse(item.client as string);
             const client = clientInfo.name || "-";
 
-            return {
+            return IconMenuItem.new({
               id: "add_to_proxy_client",
               text: `Add to Proxy List (Client: ${client})`,
               icon: iSmartphone,
@@ -500,12 +498,12 @@ class TrafficListContextMenuRenderer
                   }
                 });
               }
-            };
+            });
           } catch {
-            return { id: "add_to_proxy_client", text: "Add to Proxy List (Client)", icon: iSmartphone, enabled: false };
+            return IconMenuItem.new({ id: "add_to_proxy_client", text: "Add to Proxy List (Client)", icon: iSmartphone, enabled: false });
           }
         })(),
-        {
+        IconMenuItem.new({
           id: "delete_selected",
           text: `Delete ${items.length === 1 ? 'item' : `${items.length} items`}`,
           icon: iTrash,
@@ -513,8 +511,8 @@ class TrafficListContextMenuRenderer
           action: () => {
             emit("delete_selected", { ids });
           },
-        },
-      ];
+        }),
+      ]);
 
       const menu = await Menu.new({ items: menuItems });
       await menu.popup();
