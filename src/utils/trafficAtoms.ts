@@ -1,9 +1,10 @@
 import { atom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
 import { atomFamily } from 'jotai-family';
 import { FilterNode } from "@src/models/Filter";
 
 // Current Active Tab
-export const activeTabIdAtom = atom<string>("");
+export const activeTabIdAtom = atomWithStorage<string>("ns_active_tab_id", "");
 
 // Main Traffic List Filters (Per Tab)
 export const mainTrafficListFiltersAtom = atomFamily((tabId: string) => atom<FilterNode[]>([]));

@@ -66,6 +66,12 @@ export const NSTabs: React.FC<NSTabsProps> = ({
   const [currentTab, setCurrentTabInternal] = useState(initialTab || tabs[0]?.id || "");
   const [activeTabId, setActiveTabId] = useAtom(activeTabIdAtom);
 
+  useEffect(() => {
+    if (initialTab && initialTab !== currentTab) {
+      setCurrentTabInternal(initialTab);
+    }
+  }, [initialTab]);
+
   const setCurrentTab = useCallback((id: string) => {
     setCurrentTabInternal(id);
     setActiveTabId(id);

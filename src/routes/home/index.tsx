@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useAtomValue } from "jotai";
+import { activeTabIdAtom } from "@src/utils/trafficAtoms";
 import SplitPane, { Pane, SashContent } from "split-pane-react";
 
 import { TauriEnvProvider, useAppProvider } from "@src/packages/app-env";
@@ -44,6 +46,7 @@ const Content = () => {
   const { isReviewMode } = useSessionContext();
   const { getLimit } = useLicense();
   const { openUpgradeDialog } = useUpgradeDialog();
+  const activeTabId = useAtomValue(activeTabIdAtom);
 
   const [showWelcomeCert, setShowWelcomeCert] = useState(false);
 
@@ -272,6 +275,7 @@ const Content = () => {
                 onAdd={handleAddTab}
                 onClose={handleCloseTab}
                 onRename={handleRenameTab}
+                initialTab={activeTabId}
                 integratedTitlebar={false}
                 extraLeftContent={<HeaderLeft />}
                 extraRightContent={
