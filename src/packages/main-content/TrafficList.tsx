@@ -275,7 +275,7 @@ class TrafficListContextMenuRenderer
           id: "copy_url",
           text: "Copy URL",
           icon: iLink,
-          enabled: items.length === 1,
+          enabled: items.length === 1 && !!firstItem.intercepted,
           action: () => {
             if (firstItem?.url) navigator.clipboard.writeText(String(firstItem.url));
           }
@@ -284,7 +284,7 @@ class TrafficListContextMenuRenderer
           id: "copy_curl",
           text: "Copy as cURL",
           icon: iTerminal,
-          enabled: items.length === 1,
+          enabled: items.length === 1 && !!firstItem.intercepted,
           action: async () => {
             const data = await this.getRequestData(String(firstItem.id));
             const escapeShellArg = (arg: string): string => `'${arg.replace(/'/g, "'\\''")}'`;
@@ -301,7 +301,7 @@ class TrafficListContextMenuRenderer
           id: "copy_cell",
           text: "Copy Cell Value",
           icon: iClipboard,
-          enabled: items.length === 1 && columnIndex !== undefined && columnIndex !== -1,
+          enabled: items.length === 1 && !!firstItem.intercepted && columnIndex !== undefined && columnIndex !== -1,
           action: () => {
             const columns = ["id", "intercepted", "tags", "url", "client", "method", "code", "time", "duration", "request", "response"];
             const key = columns[columnIndex!];
@@ -319,7 +319,7 @@ class TrafficListContextMenuRenderer
               id: "copy_req_header",
               text: "Request Headers",
               icon: iFileText,
-              enabled: items.length === 1,
+              enabled: items.length === 1 && !!firstItem.intercepted,
               action: async () => {
                 const data = await this.getRequestData(String(firstItem.id));
                 navigator.clipboard.writeText(data.headers.map((h: any) => `${h.key}: ${h.value}`).join("\n"));
@@ -329,7 +329,7 @@ class TrafficListContextMenuRenderer
               id: "copy_req_cookie",
               text: "Request Cookies",
               icon: iDatabase,
-              enabled: items.length === 1,
+              enabled: items.length === 1 && !!firstItem.intercepted,
               action: async () => {
                 const data = await this.getRequestData(String(firstItem.id));
                 const cookie = data.headers.find((h: any) => h.key.toLowerCase() === "cookie");
@@ -340,7 +340,7 @@ class TrafficListContextMenuRenderer
               id: "copy_req_body",
               text: "Request Body",
               icon: iFile,
-              enabled: items.length === 1,
+              enabled: items.length === 1 && !!firstItem.intercepted,
               action: async () => {
                 const data = await this.getRequestData(String(firstItem.id));
                 navigator.clipboard.writeText(this.decodeBody(data.body));
@@ -351,7 +351,7 @@ class TrafficListContextMenuRenderer
               id: "copy_res_header",
               text: "Response Headers",
               icon: iFileText,
-              enabled: items.length === 1,
+              enabled: items.length === 1 && !!firstItem.intercepted,
               action: async () => {
                 const data = await this.getResponseData(String(firstItem.id));
                 navigator.clipboard.writeText(data.headers.map((h: any) => `${h.key}: ${h.value}`).join("\n"));
@@ -361,7 +361,7 @@ class TrafficListContextMenuRenderer
               id: "copy_res_cookie",
               text: "Response Cookies",
               icon: iDatabase,
-              enabled: items.length === 1,
+              enabled: items.length === 1 && !!firstItem.intercepted,
               action: async () => {
                 const data = await this.getResponseData(String(firstItem.id));
                 const cookie = data.headers.find((h: any) => h.key.toLowerCase() === "set-cookie");
@@ -372,37 +372,12 @@ class TrafficListContextMenuRenderer
               id: "copy_res_body",
               text: "Response Body",
               icon: iFile,
-              enabled: items.length === 1,
+              enabled: items.length === 1 && !!firstItem.intercepted,
               action: async () => {
                 const data = await this.getResponseData(String(firstItem.id));
                 navigator.clipboard.writeText(this.decodeBody(data.body));
               }
             }),
-            PredefinedMenuItem.new({ item: "Separator" }),
-            IconMenuItem.new({
-              id: "copy_markdown",
-              text: "Markdown Table",
-              icon: iTable,
-              enabled: items.length > 0,
-              action: () => {
-                const headers = ["ID", "Method", "Code", "URL", "Time"];
-                const rows = items.map(i => `| ${i.id} | ${i.method} | ${i.code} | ${i.url} | ${i.time} |`);
-                const table = `| ${headers.join(" | ")} |\n| ${headers.map(() => "---").join(" | ")} |\n${rows.join("\n")}`;
-                navigator.clipboard.writeText(table);
-              }
-            }),
-            IconMenuItem.new({
-              id: "copy_csv",
-              text: "CSV",
-              icon: iFile,
-              enabled: items.length > 0,
-              action: () => {
-                const headers = ["ID", "Method", "Code", "URL", "Time"];
-                const rows = items.map(i => `"${i.id}","${i.method}","${i.code}","${i.url}","${i.time}"`);
-                const csv = `${headers.map(h => `"${h}"`).join(",")}\n${rows.join("\n")}`;
-                navigator.clipboard.writeText(csv);
-              }
-            })
           ])
         }),
         PredefinedMenuItem.new({ item: "Separator" }),
@@ -441,68 +416,111 @@ class TrafficListContextMenuRenderer
           ])
         }),
         PredefinedMenuItem.new({ item: "Separator" }),
-        IconMenuItem.new({
-          id: "export_selected",
-          text: `Export ${items.length} items to HAR`,
+        Submenu.new({
+          text: `Export ${items.length === 1 ? 'item' : `${items.length} items`}`,
           icon: iDownload,
-          enabled: items.length > 0,
-          action: () => {
-            emit("export_selected", { ids });
-          },
-        }),
-        IconMenuItem.new({
-          id: "add_to_proxy_domain",
-          text: "Add to Proxy List (Domain)",
-          icon: iGlobe,
-          enabled: items.length === 1,
-          action: async () => {
-            const item = items[0];
-            let domain = "";
-            try {
-              domain = new URL(item.url as string).hostname;
-            } catch {
-              domain = String(item.url);
-            }
-            await this.invoke("save_proxy_rule", {
-              rule: {
-                id: "",
-                enabled: true,
-                name: `Intercept ${domain}`,
-                pattern: domain,
-                action: "INTERCEPT"
+          items: await Promise.all([
+            IconMenuItem.new({
+              id: "export_har",
+              text: "HAR",
+              icon: iFileText,
+              enabled: items.length > 0,
+              action: () => {
+                emit("export_selected", { ids });
+              },
+            }),
+            IconMenuItem.new({
+              id: "export_csv",
+              text: "CSV",
+              icon: iFile,
+              enabled: items.length > 0,
+              action: () => {
+                const headers = ["ID", "Method", "Code", "URL", "Time"];
+                const rows = items.map(i => `"${i.id}","${i.method}","${i.code}","${i.url}","${i.time}"`);
+                const csv = `${headers.map(h => `"${h}"`).join(",")}\n${rows.join("\n")}`;
+                navigator.clipboard.writeText(csv);
               }
-            });
-          }
+            }),
+            IconMenuItem.new({
+              id: "export_markdown",
+              text: "Markdown Table",
+              icon: iTable,
+              enabled: items.length > 0,
+              action: () => {
+                const headers = ["ID", "Method", "Code", "URL", "Time"];
+                const rows = items.map(i => `| ${i.id} | ${i.method} | ${i.code} | ${i.url} | ${i.time} |`);
+                const table = `| ${headers.join(" | ")} |\n| ${headers.map(() => "---").join(" | ")} |\n${rows.join("\n")}`;
+                navigator.clipboard.writeText(table);
+              }
+            }),
+          ])
         }),
-        (async () => {
-          const item = items[0];
-          if (!item || !item.client) return IconMenuItem.new({ id: "add_to_proxy_client", text: "Add to Proxy List (Client)", icon: iSmartphone, enabled: false });
-
-          try {
-            const clientInfo = JSON.parse(item.client as string);
-            const client = clientInfo.name || "-";
-
-            return IconMenuItem.new({
-              id: "add_to_proxy_client",
-              text: `Add to Proxy List (Client: ${client})`,
-              icon: iSmartphone,
-              enabled: items.length === 1 && client !== "-",
+        Submenu.new({
+          text: "Add to Proxy List",
+          icon: iGlobe,
+          items: await Promise.all([
+            IconMenuItem.new({
+              id: "add_to_proxy_domain",
+              text: (() => {
+                const item = items[0];
+                try {
+                  return `Domain (${new URL(item.url as string).hostname})`;
+                } catch {
+                  return "Domain";
+                }
+              })(),
+              icon: iGlobe,
+              enabled: items.length === 1,
               action: async () => {
+                const item = items[0];
+                let domain = "";
+                try {
+                  domain = new URL(item.url as string).hostname;
+                } catch {
+                  domain = String(item.url);
+                }
                 await this.invoke("save_proxy_rule", {
                   rule: {
                     id: "",
                     enabled: true,
-                    name: `Intercept ${client}`,
-                    pattern: `client:${client}`,
+                    name: `Intercept ${domain}`,
+                    pattern: domain,
                     action: "INTERCEPT"
                   }
                 });
               }
-            });
-          } catch {
-            return IconMenuItem.new({ id: "add_to_proxy_client", text: "Add to Proxy List (Client)", icon: iSmartphone, enabled: false });
-          }
-        })(),
+            }),
+            (async () => {
+              const item = items[0];
+              if (!item || !item.client) return IconMenuItem.new({ id: "add_to_proxy_client", text: "App", icon: iSmartphone, enabled: false });
+
+              try {
+                const clientInfo = JSON.parse(item.client as string);
+                const client = clientInfo.name || "-";
+
+                return IconMenuItem.new({
+                  id: "add_to_proxy_client",
+                  text: `App (${client})`,
+                  icon: iSmartphone,
+                  enabled: items.length === 1 && client !== "-",
+                  action: async () => {
+                    await this.invoke("save_proxy_rule", {
+                      rule: {
+                        id: "",
+                        enabled: true,
+                        name: `Intercept ${client}`,
+                        pattern: `client:${client}`,
+                        action: "INTERCEPT"
+                      }
+                    });
+                  }
+                });
+              } catch {
+                return IconMenuItem.new({ id: "add_to_proxy_client", text: "App", icon: iSmartphone, enabled: false });
+              }
+            })(),
+          ])
+        }),
         IconMenuItem.new({
           id: "delete_selected",
           text: `Delete ${items.length === 1 ? 'item' : `${items.length} items`}`,
