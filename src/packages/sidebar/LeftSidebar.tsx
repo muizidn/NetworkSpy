@@ -31,14 +31,6 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = () => {
           />
         </Tooltip>
         
-        <Tooltip text="Workspaces (Incoming)">
-          <NavButton
-            icon={<FiBox size={18} />}
-            isActive={activeTab === "workspace"}
-            onClick={() => navigate("/workspace")}
-          />
-        </Tooltip>
-
         <Tooltip text="Custom Viewers">
           <NavButton
             icon={<FiEye size={18} />}
@@ -47,13 +39,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = () => {
           />
         </Tooltip>
 
-        <Tooltip text="Extensions Market">
-          <NavButton
-            icon={<FiGrid size={18} />}
-            isActive={activeTab === "extensions"}
-            onClick={() => navigate("/extensions")}
-          />
-        </Tooltip>
+
       </div>
 
       <div className="flex flex-col items-center gap-4 w-full mb-2 px-1.5">
