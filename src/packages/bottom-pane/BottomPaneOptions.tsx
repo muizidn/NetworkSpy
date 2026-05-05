@@ -119,7 +119,6 @@ export const BottomPaneOptions = () => {
 
           const scoreMode = async (matchers: ViewerMatcher[], traffic: any): Promise<number> => {
             const results = await Promise.all(matchers.map(m => evaluateMatcher(m, traffic)));
-            console.log("matcher->results", results);
             return results.filter(Boolean).length;
           };
 
@@ -141,7 +140,7 @@ export const BottomPaneOptions = () => {
 
           const allResults = await Promise.all([...builtinPromises, ...customPromises]);
           if (isCancelled) return;
-          
+
           const newScores: Record<string, number> = {};
           for (const { modeId, score } of allResults) {
             if (score > 0) newScores[modeId] = score;
@@ -224,7 +223,6 @@ export const BottomPaneOptions = () => {
       { id: "json_schema", title: "JSON Schema" },
       { id: "soap_viewer", title: "SOAP Inspector" },
       { id: "protobuf_viewer", title: "Protobuf Decoder" },
-      { id: "protobuf_viewer", title: "Protobuf Decoder" },
       { id: "urlencoded", title: "Form URL Encoded" },
       { id: "multipart_form", title: "Multipart Form" },
     ],
@@ -271,12 +269,12 @@ export const BottomPaneOptions = () => {
         const bPinned = pinnedModes.includes(b.id);
         if (aPinned && !bPinned) return -1;
         if (!aPinned && bPinned) return 1;
-        
+
         const aScore = viewerScores[a.id] || 0;
         const bScore = viewerScores[b.id] || 0;
         if (aScore > bScore) return -1;
         if (aScore < bScore) return 1;
-        
+
         return 0;
       });
   }, [selectionType, viewers, searchTerm, pinnedModes, viewerScores]);
