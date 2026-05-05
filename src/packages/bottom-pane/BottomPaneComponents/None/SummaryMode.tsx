@@ -92,8 +92,8 @@ export const SummaryMode = () => {
     const showHosts = stats.hosts.length > 2;
 
     return (
-        <div className="h-full bg-[#050505] text-white p-4 @sm:p-10 overflow-auto custom-scrollbar font-sans @container selection:bg-blue-500/30">
-            <div className="max-w-6xl mx-auto space-y-10 pb-20">
+        <div className="h-full bg-[#050505] text-white p-2 @sm:p-3 overflow-auto custom-scrollbar font-sans @container selection:bg-blue-500/30">
+            <div className="max-w-6xl mx-auto space-y-4 pb-10">
                 {/* Header */}
                 <header className="flex flex-col gap-3 pt-4">
                     <div className="flex items-center justify-between">
@@ -107,7 +107,7 @@ export const SummaryMode = () => {
                 </header>
 
                 {/* Hero Stats */}
-                <div className="grid grid-cols-2 @lg:grid-cols-4 gap-4 @sm:gap-6">
+                <div className="grid grid-cols-2 @lg:grid-cols-4 gap-3 @sm:gap-4">
                     <StatCard
                         title="Total Traffic"
                         value={stats.total}
@@ -138,11 +138,11 @@ export const SummaryMode = () => {
                     />
                 </div>
 
-                <div className="grid grid-cols-1 @lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 @lg:grid-cols-3 gap-6">
                     {/* Performance Breakdown */}
-                    <div className="space-y-8 flex flex-col">
+                    <div className="space-y-6 flex flex-col">
                         <Section title="Performance Distribution" icon={<FiClock className="text-orange-400" />}>
-                            <div className="space-y-6 pt-2 flex-grow">
+                            <div className="space-y-4 pt-1 flex-grow">
                                 <BucketRow label="Fast (<100ms)" count={stats.latencyBuckets.fast} total={stats.total} color="bg-emerald-400" />
                                 <BucketRow label="Normal (100-500ms)" count={stats.latencyBuckets.normal} total={stats.total} color="bg-blue-400" />
                                 <BucketRow label="Slow (>500ms)" count={stats.latencyBuckets.slow} total={stats.total} color="bg-red-400" />
@@ -151,13 +151,13 @@ export const SummaryMode = () => {
 
                         <Section title="System Telemetry" icon={<FiCpu className="text-emerald-400" />} className="hidden @sm:flex">
                             <div className="grid grid-cols-2 gap-4 pt-2">
-                                <div className="flex flex-col items-center justify-center py-5 px-3 bg-white/5 rounded-3xl border border-white/5">
-                                    <div className="text-[11px] font-black text-zinc-500 tracking-widest mb-1.5 px-1 text-center">Encrypted</div>
-                                    <div className="text-xl font-black text-emerald-400 italic tracking-tighter">{stats.secureCount}</div>
+                                <div className="flex flex-col items-center justify-center py-3 px-3 bg-white/5 rounded-2xl border border-white/5">
+                                    <div className="text-[10px] font-black text-zinc-500 tracking-widest mb-1 px-1 text-center">Encrypted</div>
+                                    <div className="text-lg font-black text-emerald-400 italic tracking-tighter">{stats.secureCount}</div>
                                 </div>
-                                <div className="flex flex-col items-center justify-center py-5 px-3 bg-white/5 rounded-3xl border border-white/5">
-                                    <div className="text-[11px] font-black text-zinc-500 tracking-widest mb-1.5 px-1 text-center">Success</div>
-                                    <div className="text-xl font-black text-blue-400 italic tracking-tighter">{stats.successRate}%</div>
+                                <div className="flex flex-col items-center justify-center py-3 px-3 bg-white/5 rounded-2xl border border-white/5">
+                                    <div className="text-[10px] font-black text-zinc-500 tracking-widest mb-1 px-1 text-center">Success</div>
+                                    <div className="text-lg font-black text-blue-400 italic tracking-tighter">{stats.successRate}%</div>
                                 </div>
                             </div>
                         </Section>
@@ -167,11 +167,11 @@ export const SummaryMode = () => {
                     <Section
                         title={showHosts ? "Top Destinations" : "Most Frequented Paths"}
                         icon={showHosts ? <FiGlobe className="text-blue-400" /> : <FiTrendingUp className="text-blue-400" />}
-                        className="@lg:col-span-1 min-h-[350px]"
+                        className="@lg:col-span-1 min-h-[300px]"
                     >
-                        <div className="space-y-4 pt-2 flex-grow">
+                        <div className="space-y-3 pt-2 flex-grow">
                             {(showHosts ? stats.hosts.slice(0, 5) : stats.endpoints).map(([item, count], i) => (
-                                <div key={item} className="flex items-center justify-between bg-white/[0.04] p-4 rounded-2xl border border-white/5 group hover:bg-white/[0.08] transition-all duration-300">
+                                <div key={item} className="flex items-center justify-between bg-white/[0.04] p-3 rounded-xl border border-white/5 group hover:bg-white/[0.08] transition-all duration-300">
                                     <div className="flex items-center gap-4 overflow-hidden">
                                         <span className="text-[12px] font-black text-zinc-800 w-5 font-mono">{i + 1}</span>
                                         <span className="text-sm font-semibold text-zinc-200 truncate tracking-tight">{item}</span>
@@ -185,7 +185,7 @@ export const SummaryMode = () => {
                     </Section>
 
                     {/* Breakdown Sections */}
-                    <div className="grid grid-cols-1 @sm:grid-cols-2 @lg:grid-cols-1 gap-8">
+                    <div className="grid grid-cols-1 @sm:grid-cols-2 @lg:grid-cols-1 gap-6">
                         <Section title="Protocol Methods" icon={<FiCheckCircle className="text-blue-500" />}>
                             <div className="space-y-4 pt-2">
                                 {stats.methods.slice(0, 4).map(([method, count]) => (
@@ -218,22 +218,22 @@ export const SummaryMode = () => {
 };
 
 const StatCard = ({ title, value, subValue, icon, themeColor }: { title: string; value: string | number; subValue?: string; icon: React.ReactNode; themeColor: string }) => (
-    <div className="bg-zinc-950 p-6 @sm:p-8 rounded-[2.5rem] border border-white/10 shadow-2xl group transition-all duration-500 hover:border-white/20 relative overflow-hidden">
-        <div className="flex items-start justify-between mb-4 @sm:mb-6">
+    <div className="bg-zinc-950 p-3 @sm:p-4 rounded-2xl border border-white/10 shadow-2xl group transition-all duration-500 hover:border-white/20 relative overflow-hidden">
+        <div className="flex items-start justify-between mb-2 @sm:mb-3">
             <div className="text-zinc-500 text-xs font-black tracking-[0.1em]">{title}</div>
             <div className={twMerge("p-2.5 bg-white/5 rounded-2xl transition-colors duration-500 group-hover:bg-white/10", themeColor)}>{icon}</div>
         </div>
         <div className="flex flex-col">
-            <div className="text-3xl @sm:text-4xl font-black italic tracking-tighter leading-none text-zinc-100">{value}</div>
-            <div className="text-[11px] text-zinc-400 font-bold tracking-[0.15em] mt-3 opacity-80 truncate">{subValue}</div>
+            <div className="text-2xl @sm:text-3xl font-black italic tracking-tighter leading-none text-zinc-100">{value}</div>
+            <div className="text-[10px] text-zinc-400 font-bold tracking-[0.12em] mt-2 opacity-80 truncate">{subValue}</div>
         </div>
         <div className={twMerge("absolute top-0 right-0 w-32 h-[1px] opacity-30", themeColor.replace('text', 'bg'))} />
     </div>
 );
 
 const Section = ({ title, icon, children, className = "" }: { title: string; icon?: React.ReactNode; children: React.ReactNode; className?: string }) => (
-    <div className={twMerge("bg-zinc-950 p-7 @sm:p-8 rounded-[3rem] border border-white/5 shadow-[inset_0_0_80px_rgba(255,255,255,0.02)] flex flex-col", className)}>
-        <h3 className="text-xs font-black text-zinc-400 tracking-[0.25em] mb-6 flex items-center gap-3 italic px-1">
+    <div className={twMerge("bg-zinc-950 p-4 @sm:p-5 rounded-3xl border border-white/5 shadow-[inset_0_0_80px_rgba(255,255,255,0.02)] flex flex-col", className)}>
+        <h3 className="text-[10px] font-black text-zinc-400 tracking-[0.2em] mb-3 flex items-center gap-2 italic px-1">
             {icon} {title}
         </h3>
         {children}
