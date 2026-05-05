@@ -3,5 +3,5 @@
 export type TableViewContextMenuRendererOptions = any;
 
 export interface TableViewContextMenuRenderer<T> {
-  render: (items: T[]) => Promise<void>;
+  render: (items: T[], columnIndex?: number, event?: React.MouseEvent) => Promise<void>;
 }

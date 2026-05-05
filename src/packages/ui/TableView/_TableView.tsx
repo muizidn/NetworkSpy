@@ -266,12 +266,25 @@ export const TableView = <T,>({
 
     e.preventDefault();
 
+    // Find column index
+    let columnIndex = -1;
+    let target = e.target as HTMLElement;
+    while (target && target.getAttribute('role') !== "gridcell") {
+      target = target.parentElement as HTMLElement;
+    }
+    if (target && target.getAttribute('role') === "gridcell") {
+      const row = target.parentElement;
+      if (row) {
+        columnIndex = Array.from(row.children).indexOf(target);
+      }
+    }
+
     let selectedItems = [sortedData[Number(indexString)]];
     if (selectedRows.rows.length > 1) {
       selectedItems = selectedRows.rows.map((i) => sortedData[i]);
     }
 
-    await contextMenuRenderer.render(selectedItems);
+    await contextMenuRenderer.render(selectedItems, columnIndex, e);
   }
 
   function _animateScroll() {
