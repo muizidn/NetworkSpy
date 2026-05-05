@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { useAppProvider } from "../app-env";
 import { BreakpointData } from "../app-env/AppProvider";
@@ -9,8 +10,19 @@ import { BreakpointBodyEditor } from "./components/BreakpointBodyEditor";
 import { BreakpointHeadersEditor } from "./components/BreakpointHeadersEditor";
 
 export const BreakpointHitView: React.FC = () => {
-    const { pausedBreakpoints, resumeBreakpoint, getPausedData, refreshBreakpoints } = useAppProvider();
+    const location = useLocation();
+    const queryId = new URLSearchParams(location.search).get("id");
+
+    const { pausedBreakpoints, resumeBreakpoint, getPausedData, refreshBreakpoints, getRequestPairData, repeatRequestWithData } = useAppProvider();
     const [selectedHitId, setSelectedHitId] = useState<string | null>(null);
+    const [isRepeatMode, setIsRepeatMode] = useState(false);
+
+    // Initial selection from URL
+    useEffect(() => {
+        if (queryId) {
+            setSelectedHitId(queryId);
+        }
+    }, [queryId]);
     const [dataCache, setDataCache] = useState<Record<string, BreakpointData>>({});
     const [isLoadingData, setIsLoadingData] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -34,9 +46,25 @@ export const BreakpointHitView: React.FC = () => {
 
             const fetchData = async () => {
                 try {
-                    const data = await getPausedData(selectedHitId);
+                    let data: BreakpointData;
+                    try {
+                        data = await getPausedData(selectedHitId);
+                        setIsRepeatMode(false);
+                    } catch (e) {
+                        // Fallback: If not a paused breakpoint, it's likely a "Repeat" action
+                        const reqData = await getRequestPairData(selectedHitId);
+                        data = {
+                            id: selectedHitId,
+                            headers: Object.fromEntries(reqData.headers.map(h => [h.key, h.value])),
+                            body: Array.from(reqData.body),
+                            method: reqData.method || "GET",
+                            uri: reqData.uri || ""
+                        };
+                        setIsRepeatMode(true);
+                    }
+
                     if (!isCancelled) {
-                        setDataCache(prev => ({ ...prev, [selectedHitId]: data }));
+                        setDataCache(prev => ({ ...prev, [selectedHitId!]: data }));
 
                         // Convert body to string for initial edit state if this is the first load
                         const bodyStr = new TextDecoder().decode(new Uint8Array(data.body));
@@ -104,12 +132,16 @@ export const BreakpointHitView: React.FC = () => {
                 };
             }
 
-            await resumeBreakpoint(selectedHitId, modifiedData);
+            if (isRepeatMode && modifiedData) {
+                await repeatRequestWithData(modifiedData);
+            } else {
+                await resumeBreakpoint(selectedHitId, modifiedData);
+            }
 
             // Clean up cache
             setDataCache(prev => {
                 const next = { ...prev };
-                delete next[selectedHitId];
+                delete next[selectedHitId!];
                 return next;
             });
             setSelectedHitId(null);

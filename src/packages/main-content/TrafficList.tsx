@@ -396,7 +396,7 @@ class TrafficListContextMenuRenderer
           icon: iEdit,
           enabled: items.length === 1 && !!firstItem.intercepted,
           action: async () => {
-            await this.invoke("open_new_window", { context: `repeat:${firstItem.id}`, title: "Edit & Repeat" });
+            await this.invoke("open_new_window", { context: `repeat?id=${firstItem.id}`, title: "Edit & Repeat" });
           }
         }),
         PredefinedMenuItem.new({ item: "Separator" }),
@@ -410,7 +410,7 @@ class TrafficListContextMenuRenderer
               icon: iZap,
               enabled: items.length === 1,
               action: async () => {
-                await this.invoke("open_new_window", { context: `breakpoint:${firstItem.id}`, title: "Breakpoint Editor" });
+                await this.invoke("open_new_window", { context: `breakpoint?id=${firstItem.id}`, title: "Breakpoint Editor" });
               }
             })
           ])

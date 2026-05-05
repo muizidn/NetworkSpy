@@ -61,6 +61,7 @@ export interface IAppProvider {
   getPausedBreakpoints(): Promise<BreakpointHit[]>;
   getPausedData(id: string): Promise<BreakpointData>;
   openNewWindow(context: string, title: string): Promise<void>;
+  repeatRequestWithData(data: BreakpointData): Promise<void>;
 }
 
 export class TauriAppProvider implements IAppProvider {
@@ -261,6 +262,10 @@ export class TauriAppProvider implements IAppProvider {
 
   async openNewWindow(context: string, title: string): Promise<void> {
     return await tauriInvoke("open_new_window", { context, title });
+  }
+
+  async repeatRequestWithData(data: BreakpointData): Promise<void> {
+    return await tauriInvoke("repeat_request_with_data", { data });
   }
 }
 
@@ -512,6 +517,10 @@ export class MockAppProvider implements IAppProvider {
 
   async openNewWindow(context: string, title: string): Promise<void> {
     console.log(`[Mock] Opening window: ${context} (${title})`);
+  }
+
+  async repeatRequestWithData(data: BreakpointData): Promise<void> {
+    console.log(`[Mock] Repeating request with data:`, data);
   }
 
   async saveSession(): Promise<void> {

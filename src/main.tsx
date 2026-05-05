@@ -124,6 +124,10 @@ const router = createBrowserRouter([
         path: "/breakpoint-hit",
         element: <BreakpointHitView />,
       },
+      {
+        path: "/repeat",
+        element: <BreakpointHitView />,
+      },
     ],
   },
 ]);
