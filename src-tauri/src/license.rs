@@ -6,17 +6,25 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::Manager;
 use hostname;
-use keyring::Entry;
 use std::sync::RwLock;
 use once_cell::sync::Lazy;
 use sha2::{Sha256, Digest};
 use mac_address::get_mac_address;
-
-const SERVICE_NAME: &str = "app.networkspy.license";
-const KEYCHAIN_USER: &str = "networkspy_user";
+use std::fs;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 pub struct LicenseState {
     pub plan: Option<String>,
+    pub features: Option<serde_json::Value>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct PersistentLicenseData {
+    pub license_key: String,
+    pub machine_id: String,
+    pub last_verify_at: u64,
+    pub created_at: u64,
+    pub plan: String,
     pub features: Option<serde_json::Value>,
 }
 
@@ -37,21 +45,33 @@ fn get_stable_device_id() -> String {
     }
 }
 
-fn save_license_to_keychain(key: &str) -> Result<(), String> {
-    let entry = Entry::new(SERVICE_NAME, KEYCHAIN_USER).map_err(|e: keyring::Error| e.to_string())?;
-    entry.set_password(key).map_err(|e: keyring::Error| e.to_string())
+fn get_license_file_path() -> std::path::PathBuf {
+    crate::commands::get_app_data_dir().join("license.json")
+}
+
+fn save_license_to_file(data: &PersistentLicenseData) -> Result<(), String> {
+    let path = get_license_file_path();
+    let json = serde_json::to_string_pretty(data).map_err(|e| e.to_string())?;
+    fs::write(path, json).map_err(|e| e.to_string())
+}
+
+fn load_license_from_file() -> Result<PersistentLicenseData, String> {
+    let path = get_license_file_path();
+    let json = fs::read_to_string(path).map_err(|e| e.to_string())?;
+    serde_json::from_str(&json).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 pub fn get_license_from_keychain() -> Result<String, String> {
-    let entry = Entry::new(SERVICE_NAME, KEYCHAIN_USER).map_err(|e: keyring::Error| e.to_string())?;
-    entry.get_password().map_err(|e: keyring::Error| e.to_string())
+    load_license_from_file().map(|d| d.license_key)
 }
 
 #[tauri::command]
 pub fn revoke_license_from_keychain() -> Result<(), String> {
-    let entry = Entry::new(SERVICE_NAME, KEYCHAIN_USER).map_err(|e| e.to_string())?;
-    let _ = entry.delete_credential();
+    let path = get_license_file_path();
+    if path.exists() {
+        let _ = fs::remove_file(path);
+    }
 
     // Clear Cache
     if let Ok(mut cache) = CACHED_LICENSE.write() {
@@ -60,6 +80,21 @@ pub fn revoke_license_from_keychain() -> Result<(), String> {
     }
     
     Ok(())
+}
+
+fn ensure_cache_loaded() {
+    if let Ok(cache) = CACHED_LICENSE.read() {
+        if cache.plan.is_some() {
+            return;
+        }
+    }
+
+    if let Ok(data) = load_license_from_file() {
+        if let Ok(mut cache) = CACHED_LICENSE.write() {
+            cache.plan = Some(data.plan);
+            cache.features = data.features;
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -174,7 +209,7 @@ pub async fn verify_license(
     // 4. Encrypt LicenseRequest using Server Public Key
     let req_data = LicenseRequest {
         license_key: license_key.clone(),
-        device_id,
+        device_id: device_id.clone(),
         device_name,
         public_key: client_public_jwk_json,
     };
@@ -228,8 +263,32 @@ pub async fn verify_license(
         .map_err(|e| format!("Failed to parse decrypted result: {}", e))?;
 
     if result.success {
-        // Save to keychain
-        let _ = save_license_to_keychain(&license_key);
+        // Save to file with metadata
+        let now = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs();
+        
+        let data = PersistentLicenseData {
+            license_key: license_key.clone(),
+            machine_id: device_id,
+            last_verify_at: now,
+            created_at: now,
+            plan: result.plan.clone().unwrap_or_else(|| "free".to_string()),
+            features: result.features.clone(),
+        };
+        
+        // If file exists, preserve created_at
+        let final_data = if let Ok(existing) = load_license_from_file() {
+            PersistentLicenseData {
+                created_at: existing.created_at,
+                ..data
+            }
+        } else {
+            data
+        };
+
+        let _ = save_license_to_file(&final_data);
 
         // Update Cache
         let mut cache = CACHED_LICENSE.write().map_err(|e| e.to_string())?;
@@ -242,6 +301,7 @@ pub async fn verify_license(
 
 #[tauri::command]
 pub fn license_check_feature(feature: String) -> bool {
+    ensure_cache_loaded();
     let cache = match CACHED_LICENSE.read() {
         Ok(c) => c,
         Err(_) => return false,
@@ -270,6 +330,7 @@ pub fn license_check_feature(feature: String) -> bool {
 
 #[tauri::command]
 pub fn license_get_limit(limit_name: String) -> i32 {
+    ensure_cache_loaded();
     let cache = match CACHED_LICENSE.read() {
         Ok(c) => c,
         Err(_) => return if limit_name == "max_tabs" { 2 } else { 3 },
@@ -299,6 +360,7 @@ pub fn license_get_limit(limit_name: String) -> i32 {
 
 #[tauri::command]
 pub fn license_get_plan() -> String {
+    ensure_cache_loaded();
     let cache = match CACHED_LICENSE.read() {
         Ok(c) => c,
         Err(_) => return "free".to_string(),
