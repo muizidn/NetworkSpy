@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { activeTabIdAtom } from "@src/utils/trafficAtoms";
 import SplitPane, { Pane, SashContent } from "split-pane-react";
 
@@ -46,7 +46,7 @@ const Content = () => {
   const { isReviewMode } = useSessionContext();
   const { getLimit } = useLicense();
   const { openUpgradeDialog } = useUpgradeDialog();
-  const activeTabId = useAtomValue(activeTabIdAtom);
+  const [activeTabId, setActiveTabId] = useAtom(activeTabIdAtom);
 
   const [showWelcomeCert, setShowWelcomeCert] = useState(false);
 
@@ -275,6 +275,7 @@ const Content = () => {
                 onAdd={handleAddTab}
                 onClose={handleCloseTab}
                 onRename={handleRenameTab}
+                onTabChange={setActiveTabId}
                 initialTab={activeTabId}
                 integratedTitlebar={false}
                 extraLeftContent={<HeaderLeft />}

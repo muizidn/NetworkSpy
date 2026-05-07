@@ -3,8 +3,6 @@ import { Icon } from "./Icon";
 import { twMerge } from "tailwind-merge";
 import Tab from "@src/stories/app/atoms/Tab";
 import { ErrorBoundary } from "./ErrorBoundary";
-import { useAtom } from "jotai";
-import { activeTabIdAtom } from "@src/utils/trafficAtoms";
 
 export interface Tab {
   id: string;
@@ -41,6 +39,7 @@ interface NSTabsProps {
   onAdd?: () => void;
   onRename?: (id: string, newTitle: string) => void;
   onReorder?: (dragIndex: number, hoverIndex: number) => void;
+  onTabChange?: (id: string) => void;
   initialTab?: string;
   designStyle?: "chrome" | "opera" | "basic";
   extraRightContent?: ReactNode;
@@ -58,13 +57,13 @@ export const NSTabs: React.FC<NSTabsProps> = ({
   onAdd,
   onRename,
   onReorder,
+  onTabChange,
   designStyle = "chrome",
   extraRightContent,
   extraLeftContent,
   integratedTitlebar = false,
 }) => {
   const [currentTab, setCurrentTabInternal] = useState(initialTab || tabs[0]?.id || "");
-  const [activeTabId, setActiveTabId] = useAtom(activeTabIdAtom);
 
   useEffect(() => {
     if (initialTab && initialTab !== currentTab) {
@@ -74,12 +73,8 @@ export const NSTabs: React.FC<NSTabsProps> = ({
 
   const setCurrentTab = useCallback((id: string) => {
     setCurrentTabInternal(id);
-    setActiveTabId(id);
-  }, [setActiveTabId]);
-
-  useEffect(() => {
-    if (currentTab) setActiveTabId(currentTab);
-  }, [currentTab, setActiveTabId]);
+    onTabChange?.(id);
+  }, [onTabChange]);
   const prevTabsLength = useRef(tabs.length);
 
   useEffect(() => {
@@ -94,7 +89,7 @@ export const NSTabs: React.FC<NSTabsProps> = ({
       setCurrentTab(tabs[0].id);
     }
     prevTabsLength.current = tabs.length;
-  }, [tabs, currentTab]);
+  }, [tabs, currentTab, setCurrentTab]);
 
   // Memoize tabs to avoid unnecessary re-renders
   const memoizedTabs = useMemo(() => tabs, [tabs]);
