@@ -8,6 +8,14 @@ use base64::{Engine as _, engine::general_purpose};
 use std::fs;
 use rusqlite::params;
 use std::sync::atomic::Ordering;
+use arboard::Clipboard;
+
+#[tauri::command]
+pub fn write_to_clipboard(text: String) -> Result<(), String> {
+    let mut clipboard = Clipboard::new().map_err(|e| e.to_string())?;
+    clipboard.set_text(text).map_err(|e| e.to_string())?;
+    Ok(())
+}
 
 #[tauri::command]
 pub async fn get_proxy_settings(state: tauri::State<'_, ManagedProxySettings>) -> Result<ProxySettings, String> {

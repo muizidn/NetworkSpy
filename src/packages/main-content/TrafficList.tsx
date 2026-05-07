@@ -276,8 +276,8 @@ class TrafficListContextMenuRenderer
           text: "Copy URL",
           icon: iLink,
           enabled: items.length === 1 && !!firstItem.intercepted,
-          action: () => {
-            if (firstItem?.url) navigator.clipboard.writeText(String(firstItem.url));
+          action: async () => {
+            if (firstItem?.url) await this.invoke("write_to_clipboard", { text: String(firstItem.url) });
           }
         }),
         IconMenuItem.new({
@@ -294,7 +294,7 @@ class TrafficListContextMenuRenderer
             });
             const body = this.decodeBody(data.body);
             if (body) command += ` \\\n  -d ${escapeShellArg(body)}`;
-            navigator.clipboard.writeText(command);
+            await this.invoke("write_to_clipboard", { text: command });
           }
         }),
         IconMenuItem.new({
@@ -302,12 +302,12 @@ class TrafficListContextMenuRenderer
           text: "Copy Cell Value",
           icon: iClipboard,
           enabled: items.length === 1 && !!firstItem.intercepted && columnIndex !== undefined && columnIndex !== -1,
-          action: () => {
+          action: async () => {
             const columns = ["id", "intercepted", "tags", "url", "client", "method", "code", "time", "duration", "request", "response"];
             const key = columns[columnIndex!];
             if (key && firstItem[key] !== undefined) {
               const val = firstItem[key];
-              navigator.clipboard.writeText(Array.isArray(val) ? val.join(", ") : String(val));
+              await this.invoke("write_to_clipboard", { text: Array.isArray(val) ? val.join(", ") : String(val) });
             }
           }
         }),
@@ -322,7 +322,7 @@ class TrafficListContextMenuRenderer
               enabled: items.length === 1 && !!firstItem.intercepted,
               action: async () => {
                 const data = await this.getRequestData(String(firstItem.id));
-                navigator.clipboard.writeText(data.headers.map((h: any) => `${h.key}: ${h.value}`).join("\n"));
+                await this.invoke("write_to_clipboard", { text: data.headers.map((h: any) => `${h.key}: ${h.value}`).join("\n") });
               }
             }),
             IconMenuItem.new({
@@ -333,7 +333,7 @@ class TrafficListContextMenuRenderer
               action: async () => {
                 const data = await this.getRequestData(String(firstItem.id));
                 const cookie = data.headers.find((h: any) => h.key.toLowerCase() === "cookie");
-                if (cookie) navigator.clipboard.writeText(cookie.value);
+                if (cookie) await this.invoke("write_to_clipboard", { text: cookie.value });
               }
             }),
             IconMenuItem.new({
@@ -343,7 +343,7 @@ class TrafficListContextMenuRenderer
               enabled: items.length === 1 && !!firstItem.intercepted,
               action: async () => {
                 const data = await this.getRequestData(String(firstItem.id));
-                navigator.clipboard.writeText(this.decodeBody(data.body));
+                await this.invoke("write_to_clipboard", { text: this.decodeBody(data.body) });
               }
             }),
             PredefinedMenuItem.new({ item: "Separator" }),
@@ -354,7 +354,7 @@ class TrafficListContextMenuRenderer
               enabled: items.length === 1 && !!firstItem.intercepted,
               action: async () => {
                 const data = await this.getResponseData(String(firstItem.id));
-                navigator.clipboard.writeText(data.headers.map((h: any) => `${h.key}: ${h.value}`).join("\n"));
+                await this.invoke("write_to_clipboard", { text: data.headers.map((h: any) => `${h.key}: ${h.value}`).join("\n") });
               }
             }),
             IconMenuItem.new({
@@ -365,7 +365,7 @@ class TrafficListContextMenuRenderer
               action: async () => {
                 const data = await this.getResponseData(String(firstItem.id));
                 const cookie = data.headers.find((h: any) => h.key.toLowerCase() === "set-cookie");
-                if (cookie) navigator.clipboard.writeText(cookie.value);
+                if (cookie) await this.invoke("write_to_clipboard", { text: cookie.value });
               }
             }),
             IconMenuItem.new({
@@ -375,7 +375,7 @@ class TrafficListContextMenuRenderer
               enabled: items.length === 1 && !!firstItem.intercepted,
               action: async () => {
                 const data = await this.getResponseData(String(firstItem.id));
-                navigator.clipboard.writeText(this.decodeBody(data.body));
+                await this.invoke("write_to_clipboard", { text: this.decodeBody(data.body) });
               }
             }),
           ])
@@ -434,11 +434,11 @@ class TrafficListContextMenuRenderer
               text: "CSV",
               icon: iFile,
               enabled: items.length > 0,
-              action: () => {
+              action: async () => {
                 const headers = ["ID", "Method", "Code", "URL", "Time"];
                 const rows = items.map(i => `"${i.id}","${i.method}","${i.code}","${i.url}","${i.time}"`);
                 const csv = `${headers.map(h => `"${h}"`).join(",")}\n${rows.join("\n")}`;
-                navigator.clipboard.writeText(csv);
+                await this.invoke("write_to_clipboard", { text: csv });
               }
             }),
             IconMenuItem.new({
@@ -446,15 +446,16 @@ class TrafficListContextMenuRenderer
               text: "Markdown Table",
               icon: iTable,
               enabled: items.length > 0,
-              action: () => {
+              action: async () => {
                 const headers = ["ID", "Method", "Code", "URL", "Time"];
                 const rows = items.map(i => `| ${i.id} | ${i.method} | ${i.code} | ${i.url} | ${i.time} |`);
                 const table = `| ${headers.join(" | ")} |\n| ${headers.map(() => "---").join(" | ")} |\n${rows.join("\n")}`;
-                navigator.clipboard.writeText(table);
+                await this.invoke("write_to_clipboard", { text: table });
               }
             }),
           ])
         }),
+
         Submenu.new({
           text: "Add to Proxy List",
           icon: iGlobe,

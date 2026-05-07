@@ -89,6 +89,7 @@ macro_rules! generate_handler {
             crate::license::license_check_feature,
             crate::license::license_get_limit,
             crate::license::license_get_plan,
+            crate::commands::write_to_clipboard,
         ]
     };
 }
