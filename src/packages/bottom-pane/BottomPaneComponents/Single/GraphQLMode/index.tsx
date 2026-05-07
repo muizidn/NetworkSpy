@@ -13,6 +13,17 @@ import { GraphQLExtensions } from "./components/GraphQLExtensions";
 import { GraphQLResponse } from "./components/GraphQLResponse";
 import { Sidebar } from "./components/Sidebar";
 
+import { ViewerPlaceholder } from "../../../ViewerPlaceholder";
+
+const GraphQLPlaceholder = ({ text, subtext }: { text: string; subtext?: string }) => (
+  <ViewerPlaceholder
+    title={text}
+    subtext={subtext}
+    type="GraphQL"
+    hint="Build a specialized viewer to cater to unique GraphQL implementations like LinkedIn, Reddit, or X."
+  />
+);
+
 export const GraphQLMode = () => {
   const { provider } = useAppProvider();
   const { selections } = useTrafficListContext();
@@ -72,12 +83,12 @@ export const GraphQLMode = () => {
     }
   }, [responseBody]);
 
-  if (!trafficId || gqlItems.length === 0) return <Placeholder text="Select a GraphQL request to begin inspection" />;
-  if (loading) return <Placeholder text="Analyzing GraphQL traffic..." />;
+  if (!trafficId || gqlItems.length === 0) return <GraphQLPlaceholder text="No GraphQL Detected" subtext="We couldn't find a standard GraphQL query in this request. If this is a custom GraphQL implementation, you can create a specialized viewer for it." />;
+  if (loading) return <GraphQLPlaceholder text="Analyzing Traffic..." subtext="Inspecting request body and headers for GraphQL structures..." />;
 
   const isBatched = gqlItems.length > 1;
 
-  if (!activeData) return <Placeholder text="No valid GraphQL query detected" />;
+  if (!activeData) return <GraphQLPlaceholder text="Invalid Query" subtext="The detected GraphQL content could not be correctly parsed into operations." />;
 
   return (
     <div className="h-full bg-[#0d0d0d] flex flex-col font-sans overflow-hidden">
@@ -246,11 +257,3 @@ export const GraphQLMode = () => {
   );
 };
 
-const Placeholder = ({ text }: { text: string }) => (
-  <div className="h-full flex items-center justify-center text-zinc-500 bg-[#1e1e1e] p-6 @sm:p-10 text-center">
-    <div>
-      <div className="text-4xl mb-4 text-zinc-700 font-bold opacity-20">GraphQL</div>
-      <div className="text-sm max-w-md mx-auto">{text}</div>
-    </div>
-  </div>
-);

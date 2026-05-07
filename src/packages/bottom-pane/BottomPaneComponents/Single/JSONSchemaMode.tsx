@@ -13,6 +13,17 @@ interface ValidationError {
     line?: number;
 }
 
+import { ViewerPlaceholder } from "../../ViewerPlaceholder";
+
+const SchemaPlaceholder = ({ text, subtext }: { text: string; subtext?: string }) => (
+    <ViewerPlaceholder
+        title={text}
+        subtext={subtext}
+        type="JSON"
+        hint="Building a custom viewer for JSON data allows you to automate schema validation and structural consistency checks."
+    />
+);
+
 export const JSONSchemaMode = () => {
     const monaco = useMonaco();
     const { provider } = useAppProvider();
@@ -190,8 +201,8 @@ export const JSONSchemaMode = () => {
         }
     };
 
-    if (!trafficId) return <Placeholder text="Select a request to manage JSON Schemas" />;
-    if (loading) return <Placeholder text="Constructing schema definitions..." />;
+    if (!trafficId) return <SchemaPlaceholder text="No Request Selected" subtext="Select a request from the list to start building or validating JSON schemas." />;
+    if (loading) return <SchemaPlaceholder text="Constructing Blueprints..." subtext="Analyzing data structure and preparing validator environment..." />;
 
     return (
         <div className="h-full bg-[#0a0a0a] flex flex-col overflow-hidden">
@@ -393,11 +404,3 @@ export const JSONSchemaMode = () => {
     );
 };
 
-const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0a0a0a]">
-        <div className="text-center">
-            <div className="text-5xl font-black opacity-5 mb-4 italic tracking-tighter">BLUEPRINT</div>
-            <div className="text-xs tracking-[0.2em] font-bold text-zinc-700">{text}</div>
-        </div>
-    </div>
-);

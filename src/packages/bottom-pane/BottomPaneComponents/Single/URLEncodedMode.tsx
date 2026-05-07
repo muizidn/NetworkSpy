@@ -5,6 +5,17 @@ import { useTrafficListContext } from "@src/packages/main-content/context/Traffi
 import { useAppProvider } from "@src/packages/app-env";
 import { RequestPairData } from "../../RequestTab";
 
+import { ViewerPlaceholder } from "../../ViewerPlaceholder";
+
+const FormPlaceholder = ({ text, subtext }: { text: string; subtext?: string }) => (
+  <ViewerPlaceholder
+    title={text}
+    subtext={subtext}
+    type="Form"
+    hint="URL-encoded data can sometimes be non-standard or heavily nested. Building a custom viewer allows you to parse it exactly how you need."
+  />
+);
+
 export const URLEncodedMode = () => {
   const { selections } = useTrafficListContext();
   const { provider } = useAppProvider();
@@ -81,9 +92,14 @@ export const URLEncodedMode = () => {
     navigator.clipboard.writeText(text);
   };
 
-  if (!trafficId) return <Placeholder text="Select a request to view form data" />;
-  if (loading) return <Placeholder text="Decoding form data..." />;
-  if (formParams.length === 0) return <Placeholder text="No URL-encoded form data found in this request body" icon={<FiLayers size={32} />} />;
+  if (!trafficId) return <FormPlaceholder text="No Request Selected" subtext="Select a request from the list to view and analyze form data." />;
+  if (loading) return <FormPlaceholder text="Decoding Form..." subtext="Analyzing request body and extracting URL-encoded parameters..." />;
+  if (formParams.length === 0) return (
+    <FormPlaceholder
+      text="No Form Data"
+      subtext="No URL-encoded form data was found in this request body. If this is a custom encoding, you can build a viewer for it."
+    />
+  );
 
   return (
     <div className="flex flex-col h-full bg-[#0d0f11] text-zinc-300 font-sans overflow-hidden select-none">
@@ -233,13 +249,5 @@ export const URLEncodedMode = () => {
   );
 };
 
-const Placeholder = ({ text, icon = null }: { text: string, icon?: React.ReactNode }) => (
-  <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0d0f11] p-6 @sm:p-10 text-center">
-    <div className="flex flex-col items-center gap-4">
-      {icon || <div className="text-4xl text-amber-950 font-bold opacity-30 tracking-tighter">Form Data</div>}
-      <div className="text-sm max-w-md mx-auto font-medium text-zinc-600">{text}</div>
-    </div>
-  </div>
-);
 
 export default URLEncodedMode;

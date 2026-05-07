@@ -1,7 +1,17 @@
-import React, { useMemo, useState } from "react";
-import { FiFilter, FiCopy, FiExternalLink, FiSearch, FiCode, FiGrid } from "react-icons/fi";
-import { twMerge } from "tailwind-merge";
 import { useTrafficListContext } from "@src/packages/main-content/context/TrafficList";
+import { useMemo, useState } from "react";
+import { FiCode, FiCopy, FiExternalLink, FiFilter, FiGrid, FiSearch } from "react-icons/fi";
+
+import { ViewerPlaceholder } from "../../ViewerPlaceholder";
+
+const QueryPlaceholder = ({ text, subtext }: { text: string; subtext?: string }) => (
+  <ViewerPlaceholder
+    title={text}
+    subtext={subtext}
+    type="Form"
+    hint="You can create a custom viewer to automate complex URL parameter parsing or to highlight specific tracking IDs."
+  />
+);
 
 export const QueryParamsMode = () => {
   const { selections } = useTrafficListContext();
@@ -44,8 +54,13 @@ export const QueryParamsMode = () => {
     navigator.clipboard.writeText(text);
   };
 
-  if (!selected) return <Placeholder text="Select a request to view query parameters" />;
-  if (urlParams.length === 0) return <Placeholder text="No query parameters found in this URL" icon={<FiFilter size={32} />} />;
+  if (!selected) return <QueryPlaceholder text="No Request Selected" subtext="Select a request from the traffic list to analyze its query parameters." />;
+  if (urlParams.length === 0) return (
+    <QueryPlaceholder
+      text="No Parameters Found"
+      subtext="This URL does not contain any query parameters. If it uses a custom parameter format, you can build a viewer for it."
+    />
+  );
 
   return (
     <div className="flex flex-col h-full bg-[#0d0f11] text-zinc-300 font-sans overflow-hidden select-none">
@@ -196,13 +211,5 @@ export const QueryParamsMode = () => {
   );
 };
 
-const Placeholder = ({ text, icon = null }: { text: string, icon?: React.ReactNode }) => (
-  <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0d0f11] p-6 @sm:p-10 text-center">
-    <div className="flex flex-col items-center gap-4">
-      {icon || <div className="text-4xl text-orange-950 font-bold opacity-30 tracking-tighter">Query Params</div>}
-      <div className="text-sm max-w-md mx-auto font-medium text-zinc-600">{text}</div>
-    </div>
-  </div>
-);
 
 export default QueryParamsMode;

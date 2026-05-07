@@ -23,6 +23,18 @@ const beautifyXML = (xml: string) => {
     return formatted.substring(1, formatted.length - 3).trim();
 };
 
+import { ViewerPlaceholder } from "../../ViewerPlaceholder";
+
+const XMLPlaceholder = ({ text, subtext }: { text: string; subtext?: string }) => (
+    <ViewerPlaceholder
+        title={text}
+        subtext={subtext}
+        type="Generic"
+        icon={<FiLayers size={32} className="text-orange-500" />}
+        hint="XML can be extremely nested or follow complex schemas. Building a custom viewer allows you to extract exactly what you need using custom logic."
+    />
+);
+
 export const XMLViewerMode = () => {
     const { provider } = useAppProvider();
     const { selections } = useTrafficListContext();
@@ -51,8 +63,8 @@ export const XMLViewerMode = () => {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    if (!trafficId) return <Placeholder text="Select request for XML structure" />;
-    if (loading) return <Placeholder text="Beautifying XML..." />;
+    if (!trafficId) return <XMLPlaceholder text="No Request Selected" subtext="Select a request with XML content from the list to begin structural analysis." />;
+    if (loading) return <XMLPlaceholder text="Beautifying DOM..." subtext="Analyzing XML structure and applying hierarchical formatting..." />;
 
     const isXML = data?.content_type?.toLowerCase().includes('xml') || displayXML?.trim().startsWith('<');
 
@@ -113,16 +125,3 @@ export const XMLViewerMode = () => {
     );
 };
 
-const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0a0a0a] font-sans">
-        <div className="text-center">
-            <div className="w-16 h-16 @sm:w-20 @sm:h-20 bg-orange-600/5 rounded-3xl border border-orange-500/10 flex items-center justify-center text-orange-500 mx-auto mb-6 shadow-2xl relative">
-                <div className="absolute inset-0 bg-orange-500/5 blur-2xl rounded-full"></div>
-                <FiLayers size={40} className="relative z-10" />
-            </div>
-            <div className="text-5xl font-black opacity-5 mb-3 italic tracking-tighter text-orange-500">STRUCTURE</div>
-            <div className="text-[10px] font-bold tracking-widest text-zinc-600 mb-2">XML DOM Standby</div>
-            <div className="text-xs italic">{text}</div>
-        </div>
-    </div>
-);

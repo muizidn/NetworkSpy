@@ -14,6 +14,17 @@ interface MultipartPart {
     size: number;
 }
 
+import { ViewerPlaceholder } from "../../ViewerPlaceholder";
+
+const MultipartPlaceholder = ({ text, subtext }: { text: string; subtext?: string }) => (
+    <ViewerPlaceholder
+        title={text}
+        subtext={subtext}
+        type="Form"
+        hint="Building a custom viewer for multipart data allows you to extract specific binary files or parse unique boundary structures automatically."
+    />
+);
+
 export const MultipartFormDataMode = () => {
     const { selections } = useTrafficListContext();
     const { provider } = useAppProvider();
@@ -95,6 +106,15 @@ export const MultipartFormDataMode = () => {
         }
         return rawText;
     }, [selectedPart, viewMode, isBeautified]);
+
+    if (parts.length === 0) {
+        return (
+            <MultipartPlaceholder
+                text="No Multipart Data"
+                subtext="This request does not appear to contain standard multipart/form-data. If you are using a custom multipart format, you can build a viewer to parse it."
+            />
+        );
+    }
 
     return (
         <div className="h-full bg-[#0a0a0a] flex flex-col overflow-hidden">

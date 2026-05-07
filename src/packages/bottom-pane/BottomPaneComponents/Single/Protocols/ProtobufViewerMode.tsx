@@ -5,6 +5,18 @@ import { ResponsePairData } from "../../../ResponseTab";
 import { CodeView } from "../../../TabRenderer/CodeView";
 import { FiPackage, FiFileText, FiUpload, FiCheck, FiAlertCircle, FiCopy } from "react-icons/fi";
 
+import { ViewerPlaceholder } from "../../../ViewerPlaceholder";
+
+const ProtobufPlaceholder = ({ text, subtext }: { text: string; subtext?: string }) => (
+    <ViewerPlaceholder
+        title={text}
+        subtext={subtext}
+        type="Generic"
+        icon={<FiPackage size={32} className="text-blue-500" />}
+        hint="Building a custom viewer for Protobuf allows you to integrate complex .proto definitions and specialized decoding logic."
+    />
+);
+
 export const ProtobufViewerMode = () => {
     const { provider } = useAppProvider();
     const { selections } = useTrafficListContext();
@@ -63,8 +75,8 @@ export const ProtobufViewerMode = () => {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    if (!trafficId) return <Placeholder text="Select Protobuf traffic" />;
-    if (loading) return <Placeholder text="Analyzing Binary Stream..." />;
+    if (!trafficId) return <ProtobufPlaceholder text="No Request Selected" subtext="Select Protobuf traffic from the list to begin binary inspection." />;
+    if (loading) return <ProtobufPlaceholder text="Analyzing Stream..." subtext="Inspecting binary payload for protocol buffer structures..." />;
 
     return (
         <div className="bg-[#0a0a0a] flex flex-col min-h-full h-full font-sans">
@@ -154,16 +166,3 @@ export const ProtobufViewerMode = () => {
     );
 };
 
-const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0a0a0a] font-sans">
-        <div className="text-center">
-            <div className="w-16 h-16 @sm:w-20 @sm:h-20 bg-blue-600/5 rounded-3xl border border-blue-500/10 flex items-center justify-center text-blue-400 mx-auto mb-6 shadow-2xl relative">
-                <div className="absolute inset-0 bg-blue-500/5 blur-2xl rounded-full"></div>
-                <FiPackage size={40} className="relative z-10" />
-            </div>
-            <div className="text-5xl font-black opacity-5 mb-3 italic tracking-tighter text-blue-500">PROTOBUF</div>
-            <div className="text-[10px] font-bold tracking-widest text-zinc-600 mb-2">Binary Deserializer Standby</div>
-            <div className="text-xs italic">{text}</div>
-        </div>
-    </div>
-);

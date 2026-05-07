@@ -19,6 +19,18 @@ const beautifyXML = (xml: string) => {
     return formatted.substring(1, formatted.length - 1).trim();
 };
 
+import { ViewerPlaceholder } from "../../../ViewerPlaceholder";
+
+const SOAPPlaceholder = ({ text, subtext }: { text: string; subtext?: string }) => (
+    <ViewerPlaceholder
+        title={text}
+        subtext={subtext}
+        type="Generic"
+        icon={<FiShare2 size={32} className="text-blue-500" />}
+        hint="SOAP envelopes can be extremely complex. Building a custom viewer allows you to extract specific business logic from deep XML structures automatically."
+    />
+);
+
 export const SOAPViewerMode = () => {
     const { provider } = useAppProvider();
     const { selections } = useTrafficListContext();
@@ -45,8 +57,8 @@ export const SOAPViewerMode = () => {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    if (!trafficId) return <Placeholder text="Select SOAP traffic" />;
-    if (loading) return <Placeholder text="Expanding SOAP Envelope..." />;
+    if (!trafficId) return <SOAPPlaceholder text="No Request Selected" subtext="Select SOAP traffic from the list to begin XML inspection." />;
+    if (loading) return <SOAPPlaceholder text="Expanding Envelope..." subtext="Analyzing XML structure and preparing enterprise view..." />;
 
     return (
         <div className="bg-[#0a0a0a] flex flex-col min-h-full h-full font-sans">
@@ -86,17 +98,3 @@ export const SOAPViewerMode = () => {
         </div>
     );
 };
-
-const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0a0a0a] font-sans">
-        <div className="text-center">
-            <div className="w-16 h-16 @sm:w-20 @sm:h-20 bg-blue-600/5 rounded-3xl border border-blue-500/10 flex items-center justify-center text-blue-500 mx-auto mb-6 shadow-2xl relative">
-                <div className="absolute inset-0 bg-blue-500/5 blur-2xl rounded-full"></div>
-                <FiShare2 size={40} className="relative z-10" />
-            </div>
-            <div className="text-5xl font-black opacity-5 mb-3 italic tracking-tighter text-blue-500/50">WSDL</div>
-            <div className="text-[10px] font-bold tracking-widest text-zinc-600 mb-2">Service Descriptor Standby</div>
-            <div className="text-xs italic">{text}</div>
-        </div>
-    </div>
-);

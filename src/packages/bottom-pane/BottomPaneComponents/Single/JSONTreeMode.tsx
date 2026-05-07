@@ -8,6 +8,17 @@ import { parseBodyAsJson } from "../../utils/bodyUtils";
 import { MonacoEditor } from "../../../ui/MonacoEditor";
 import { FiZap, FiLayers, FiSearch, FiCode, FiEye } from "react-icons/fi";
 
+import { ViewerPlaceholder } from "../../ViewerPlaceholder";
+
+const JSONPlaceholder = ({ text, subtext }: { text: string; subtext?: string }) => (
+  <ViewerPlaceholder
+    title={text}
+    subtext={subtext}
+    type="JSON"
+    hint="You can create a custom viewer to handle specialized JSON responses or to automate specific data extractions."
+  />
+);
+
 export const JSONTreeMode = () => {
   const { provider } = useAppProvider();
   const { selections } = useTrafficListContext();
@@ -146,8 +157,8 @@ export const JSONTreeMode = () => {
     return `Try typing: ${keys.join(", ")}... (JMESPath supported)`;
   }, [rawJson]);
 
-  if (!trafficId) return <Placeholder text="Select a request to analyze JSON structure" />;
-  if (loading) return <Placeholder text="Scanning object hierarchy..." />;
+  if (!trafficId) return <JSONPlaceholder text="No Request Selected" subtext="Select a request from the list to begin structural JSON analysis." />;
+  if (loading) return <JSONPlaceholder text="Scanning Hierarchy..." subtext="Analyzing object structure and preparing transformation engine..." />;
 
   const theme = {
     scheme: 'monokai',
@@ -320,13 +331,10 @@ export const JSONTreeMode = () => {
       {/* Tree Content */}
       <div className="flex-1 overflow-auto p-4 @sm:p-6 bg-[#0a0a0a]">
         {!rawJson ? (
-          <div className="h-full flex flex-col items-center justify-center space-y-4 opacity-30 grayscale pointer-events-none">
-            <FiLayers className="text-6xl text-zinc-500" />
-            <div className="text-center">
-              <div className="text-sm font-black text-zinc-400 tracking-widest">No JSON Body Detected</div>
-              <div className="text-[10px] text-zinc-600 font-medium">This {activeTab} did not contain a valid JSON payload.</div>
-            </div>
-          </div>
+          <JSONPlaceholder
+            text="No JSON Body Detected"
+            subtext={`The current ${activeTab} does not contain a valid JSON payload. If you expect JSON here, check the Content-Type header or build a custom parser.`}
+          />
         ) : transformedJson === undefined ? (
           <div className="h-full flex flex-col items-center justify-center space-y-4">
             <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-center max-w-xs">
@@ -382,12 +390,3 @@ export const JSONTreeMode = () => {
     </div>
   );
 };
-
-const Placeholder = ({ text }: { text: string }) => (
-  <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0a0a0a]">
-    <div className="text-center">
-      <div className="text-5xl font-black opacity-5 mb-4 italic tracking-tighter">JSON TREE</div>
-      <div className="text-xs tracking-[0.2em] font-bold text-zinc-700">{text}</div>
-    </div>
-  </div>
-);
