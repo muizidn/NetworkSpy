@@ -119,59 +119,63 @@ export const NotInterceptedMode: React.FC<NotInterceptedModeProps> = ({
 }) => {
     if (isAdded) {
         return (
-            <div className="flex flex-col items-center justify-center h-full p-12 text-center bg-[#0a0a0a]">
-                <TrafficFlow intercepted={true} />
-                <h2 className="text-2xl font-black text-white mb-3 tracking-tight tracking-[0.2em]">Rule Added</h2>
-                <p className="text-zinc-500 max-w-md text-sm leading-relaxed mb-4">
-                    Interception rule has been created for <span className="text-emerald-400 font-mono">{domain}</span>.
-                </p>
-                <div className="flex flex-col items-center gap-4 bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 max-w-sm">
-                    <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500 mb-2">
-                        <FiCheckCircle size={24} />
-                    </div>
-                    <p className="text-zinc-300 text-xs font-bold leading-relaxed">
-                        Please repeat the request in your app to see the decrypted data.
+            <div className="h-full overflow-y-auto bg-[#0a0a0a] no-scrollbar">
+                <div className="flex flex-col items-center justify-center min-h-full p-12 text-center">
+                    <TrafficFlow intercepted={true} />
+                    <h2 className="text-2xl font-black text-white mb-3 tracking-tight tracking-[0.2em]">Rule Added</h2>
+                    <p className="text-zinc-500 max-w-md text-sm leading-relaxed mb-4">
+                        Interception rule has been created for <span className="text-emerald-400 font-mono">{domain}</span>.
                     </p>
+                    <div className="flex flex-col items-center gap-4 bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 max-w-sm">
+                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500 mb-2">
+                            <FiCheckCircle size={24} />
+                        </div>
+                        <p className="text-zinc-300 text-xs font-bold leading-relaxed">
+                            Please repeat the request in your app to see the decrypted data.
+                        </p>
+                    </div>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col items-center justify-center h-full p-12 text-center bg-[#0a0a0a]">
-            <TrafficFlow />
-            <h2 className="text-2xl font-black text-white mb-3 tracking-tight tracking-[0.2em]">Traffic Not Intercepted</h2>
-            <p className="text-zinc-500 max-w-md text-sm leading-relaxed mb-10">
-                This traffic to <span className="text-zinc-300 font-mono font-bold">{domain}</span> is currently being tunneled directly. To decrypt and inspect this traffic, add it to your <span className="text-indigo-400 font-bold tracking-widest text-[10px]">Proxy Intercept List</span>.
-            </p>
-            <div className="flex flex-col gap-4">
-                <button
-                    onClick={handleIntercept}
-                    disabled={isIntercepting}
-                    className="flex items-center justify-center gap-3 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-xs transition-all active:scale-95 disabled:opacity-50 shadow-2xl shadow-indigo-900/40 min-w-[280px]"
-                >
-                    <FiUnlock size={18} />
-                    {isIntercepting ? "Adding..." : (
-                        <span>
-                            Add "<span className="text-yellow-500 font-mono">{domain}</span>" to Proxy List
-                        </span>
-                    )}
-                </button>
-
-                {clientName && clientName !== "-" && (
+        <div className="h-full overflow-y-auto bg-[#0a0a0a] no-scrollbar">
+            <div className="flex flex-col items-center justify-center min-h-full p-12 text-center">
+                <TrafficFlow />
+                <h2 className="text-2xl font-black text-white mb-3 tracking-tight tracking-[0.2em]">Traffic Not Intercepted</h2>
+                <p className="text-zinc-500 max-w-md text-sm leading-relaxed mb-10">
+                    This traffic to <span className="text-zinc-300 font-mono font-bold">{domain}</span> is currently being tunneled directly. To decrypt and inspect this traffic, add it to your <span className="text-indigo-400 font-bold tracking-widest text-[10px]">Proxy Intercept List</span>.
+                </p>
+                <div className="flex flex-col gap-4">
                     <button
-                        onClick={() => onInterceptClient(clientName)}
+                        onClick={handleIntercept}
                         disabled={isIntercepting}
-                        className="flex items-center justify-center gap-3 px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-2xl font-black text-xs transition-all active:scale-95 disabled:opacity-50 border border-zinc-800 min-w-[280px]"
+                        className="flex items-center justify-center gap-3 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-xs transition-all active:scale-95 disabled:opacity-50 shadow-2xl shadow-indigo-900/40 min-w-[280px]"
                     >
-                        <FiShield size={18} />
+                        <FiUnlock size={18} />
                         {isIntercepting ? "Adding..." : (
                             <span>
-                                Intercept all from "<span className="text-yellow-400 font-mono">{clientName}</span>"
+                                Add "<span className="text-yellow-500 font-mono">{domain}</span>" to Proxy List
                             </span>
                         )}
                     </button>
-                )}
+    
+                    {clientName && clientName !== "-" && (
+                        <button
+                            onClick={() => onInterceptClient(clientName)}
+                            disabled={isIntercepting}
+                            className="flex items-center justify-center gap-3 px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-2xl font-black text-xs transition-all active:scale-95 disabled:opacity-50 border border-zinc-800 min-w-[280px]"
+                        >
+                            <FiShield size={18} />
+                            {isIntercepting ? "Adding..." : (
+                                <span>
+                                    Intercept all from "<span className="text-yellow-400 font-mono">{clientName}</span>"
+                                </span>
+                            )}
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );
