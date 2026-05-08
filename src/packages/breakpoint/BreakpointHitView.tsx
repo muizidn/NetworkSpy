@@ -55,7 +55,7 @@ export const BreakpointHitView: React.FC = () => {
                         const reqData = await getRequestPairData(selectedHitId);
                         data = {
                             id: selectedHitId,
-                            headers: Object.fromEntries(reqData.headers.map(h => [h.key, h.value])),
+                            headers: Object.fromEntries(reqData.headers.map((h: { key: string; value: string }) => [h.key, h.value])),
                             body: Array.from(reqData.body),
                             method: reqData.method || "GET",
                             uri: reqData.uri || ""

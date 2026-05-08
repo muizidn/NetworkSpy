@@ -15,6 +15,8 @@ export interface IAppProviderContext {
   resumeBreakpoint: (id: string, modifiedData?: BreakpointData) => Promise<void>;
   getPausedData: (id: string) => Promise<BreakpointData>;
   openNewWindow: (context: string, title: string) => Promise<void>;
+  getRequestPairData: (trafficId: string) => Promise<any>;
+  repeatRequestWithData: (data: BreakpointData) => Promise<void>;
 }
 
 export const TauriEnvContext = createContext<IAppProviderContext | undefined>(
@@ -43,6 +45,8 @@ export const useAppProvider = (): IAppProviderContext => {
       resumeBreakpoint: async () => { },
       getPausedData: async () => ({} as BreakpointData),
       openNewWindow: async () => { },
+      getRequestPairData: async () => ({} as any),
+      repeatRequestWithData: async () => { },
     };
   }
   return context;
@@ -174,6 +178,8 @@ export const TauriEnvProvider: React.FC<TauriEnvProviderProps> = ({
     resumeBreakpoint,
     getPausedData,
     openNewWindow,
+    getRequestPairData: activeProvider.getRequestPairData.bind(activeProvider),
+    repeatRequestWithData: activeProvider.repeatRequestWithData.bind(activeProvider),
   }), [
     activeProvider,
     isRun,
