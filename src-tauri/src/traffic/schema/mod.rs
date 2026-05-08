@@ -5,6 +5,7 @@ pub mod tags;
 pub mod filter_presets;
 pub mod settings;
 pub mod map_local;
+pub mod map_remote;
 
 use rusqlite::Connection;
 
@@ -16,5 +17,6 @@ pub fn init_all_tables(conn: &Connection) -> rusqlite::Result<()> {
     filter_presets::create_table(conn)?;
     settings::create_table(conn)?;
     map_local::create_table(conn)?;
+    map_remote::create_table(conn)?;
     Ok(())
 }

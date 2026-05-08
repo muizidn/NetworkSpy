@@ -1,4 +1,5 @@
 use crate::map_local::MapLocalManager;
+use crate::map_remote::MapRemoteManager;
 use crate::*;
 use std::sync::Mutex;
 use std::time::Instant;
@@ -14,6 +15,7 @@ pub struct MyTrafficListener {
     pub breakpoint_manager: Arc<BreakpointManager>,
     pub script_manager: Arc<ScriptManager>,
     pub map_local_manager: Arc<MapLocalManager>,
+    pub map_remote_manager: Arc<MapRemoteManager>,
 }
 
 #[async_trait]
@@ -60,6 +62,21 @@ impl TrafficListener for MyTrafficListener {
         }
         
         let method = request.method().as_str().to_string();
+
+        // 0. Handle Map Remote
+        if self.map_remote_manager.is_enabled.load(Ordering::SeqCst) {
+            if let Ok(rules) = self.traffic_db.get_map_remote_rules() {
+                for rule in rules {
+                    if rule.enabled && crate::eval::matches_breakpoint(&uri, &method, &rule.matching_rule, &rule.method) {
+                        if let Ok(target_uri) = rule.remote_url.parse::<hyper::Uri>() {
+                            *request.uri_mut() = target_uri;
+                            uri = request.uri().to_string();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
  
         if intercepted && method.trim().to_uppercase() == "CONNECT" {
             return request;

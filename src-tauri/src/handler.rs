@@ -95,6 +95,11 @@ macro_rules! generate_handler {
             crate::commands::delete_map_local_rule,
             crate::commands::set_map_local_enabled,
             crate::commands::get_map_local_enabled,
+            crate::commands::get_map_remote_rules,
+            crate::commands::save_map_remote_rule,
+            crate::commands::delete_map_remote_rule,
+            crate::commands::set_map_remote_enabled,
+            crate::commands::get_map_remote_enabled,
         ]
     };
 }

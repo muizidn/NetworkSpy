@@ -17,7 +17,9 @@ pub mod mcp;
 pub mod license;
 pub mod handler;
 pub mod map_local;
+pub mod map_remote;
 use crate::map_local::MapLocalManager;
+use crate::map_remote::MapRemoteManager;
 
 pub use breakpoints::*;
 pub use scripting::*;
@@ -182,6 +184,9 @@ fn main() {
             let map_local_manager = Arc::new(MapLocalManager::new());
             app_handle.manage(Arc::clone(&map_local_manager));
 
+            let map_remote_manager = Arc::new(MapRemoteManager::new());
+            app_handle.manage(Arc::clone(&map_remote_manager));
+
             // Load settings from DB
             let proxy_settings_data = if let Ok(Some(val)) = traffic_db.get_setting("proxy_settings") {
                 serde_json::from_str::<ProxySettings>(&val).unwrap_or_default()
@@ -229,6 +234,7 @@ fn main() {
             let breakpoint_manager_outer = Arc::clone(&breakpoint_manager);
             let script_manager_outer = Arc::clone(&script_manager);
             let map_local_manager_outer = Arc::clone(&map_local_manager);
+            let map_remote_manager_outer = Arc::clone(&map_remote_manager);
 
             tauri::async_runtime::spawn(async move {
                 let mut current_port = actual_port;
@@ -248,10 +254,11 @@ fn main() {
                             proxy_settings: proxy_settings_inner,
                             request_times: Mutex::new(HashMap::new()),
                             tray_stats: tray_stats_deep,
-                            session_id: uuid::Uuid::new_v4().to_string(),
-                            breakpoint_manager: breakpoint_manager_outer.clone(),
-                            script_manager: script_manager_outer.clone(),
-                            map_local_manager: map_local_manager_outer.clone(),
+                            session_id: format!("SESS_{}", chrono::Local::now().format("%Y%m%d_%H%M%S")),
+                            breakpoint_manager: Arc::clone(&breakpoint_manager_outer),
+                            script_manager: Arc::clone(&script_manager_outer),
+                            map_local_manager: Arc::clone(&map_local_manager_outer),
+                            map_remote_manager: Arc::clone(&map_remote_manager_outer),
                         });
 
                     println!("Proxy server listening on port: {}", current_port);
@@ -384,6 +391,9 @@ fn main() {
                     }
                     "map_local" => {
                         let _ = open_new_window_internal(&app_handle_menu, "map-local".to_string(), "Map Local Rules".to_string());
+                    }
+                    "map_remote" => {
+                        let _ = open_new_window_internal(&app_handle_menu, "map-remote".to_string(), "Map Remote Rules".to_string());
                     }
                     "scripting" => {
                         let _ = open_new_window_internal(&app_handle_menu, "scripting".to_string(), "Custom Scripting".to_string());

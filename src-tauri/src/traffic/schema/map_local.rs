@@ -1,5 +1,5 @@
 use rusqlite::{params, Connection};
-use crate::traffic::db::MapLocalRule;
+pub use crate::traffic::db::MapLocalRule;
 
 pub fn create_table(conn: &Connection) -> rusqlite::Result<()> {
     conn.execute(
@@ -16,7 +16,7 @@ pub fn create_table(conn: &Connection) -> rusqlite::Result<()> {
     Ok(())
 }
 
-pub fn get_rules(conn: &Connection) -> rusqlite::Result<Vec<MapLocalRule>> {
+pub fn get_all(conn: &Connection) -> rusqlite::Result<Vec<MapLocalRule>> {
     let mut stmt = conn.prepare("SELECT id, enabled, name, method, matching_rule, local_path FROM map_local_rules")?;
     let rows = stmt.query_map([], |row| {
         Ok(MapLocalRule {
@@ -36,7 +36,7 @@ pub fn get_rules(conn: &Connection) -> rusqlite::Result<Vec<MapLocalRule>> {
     Ok(rules)
 }
 
-pub fn save_rule(conn: &Connection, rule: MapLocalRule) -> rusqlite::Result<()> {
+pub fn save(conn: &Connection, rule: &MapLocalRule) -> rusqlite::Result<()> {
     conn.execute(
         "INSERT INTO map_local_rules (id, enabled, name, method, matching_rule, local_path) VALUES (?1, ?2, ?3, ?4, ?5, ?6)
          ON CONFLICT(id) DO UPDATE SET
@@ -50,7 +50,7 @@ pub fn save_rule(conn: &Connection, rule: MapLocalRule) -> rusqlite::Result<()> 
     Ok(())
 }
 
-pub fn delete_rule(conn: &Connection, id: String) -> rusqlite::Result<()> {
+pub fn delete(conn: &Connection, id: String) -> rusqlite::Result<()> {
     conn.execute(
         "DELETE FROM map_local_rules WHERE id = ?1",
         params![id],

@@ -43,6 +43,7 @@ import ViewersPage from "./routes/viewers";
 import FiltersPage from "./routes/filters";
 import ProxyList from "./routes/tools/ProxyList";
 import MapLocal from "./routes/tools/MapLocal";
+import MapRemote from "./routes/tools/MapRemote/index";
 import { SessionProvider } from "./context/SessionContext";
 import { ViewerProvider } from "./context/ViewerContext";
 // FilterProvider removed as it is now per-tab in CenterPane
@@ -124,6 +125,10 @@ const router = createBrowserRouter([
       {
         path: "/map-local",
         element: <MapLocal />,
+      },
+      {
+        path: "/map-remote",
+        element: <MapRemote />,
       },
       {
         path: "/breakpoint-hit",

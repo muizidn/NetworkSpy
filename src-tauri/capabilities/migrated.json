@@ -14,7 +14,9 @@
     "scripting",
     "sessions",
     "viewers",
-    "filters"
+    "filters",
+    "map-local",
+    "map-remote"
   ],
   "permissions": [
     "core:default",

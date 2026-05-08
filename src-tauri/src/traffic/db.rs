@@ -456,15 +456,27 @@ impl TrafficDb {
     }
 
     pub fn get_map_local_rules(&self) -> rusqlite::Result<Vec<MapLocalRule>> {
-        crate::traffic::schema::map_local::get_rules(&self.conn.lock().unwrap())
+        crate::traffic::schema::map_local::get_all(&self.conn.lock().unwrap())
     }
 
     pub fn save_map_local_rule(&self, rule: MapLocalRule) -> rusqlite::Result<()> {
-        crate::traffic::schema::map_local::save_rule(&self.conn.lock().unwrap(), rule)
+        crate::traffic::schema::map_local::save(&self.conn.lock().unwrap(), &rule)
     }
 
     pub fn delete_map_local_rule(&self, id: String) -> rusqlite::Result<()> {
-        crate::traffic::schema::map_local::delete_rule(&self.conn.lock().unwrap(), id)
+        crate::traffic::schema::map_local::delete(&self.conn.lock().unwrap(), id)
+    }
+
+    pub fn get_map_remote_rules(&self) -> rusqlite::Result<Vec<crate::traffic::schema::map_remote::MapRemoteRule>> {
+        crate::traffic::schema::map_remote::get_all(&self.conn.lock().unwrap())
+    }
+
+    pub fn save_map_remote_rule(&self, rule: crate::traffic::schema::map_remote::MapRemoteRule) -> rusqlite::Result<()> {
+        crate::traffic::schema::map_remote::save(&self.conn.lock().unwrap(), &rule)
+    }
+
+    pub fn delete_map_remote_rule(&self, id: i64) -> rusqlite::Result<()> {
+        crate::traffic::schema::map_remote::delete(&self.conn.lock().unwrap(), id)
     }
 }
 

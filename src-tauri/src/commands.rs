@@ -4,6 +4,7 @@ use std::sync::Arc;
 use std::collections::HashMap;
 use crate::scripting::ScriptManager;
 use crate::map_local::MapLocalManager;
+use crate::map_remote::MapRemoteManager;
 use crate::traffic::db::{TrafficDb, TrafficEvent};
 use crate::traffic::har_util::{create_har_log, HarLog};
 use base64::{Engine as _, engine::general_purpose};
@@ -88,6 +89,17 @@ pub async fn get_map_local_enabled(state: tauri::State<'_, Arc<MapLocalManager>>
 }
 
 #[tauri::command]
+pub async fn set_map_remote_enabled(state: tauri::State<'_, Arc<MapRemoteManager>>, enabled: bool) -> Result<(), String> {
+    state.is_enabled.store(enabled, Ordering::SeqCst);
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn get_map_remote_enabled(state: tauri::State<'_, Arc<MapRemoteManager>>) -> Result<bool, String> {
+    Ok(state.is_enabled.load(Ordering::SeqCst))
+}
+
+#[tauri::command]
 pub async fn resume_breakpoint(
     app: tauri::AppHandle,
     state: tauri::State<'_, Arc<BreakpointManager>>, 
@@ -155,18 +167,33 @@ pub fn delete_script(id: String, db: tauri::State<'_, Arc<TrafficDb>>) -> Result
 }
 
 #[tauri::command]
-pub fn get_map_local_rules(db: tauri::State<'_, Arc<TrafficDb>>) -> Result<Vec<traffic::db::MapLocalRule>, String> {
+pub async fn get_map_local_rules(db: tauri::State<'_, Arc<TrafficDb>>) -> Result<Vec<crate::traffic::db::MapLocalRule>, String> {
     db.get_map_local_rules().map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn save_map_local_rule(rule: traffic::db::MapLocalRule, db: tauri::State<'_, Arc<TrafficDb>>) -> Result<(), String> {
+pub async fn save_map_local_rule(db: tauri::State<'_, Arc<TrafficDb>>, rule: crate::traffic::db::MapLocalRule) -> Result<(), String> {
     db.save_map_local_rule(rule).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn delete_map_local_rule(id: String, db: tauri::State<'_, Arc<TrafficDb>>) -> Result<(), String> {
+pub async fn delete_map_local_rule(db: tauri::State<'_, Arc<TrafficDb>>, id: String) -> Result<(), String> {
     db.delete_map_local_rule(id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn get_map_remote_rules(db: tauri::State<'_, Arc<TrafficDb>>) -> Result<Vec<crate::traffic::schema::map_remote::MapRemoteRule>, String> {
+    db.get_map_remote_rules().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn save_map_remote_rule(db: tauri::State<'_, Arc<TrafficDb>>, rule: crate::traffic::schema::map_remote::MapRemoteRule) -> Result<(), String> {
+    db.save_map_remote_rule(rule).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn delete_map_remote_rule(db: tauri::State<'_, Arc<TrafficDb>>, id: i64) -> Result<(), String> {
+    db.delete_map_remote_rule(id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -289,9 +316,10 @@ pub fn uninstall_certificate(app: tauri::AppHandle, state: tauri::State<'_, Mana
 }
 
 pub fn open_new_window_internal(app_handle: &tauri::AppHandle, context: String, title: String) {
+    let label = context.split('?').next().unwrap_or(&context).to_string();
     let _ = tauri::WebviewWindowBuilder::new(
         app_handle,
-        context.clone(),
+        label,
         tauri::WebviewUrl::App(std::path::PathBuf::from(format!("/{}", context))),
     )
     .title(title)
