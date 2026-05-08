@@ -2,6 +2,8 @@ use crate::*;
 use tauri::{AppHandle, Manager, Emitter};
 use std::sync::Arc;
 use std::collections::HashMap;
+use crate::scripting::ScriptManager;
+use crate::map_local::MapLocalManager;
 use crate::traffic::db::{TrafficDb, TrafficEvent};
 use crate::traffic::har_util::{create_har_log, HarLog};
 use base64::{Engine as _, engine::general_purpose};
@@ -75,6 +77,17 @@ pub async fn get_script_enabled(state: tauri::State<'_, Arc<ScriptManager>>) -> 
 }
 
 #[tauri::command]
+pub async fn set_map_local_enabled(state: tauri::State<'_, Arc<MapLocalManager>>, enabled: bool) -> Result<(), String> {
+    state.is_enabled.store(enabled, Ordering::SeqCst);
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn get_map_local_enabled(state: tauri::State<'_, Arc<MapLocalManager>>) -> Result<bool, String> {
+    Ok(state.is_enabled.load(Ordering::SeqCst))
+}
+
+#[tauri::command]
 pub async fn resume_breakpoint(
     app: tauri::AppHandle,
     state: tauri::State<'_, Arc<BreakpointManager>>, 
@@ -139,6 +152,21 @@ pub fn save_script(rule: traffic::db::ScriptRule, db: tauri::State<'_, Arc<Traff
 #[tauri::command]
 pub fn delete_script(id: String, db: tauri::State<'_, Arc<TrafficDb>>) -> Result<(), String> {
     db.delete_script(id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn get_map_local_rules(db: tauri::State<'_, Arc<TrafficDb>>) -> Result<Vec<traffic::db::MapLocalRule>, String> {
+    db.get_map_local_rules().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn save_map_local_rule(rule: traffic::db::MapLocalRule, db: tauri::State<'_, Arc<TrafficDb>>) -> Result<(), String> {
+    db.save_map_local_rule(rule).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn delete_map_local_rule(id: String, db: tauri::State<'_, Arc<TrafficDb>>) -> Result<(), String> {
+    db.delete_map_local_rule(id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]

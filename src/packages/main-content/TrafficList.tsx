@@ -412,6 +412,15 @@ class TrafficListContextMenuRenderer
               action: async () => {
                 await this.invoke("open_new_window", { context: `breakpoint?id=${firstItem.id}`, title: "Breakpoint Editor" });
               }
+            }),
+            IconMenuItem.new({
+              id: "tool_map_local",
+              text: "Map Local",
+              icon: iFolder,
+              enabled: items.length === 1,
+              action: async () => {
+                await this.invoke("open_new_window", { context: `map-local?id=${firstItem.id}`, title: "Map Local Editor" });
+              }
             })
           ])
         }),

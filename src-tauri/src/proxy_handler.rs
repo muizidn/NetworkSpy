@@ -1,3 +1,4 @@
+use crate::map_local::MapLocalManager;
 use crate::*;
 use std::sync::Mutex;
 use std::time::Instant;
@@ -12,6 +13,7 @@ pub struct MyTrafficListener {
     pub session_id: String,
     pub breakpoint_manager: Arc<BreakpointManager>,
     pub script_manager: Arc<ScriptManager>,
+    pub map_local_manager: Arc<MapLocalManager>,
 }
 
 #[async_trait]
@@ -263,6 +265,85 @@ impl TrafficListener for MyTrafficListener {
             },
         );
  
+        // 0. Handle Map Local
+        if self.map_local_manager.is_enabled.load(Ordering::SeqCst) {
+            if let Ok(rules) = self.traffic_db.get_map_local_rules() {
+                for rule in rules {
+                    if rule.enabled && crate::eval::matches_breakpoint(&uri, &method, &rule.matching_rule, &rule.method) {
+                        if let Ok(content) = std::fs::read(&rule.local_path) {
+                            println!("Map Local Hit: {} -> {}", uri, rule.local_path);
+                            
+                            // Replace response body
+                            *response.body_mut() = Bytes::from(content.clone());
+                            
+                            // Set status to 200 OK
+                            *response.status_mut() = hyper::StatusCode::OK;
+                            
+                            // Guess content type from extension if possible, or use default
+                            let extension = std::path::Path::new(&rule.local_path)
+                                .extension()
+                                .and_then(|ext| ext.to_str())
+                                .unwrap_or("");
+                            
+                            let content_type = match extension {
+                                "json" => "application/json",
+                                "html" => "text/html",
+                                "js" => "application/javascript",
+                                "css" => "text/css",
+                                "png" => "image/png",
+                                "jpg" | "jpeg" => "image/jpeg",
+                                "gif" => "image/gif",
+                                "svg" => "image/svg+xml",
+                                "txt" => "text/plain",
+                                _ => "application/octet-stream",
+                            };
+                            
+                            response.headers_mut().insert(
+                                hyper::header::CONTENT_TYPE,
+                                hyper::header::HeaderValue::from_static(content_type)
+                            );
+                            
+                            // Re-calculate body size and update DB
+                            let updated_body_size = content.len();
+                            self.traffic_db.insert_response(TrafficEvent::Response {
+                                id: traffic_id.clone(),
+                                headers: response.headers().iter().map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string())).collect(),
+                                body: content,
+                                content_type: Some(content_type.to_string()),
+                                content_encoding: None,
+                                status_code: 200,
+                            });
+                            
+                            // Add tag to metadata
+                            self.traffic_db.update_tags(traffic_id.clone(), vec![format!("MAP_LOCAL: {}", rule.name)]);
+                            
+                            // Re-emit traffic event to update UI
+                            let _ = self.app_handle.emit(
+                                "traffic_event",
+                                Payload {
+                                    id: traffic_id.clone(),
+                                    is_request: false,
+                                    data: PayloadTraffic {
+                                        uri: None,
+                                        version: Some(http_version.clone()),
+                                        method: None,
+                                        headers: response.headers().iter().map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string())).collect(),
+                                        body_size: updated_body_size,
+                                        intercepted,
+                                        status_code: Some(200),
+                                        client: Some(client_info.clone()),
+                                        tags: vec![format!("MAP_LOCAL: {}", rule.name)],
+                                    },
+                                },
+                            );
+                            
+                            return response;
+                        }
+                    }
+                }
+            }
+        }
+
         let (modified_by_script, final_script_name) = crate::proxy_handlers_functions::scripting::handle_response_scripts(
             &self.script_manager,
             &self.traffic_db,

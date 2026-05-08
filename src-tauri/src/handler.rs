@@ -90,6 +90,11 @@ macro_rules! generate_handler {
             crate::license::license_get_limit,
             crate::license::license_get_plan,
             crate::commands::write_to_clipboard,
+            crate::commands::get_map_local_rules,
+            crate::commands::save_map_local_rule,
+            crate::commands::delete_map_local_rule,
+            crate::commands::set_map_local_enabled,
+            crate::commands::get_map_local_enabled,
         ]
     };
 }

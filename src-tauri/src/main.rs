@@ -16,6 +16,8 @@ pub mod traffic;
 pub mod mcp;
 pub mod license;
 pub mod handler;
+pub mod map_local;
+use crate::map_local::MapLocalManager;
 
 pub use breakpoints::*;
 pub use scripting::*;
@@ -177,6 +179,9 @@ fn main() {
             let script_manager = Arc::new(ScriptManager::new());
             app_handle.manage(Arc::clone(&script_manager));
 
+            let map_local_manager = Arc::new(MapLocalManager::new());
+            app_handle.manage(Arc::clone(&map_local_manager));
+
             // Load settings from DB
             let proxy_settings_data = if let Ok(Some(val)) = traffic_db.get_setting("proxy_settings") {
                 serde_json::from_str::<ProxySettings>(&val).unwrap_or_default()
@@ -223,6 +228,7 @@ fn main() {
             let tray_stats_for_proxy = tray_stats.clone();
             let breakpoint_manager_outer = Arc::clone(&breakpoint_manager);
             let script_manager_outer = Arc::clone(&script_manager);
+            let map_local_manager_outer = Arc::clone(&map_local_manager);
 
             tauri::async_runtime::spawn(async move {
                 let mut current_port = actual_port;
@@ -245,6 +251,7 @@ fn main() {
                             session_id: uuid::Uuid::new_v4().to_string(),
                             breakpoint_manager: breakpoint_manager_outer.clone(),
                             script_manager: script_manager_outer.clone(),
+                            map_local_manager: map_local_manager_outer.clone(),
                         });
 
                     println!("Proxy server listening on port: {}", current_port);
@@ -374,6 +381,9 @@ fn main() {
                     }
                     "breakpoints" => {
                         let _ = open_new_window_internal(&app_handle_menu, "breakpoint".to_string(), "Traffic Breakpoints".to_string());
+                    }
+                    "map_local" => {
+                        let _ = open_new_window_internal(&app_handle_menu, "map-local".to_string(), "Map Local Rules".to_string());
                     }
                     "scripting" => {
                         let _ = open_new_window_internal(&app_handle_menu, "scripting".to_string(), "Custom Scripting".to_string());

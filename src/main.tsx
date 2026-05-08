@@ -42,6 +42,7 @@ import SessionPage from "./routes/sessions";
 import ViewersPage from "./routes/viewers";
 import FiltersPage from "./routes/filters";
 import ProxyList from "./routes/tools/ProxyList";
+import MapLocal from "./routes/tools/MapLocal";
 import { SessionProvider } from "./context/SessionContext";
 import { ViewerProvider } from "./context/ViewerContext";
 // FilterProvider removed as it is now per-tab in CenterPane
@@ -119,6 +120,10 @@ const router = createBrowserRouter([
       {
         path: "/proxylist",
         element: <ProxyList />,
+      },
+      {
+        path: "/map-local",
+        element: <MapLocal />,
       },
       {
         path: "/breakpoint-hit",

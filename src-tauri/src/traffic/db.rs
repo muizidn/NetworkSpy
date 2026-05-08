@@ -454,6 +454,18 @@ impl TrafficDb {
         )?;
         Ok(())
     }
+
+    pub fn get_map_local_rules(&self) -> rusqlite::Result<Vec<MapLocalRule>> {
+        crate::traffic::schema::map_local::get_rules(&self.conn.lock().unwrap())
+    }
+
+    pub fn save_map_local_rule(&self, rule: MapLocalRule) -> rusqlite::Result<()> {
+        crate::traffic::schema::map_local::save_rule(&self.conn.lock().unwrap(), rule)
+    }
+
+    pub fn delete_map_local_rule(&self, id: String) -> rusqlite::Result<()> {
+        crate::traffic::schema::map_local::delete_rule(&self.conn.lock().unwrap(), id)
+    }
 }
 
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
@@ -475,6 +487,16 @@ pub struct ProxyRule {
     pub pattern: String,
     pub action: String, // 'INTERCEPT' or 'TUNNEL'
     pub client: Option<String>,
+}
+
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+pub struct MapLocalRule {
+    pub id: String,
+    pub enabled: bool,
+    pub name: String,
+    pub method: String,
+    pub matching_rule: String,
+    pub local_path: String,
 }
 
 fn update_memory_cache(cache: &Arc<RwLock<VecDeque<TrafficMetadata>>>, event: &TrafficEvent) {
