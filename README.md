@@ -9,10 +9,10 @@
 </p>
 
 <p align center>
-  <a href="https://github.com/muizidn/NetworkSpy-Tauri/releases">
-    <img src="https://img.shields.io/github/v/release/muizidn/NetworkSpy-Tauri?include_prereleases&style=for-the-badge&color=pink" alt="Release" />
+  <a href="https://github.com/muizidn/NetworkSpy/releases">
+    <img src="https://img.shields.io/github/v/release/muizidn/NetworkSpy?include_prereleases&style=for-the-badge&color=pink" alt="Release" />
   </a>
-  <a href="https://github.com/muizidn/NetworkSpy-Tauri/releases">
+  <a href="https://github.com/muizidn/NetworkSpy/releases">
     <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blueviolet?style=for-the-badge" alt="Platform" />
   </a>
 </p>
@@ -83,12 +83,12 @@ The fastest way to install or update Network Spy is via the terminal (Stable Rel
 
 ###  macOS / 🐧 Linux
 ```bash
-curl -fsSL https://raw.githubusercontent.com/muizidn/NetworkSpy-Tauri/develop/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/muizidn/NetworkSpy/develop/install.sh | sh
 ```
 
 ### 🪟 Windows (PowerShell)
 ```powershell
-iwr -useb https://raw.githubusercontent.com/muizidn/NetworkSpy-Tauri/develop/install.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/muizidn/NetworkSpy/develop/install.ps1 | iex
 ```
 
 ### 🧪 Bleeding Edge (Develop Builds)
@@ -96,12 +96,12 @@ If you want the latest features from the `develop` branch before they are offici
 
 #### macOS / Linux
 ```bash
-curl -fsSL https://raw.githubusercontent.com/muizidn/NetworkSpy-Tauri/develop/install-dev.sh | sh
+curl -fsSL https://raw.githubusercontent.com/muizidn/NetworkSpy/develop/install-dev.sh | sh
 ```
 
 #### Windows (PowerShell)
 ```powershell
-iwr -useb https://raw.githubusercontent.com/muizidn/NetworkSpy-Tauri/develop/install-dev.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/muizidn/NetworkSpy/develop/install-dev.ps1 | iex
 ```
 
 ---
@@ -115,7 +115,7 @@ iwr -useb https://raw.githubusercontent.com/muizidn/NetworkSpy-Tauri/develop/ins
 
 ## 🛠️ Development Setup
 
-1. **Clone**: `git clone https://github.com/muizidn/NetworkSpy-Tauri.git`
+1. **Clone**: `git clone https://github.com/muizidn/NetworkSpy.git`
 2. **Install**: `bun install`
 3. **Run Dev**: `bun run tauri dev`
 4. **Build**: `bun run tauri build`

@@ -4,7 +4,7 @@ param (
     [switch]$Clean          # Added to remove old versions
 )
 
-$REPO = "muizidn/NetworkSpy-Tauri"
+$REPO = "muizidn/NetworkSpy"
 $SCRIPT_BRANCH = "main"
 
 # Fetch latest commit ID for transparency

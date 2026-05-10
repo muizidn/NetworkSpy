@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Network Spy - Development Terminal Installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/muizidn/NetworkSpy-Tauri/develop/install-dev.sh | sh
+# Usage: curl -fsSL https://raw.githubusercontent.com/muizidn/NetworkSpy/develop/install-dev.sh | sh
 
 set -e
 
-GITHUB_REPO="muizidn/NetworkSpy-Tauri"
+GITHUB_REPO="muizidn/NetworkSpy"
 SCRIPT_BRANCH="develop"
 
 # Fetch latest commit ID for transparency (silently)

@@ -98,8 +98,8 @@ Write-Host "✅ Setup complete!" -ForegroundColor Green
 Write-Host ""
 Write-Host "Next steps:" -ForegroundColor White
 Write-Host "  1. Clone the repo:" -ForegroundColor Gray
-Write-Host '       git clone https://github.com/muizidn/NetworkSpy-Tauri.git' -ForegroundColor Gray
-Write-Host "       cd NetworkSpy-Tauri" -ForegroundColor Gray
+Write-Host '       git clone https://github.com/muizidn/NetworkSpy.git' -ForegroundColor Gray
+Write-Host "       cd NetworkSpy" -ForegroundColor Gray
 Write-Host "  2. Install project dependencies:" -ForegroundColor Gray
 Write-Host "       bun install" -ForegroundColor Gray
 Write-Host "  3. Run in development mode:" -ForegroundColor Gray
