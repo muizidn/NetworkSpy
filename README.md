@@ -9,10 +9,10 @@
 </p>
 
 <p align center>
-  <a href="https://github.com/muizidn/NetworkSpy-Tauri/releases">
+  <a href="https://github.com/muizidn/NetworkSpy/releases">
     <img src="https://img.shields.io/github/v/release/muizidn/NetworkSpy-Tauri?include_prereleases&style=for-the-badge&color=pink" alt="Release" />
   </a>
-  <a href="https://github.com/muizidn/NetworkSpy-Tauri/releases">
+  <a href="https://github.com/muizidn/NetworkSpy/releases">
     <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blueviolet?style=for-the-badge" alt="Platform" />
   </a>
 </p>
@@ -115,7 +115,7 @@ iwr -useb https://raw.githubusercontent.com/muizidn/NetworkSpy-Tauri/develop/ins
 
 ## 🛠️ Development Setup
 
-1. **Clone**: `git clone https://github.com/muizidn/NetworkSpy-Tauri.git`
+1. **Clone**: `git clone https://github.com/muizidn/NetworkSpy.git`
 2. **Install**: `bun install`
 3. **Run Dev**: `bun run tauri dev`
 4. **Build**: `bun run tauri build`
