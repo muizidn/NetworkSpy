@@ -88,7 +88,8 @@ const FilterList: React.FC<FilterListProps> = ({ selectedFilterId, onSelectFilte
             <div className="flex items-center gap-2">
                 <button 
                     onClick={() => setShowImportModal(true)}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-zinc-400 hover:text-white hover:border-zinc-700 transition-all active:scale-95 shadow-sm"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-[10px] font-bold text-zinc-400 hover:text-white hover:border-zinc-700 transition-all active:scale-95 shadow-sm"
+
                 >
                     <FiUpload size={12} />
                     <span>Import</span>
@@ -161,7 +162,8 @@ const FilterList: React.FC<FilterListProps> = ({ selectedFilterId, onSelectFilte
             />
           ))}
           {userFilters.length === 0 && !isCompact && (
-            <div className="px-3 py-8 text-center border-2 border-dashed border-zinc-800 rounded-xl m-2">
+            <div className="px-3 py-8 text-center border-2 border-dashed border-zinc-800 rounded-md m-2">
+
               <p className="text-[10px] text-zinc-600 italic">No custom filters yet. Save one from the traffic view!</p>
             </div>
           )}
@@ -171,7 +173,8 @@ const FilterList: React.FC<FilterListProps> = ({ selectedFilterId, onSelectFilte
       {/* Import Modal */}
       {showImportModal && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-[#0f0f12] border border-zinc-800 w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-[#0f0f12] border border-zinc-800 w-full max-w-xl rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-zinc-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -201,12 +204,14 @@ const FilterList: React.FC<FilterListProps> = ({ selectedFilterId, onSelectFilte
                 <div className="absolute top-0 right-0 p-2 opacity-50 group-hover:opacity-100 transition-opacity">
                   <span className="text-[10px] font-mono text-zinc-600 bg-black/50 px-2 py-1 rounded">Read-only guide</span>
                 </div>
-                <pre className="p-5 bg-black border border-zinc-800 rounded-xl font-mono text-[10px] text-zinc-400 overflow-x-auto select-all leading-relaxed max-h-[250px] custom-scrollbar">
+                <pre className="p-5 bg-black border border-zinc-800 rounded-lg font-mono text-[10px] text-zinc-400 overflow-x-auto select-all leading-relaxed max-h-[250px] custom-scrollbar">
+
                   {EXAMPLE_JSON}
                 </pre>
               </div>
 
-              <div className="flex items-center gap-3 p-4 bg-blue-600/5 border border-blue-500/10 rounded-xl">
+              <div className="flex items-center gap-3 p-4 bg-blue-600/5 border border-blue-500/10 rounded-lg">
+
                  <FiInfo className="text-blue-500 shrink-0" size={16} />
                  <p className="text-[10px] text-blue-400 font-medium">
                    Importing will add these filters to your local library. IDs are regenerated to prevent conflicts.
@@ -218,7 +223,8 @@ const FilterList: React.FC<FilterListProps> = ({ selectedFilterId, onSelectFilte
             <div className="px-8 py-6 bg-zinc-900/30 border-t border-zinc-800 flex items-center justify-end gap-3">
               <button
                 onClick={() => setShowImportModal(false)}
-                className="px-6 py-2 rounded-xl text-xs font-bold text-zinc-500 hover:text-zinc-300 transition-colors"
+                className="px-6 py-2 rounded-lg text-xs font-bold text-zinc-500 hover:text-zinc-300 transition-colors"
+
               >
                 Cancel
               </button>
@@ -231,7 +237,8 @@ const FilterList: React.FC<FilterListProps> = ({ selectedFilterId, onSelectFilte
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-2 px-8 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-blue-900/20 active:scale-95"
+                className="flex items-center gap-2 px-8 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition-all shadow-lg shadow-blue-900/20 active:scale-95"
+
               >
                 <FiPlus size={14} />
                 Select JSON File
@@ -264,7 +271,8 @@ const FilterItem = ({
   <div
     onClick={onClick}
     className={twMerge(
-      "group flex items-center rounded-lg cursor-pointer transition-all",
+      "group flex items-center rounded-md cursor-pointer transition-all",
+
       isCompact ? "px-0 py-2 justify-center" : "px-3 py-2 justify-between",
       isActive ? "bg-blue-600/20 text-blue-400 ring-1 ring-blue-500/30" : "hover:bg-zinc-900/50 text-zinc-400 hover:text-zinc-200"
     )}

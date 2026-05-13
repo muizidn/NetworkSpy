@@ -6,6 +6,38 @@ import { twMerge } from "tailwind-merge";
 import { FiSearch, FiX, FiAlertCircle } from "react-icons/fi";
 import { invoke } from "@tauri-apps/api/core";
 
+const FilterTypeLabels: Record<FilterType, string> = {
+  [FilterTypes.URL]: "URL",
+  [FilterTypes.METHOD]: "Method",
+  [FilterTypes.STATUS]: "Status",
+  [FilterTypes.CLIENT]: "Client",
+  [FilterTypes.CODE]: "Code",
+  [FilterTypes.TIME]: "Time",
+  [FilterTypes.DURATION]: "Duration",
+  [FilterTypes.REQUEST_SIZE]: "Req Size",
+  [FilterTypes.RESPONSE_SIZE]: "Res Size",
+  [FilterTypes.PERFORMANCE]: "Performance",
+  [FilterTypes.SSL]: "SSL",
+  [FilterTypes.TAGS]: "Tags",
+  [FilterTypes.ID]: "ID"
+};
+
+const FilterOperatorLabels: Record<FilterOperator, string> = {
+  [FilterOperators.CONTAINS]: "Contains",
+  [FilterOperators.NOT_CONTAINS]: "Does not contain",
+  [FilterOperators.STARTS_WITH]: "Starts with",
+  [FilterOperators.ENDS_WITH]: "Ends with",
+  [FilterOperators.EQUALS]: "Equals",
+  [FilterOperators.NOT_EQUALS]: "Does not equal",
+  [FilterOperators.GREATER_THAN]: "Greater than",
+  [FilterOperators.LESS_THAN]: "Less than",
+  [FilterOperators.AFTER]: "Is after",
+  [FilterOperators.BEFORE]: "Is before",
+  [FilterOperators.MATCHES_REGEX]: "Matches regex"
+};
+
+
+
 const FilterNodeRenderer = ({
   node,
   depth = 0,
@@ -42,7 +74,8 @@ const FilterNodeRenderer = ({
             value={node.type}
             onChange={(e) => updateNode(node.id, { type: e.target.value as FilterType })}
           >
-            {filterTypes.map(t => <option key={t} value={t}>{t}</option>)}
+            {filterTypes.map(t => <option key={t} value={t}>{FilterTypeLabels[t] || t}</option>)}
+
           </select>
 
           <select
@@ -50,7 +83,8 @@ const FilterNodeRenderer = ({
             value={node.operator}
             onChange={(e) => updateNode(node.id, { operator: e.target.value as FilterOperator })}
           >
-            {filterOperators.map(o => <option key={o} value={o}>{o}</option>)}
+            {filterOperators.map(o => <option key={o} value={o}>{FilterOperatorLabels[o] || o}</option>)}
+
           </select>
 
           <input
@@ -61,7 +95,8 @@ const FilterNodeRenderer = ({
             onChange={(e) => updateNode(node.id, { value: e.target.value })}
           />
 
-          <div className="flex items-center gap-1 opacity-0 group-hover/filter-row:opacity-100 transition-opacity shrink-0">
+          <div className="flex items-center gap-1 shrink-0">
+
             <button
               onClick={() => removeNode(node.id)}
               className='btn btn-xs btn-ghost text-zinc-500 hover:text-red-400 p-0 h-6 w-6 min-h-0'
@@ -453,10 +488,8 @@ export const FilterBar = () => {
 
       {filters.length === 0 ? null : (
         <div className="flex flex-col w-full bg-black/20 max-h-[300px] overflow-y-auto no-scrollbar">
-          <div className="flex items-center text-[10px] font-bold tracking-widest text-zinc-500 p-1 uppercase border-b border-black shrink-0">
-            <span className="ml-2">Manual Matches All Root Conditions (AND)</span>
-          </div>
           {filters.map((filter) => (
+
             <FilterNodeRenderer
               key={filter.id}
               node={filter}

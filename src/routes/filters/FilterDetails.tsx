@@ -41,7 +41,8 @@ const FilterDetails: React.FC<FilterDetailsProps> = ({ filter }) => {
                 <div className="flex items-start justify-between">
                     <div className="space-y-4">
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-2xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_20px_rgba(37,99,235,0.15)]">
+                            <div className="w-12 h-12 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_20px_rgba(37,99,235,0.15)]">
+
                                 <span className="text-2xl">⚡</span>
                             </div>
                             <div>
@@ -49,7 +50,8 @@ const FilterDetails: React.FC<FilterDetailsProps> = ({ filter }) => {
                                     <input
                                         value={editName}
                                         onChange={(e) => setEditName(e.target.value)}
-                                        className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-xl font-bold text-white focus:outline-none focus:border-blue-500/50"
+                                        className="bg-zinc-950 border border-zinc-800 rounded-md px-4 py-2 text-xl font-bold text-white focus:outline-none focus:border-blue-500/50"
+
                                     />
                                 ) : (
                                     <h1 className="text-3xl font-black text-white tracking-tight">{filter.name}</h1>
@@ -67,7 +69,8 @@ const FilterDetails: React.FC<FilterDetailsProps> = ({ filter }) => {
                             <button
                                 onClick={() => isEditing ? handleSave() : setIsEditing(true)}
                                 className={twMerge(
-                                    "flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-xs transition-all",
+                                    "flex items-center gap-2 px-6 py-2.5 rounded-lg font-bold text-xs transition-all",
+
                                     isEditing
                                         ? "bg-green-600 text-white hover:bg-green-500 shadow-lg shadow-green-900/20"
                                         : "bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-700"
@@ -96,10 +99,12 @@ const FilterDetails: React.FC<FilterDetailsProps> = ({ filter }) => {
                                 value={editDesc}
                                 onChange={(e) => setEditDesc(e.target.value)}
                                 placeholder="Describe what this filter does (Markdown supported)..."
-                                className="w-full h-48 bg-zinc-950 border border-zinc-800 rounded-2xl p-6 text-sm text-zinc-300 font-medium focus:outline-none focus:border-blue-500/30 transition-all resize-none italic"
+                                className="w-full h-48 bg-zinc-950 border border-zinc-800 rounded-lg p-6 text-sm text-zinc-300 font-medium focus:outline-none focus:border-blue-500/30 transition-all resize-none italic"
+
                             />
                         ) : (
-                            <div className="bg-zinc-900/30 border border-zinc-900 rounded-3xl p-8 min-h-[200px] relative group overflow-hidden">
+                            <div className="bg-zinc-900/30 border border-zinc-900 rounded-xl p-8 min-h-[200px] relative group overflow-hidden">
+
                                 <div className="absolute top-0 left-0 w-1 h-full bg-blue-500/20 group-hover:bg-blue-500/40 transition-colors" />
                                 <p className="text-sm text-zinc-400 leading-relaxed font-medium whitespace-pre-wrap">
                                     {filter.description || "No description provided for this filter. Adding a description helps your team understand the intent of the rules."}
@@ -119,7 +124,8 @@ const FilterDetails: React.FC<FilterDetailsProps> = ({ filter }) => {
 
                         <div className="space-y-3">
                             {filter.filters.length === 0 ? (
-                                <div className="p-8 text-center bg-zinc-900/20 border border-zinc-900 rounded-2xl border-dashed">
+                                <div className="p-8 text-center bg-zinc-900/20 border border-zinc-900 rounded-lg border-dashed">
+
                                     <p className="text-xs text-zinc-600">This filter effectively allows all traffic as it contains no rules.</p>
                                 </div>
                             ) : (
@@ -133,7 +139,8 @@ const FilterDetails: React.FC<FilterDetailsProps> = ({ filter }) => {
 
                 {/* Sidebar Info */}
                 <div className="space-y-8">
-                    <div className="bg-zinc-900/50 border border-zinc-800 rounded-3xl p-6 space-y-6 shadow-xl">
+                    <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 space-y-6 shadow-xl">
+
                         <div>
                             <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-4">Properties</h4>
                             <div className="space-y-4">
@@ -155,7 +162,8 @@ const FilterDetails: React.FC<FilterDetailsProps> = ({ filter }) => {
                                     navigator.clipboard.writeText(JSON.stringify(filter, null, 2));
                                     alert('Copied to clipboard!');
                                 }}
-                                className="w-full flex items-center justify-between p-3 rounded-2xl bg-zinc-800/50 hover:bg-blue-600 hover:text-white transition-all text-zinc-400"
+                                className="w-full flex items-center justify-between p-3 rounded-lg bg-zinc-800/50 hover:bg-blue-600 hover:text-white transition-all text-zinc-400"
+
                             >
                                 <span className="text-xs font-bold">Copy JSON Payload</span>
                                 <FiCopy />
@@ -164,12 +172,14 @@ const FilterDetails: React.FC<FilterDetailsProps> = ({ filter }) => {
                     </div>
 
                     {!filter.isBuiltIn && (
-                        <div className="p-6 rounded-3xl bg-rose-500/5 border border-rose-500/10 space-y-4">
+                        <div className="p-6 rounded-xl bg-rose-500/5 border border-rose-500/10 space-y-4">
+
                             <h4 className="text-[10px] font-black uppercase tracking-widest text-rose-500/60">Danger Zone</h4>
                             <p className="text-[10px] text-rose-500/40">This action is irreversible. All associated rules will be permanently removed.</p>
                             <button
                                 onClick={() => setIsDeleteModalOpen(true)}
-                                className="w-full py-3 rounded-2xl border border-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all text-xs font-bold"
+                                className="w-full py-3 rounded-lg border border-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all text-xs font-bold"
+
                             >
                                 Permanently Delete
                             </button>
@@ -185,8 +195,10 @@ const FilterDetails: React.FC<FilterDetailsProps> = ({ filter }) => {
                         className="absolute inset-0"
                         onClick={() => setIsDeleteModalOpen(false)}
                     />
-                    <div className="relative w-full max-w-sm bg-zinc-950 border border-zinc-800 rounded-[32px] p-8 space-y-8 shadow-[0_32px_128px_rgba(0,0,0,1)] animate-in zoom-in-95 duration-200">
-                        <div className="w-16 h-16 rounded-[24px] bg-rose-500/10 border border-rose-400/20 flex items-center justify-center text-rose-500 mx-auto shadow-inner">
+                    <div className="relative w-full max-w-sm bg-zinc-950 border border-zinc-800 rounded-2xl p-8 space-y-8 shadow-[0_32px_128px_rgba(0,0,0,1)] animate-in zoom-in-95 duration-200">
+
+                        <div className="w-16 h-16 rounded-xl bg-rose-500/10 border border-rose-400/20 flex items-center justify-center text-rose-500 mx-auto shadow-inner">
+
                             <FiTrash2 size={32} />
                         </div>
                         <div className="text-center space-y-2">
@@ -199,13 +211,15 @@ const FilterDetails: React.FC<FilterDetailsProps> = ({ filter }) => {
                         <div className="flex flex-col gap-2 pt-2">
                             <button
                                 onClick={confirmDelete}
-                                className="w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black text-[11px] tracking-widest uppercase transition-all shadow-lg shadow-rose-950/20 active:scale-[0.98]"
+                                className="w-full py-4 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-black text-[11px] tracking-widest uppercase transition-all shadow-lg shadow-rose-950/20 active:scale-[0.98]"
+
                             >
                                 Permanently Delete
                             </button>
                             <button
                                 onClick={() => setIsDeleteModalOpen(false)}
-                                className="w-full py-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 font-black text-[11px] tracking-widest uppercase transition-all active:scale-[0.98]"
+                                className="w-full py-4 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 font-black text-[11px] tracking-widest uppercase transition-all active:scale-[0.98]"
+
                             >
                                 Cancel
                             </button>
@@ -220,7 +234,8 @@ const FilterDetails: React.FC<FilterDetailsProps> = ({ filter }) => {
 const RuleCard = ({ node }: { node: FilterNode }) => {
     if (node.isGroup) {
         return (
-            <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 border-l-4 border-l-amber-500/50">
+            <div className="p-4 rounded-lg bg-zinc-900 border border-zinc-800 border-l-4 border-l-amber-500/50">
+
                 <div className="flex items-center gap-2 mb-2">
                     <span className="text-[9px] font-black uppercase text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded leading-none">Group</span>
                     <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-tighter">Matches {node.logic} conditions</span>
@@ -233,7 +248,8 @@ const RuleCard = ({ node }: { node: FilterNode }) => {
     }
 
     return (
-        <div className="px-5 py-4 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-between hover:border-zinc-700 transition-all shadow-sm">
+        <div className="px-5 py-4 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-between hover:border-zinc-700 transition-all shadow-sm">
+
             <div className="flex items-center gap-4">
                 <div className="px-2 py-1 rounded bg-black/40 border border-zinc-800 text-[10px] font-bold tracking-tight text-blue-400">
                     {node.type}
