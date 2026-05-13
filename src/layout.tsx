@@ -2,6 +2,8 @@ import { Outlet, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { LeftSidebar } from "./packages/sidebar/LeftSidebar";
 import { ProStatusDialog } from "./packages/sidebar/ProStatusDialog";
+import { StatusInfoDialog } from "./packages/ui/StatusInfoDialog";
+
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { twMerge } from "tailwind-merge";
 import { useAppUpdater } from "./hooks/useAppUpdater";
@@ -40,6 +42,8 @@ export default function Layout() {
         onClose={() => setIsProDialogOpen(false)}
         status={proDialogStatus}
       />
+      <StatusInfoDialog />
     </div>
+
   );
 }

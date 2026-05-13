@@ -21,3 +21,9 @@ export const mainTrafficListSelectionsAtom = atomFamily((tabId: string) => atom<
 
 // Main Traffic List Search (Per Tab)
 export const mainTrafficListSearchAtom = atomFamily((tabId: string) => atom<string>(""));
+
+// Status Code Info Dialog
+export const statusInfoDialogAtom = atom<{
+    isOpen: boolean;
+    code?: string | number;
+} | null>(null);

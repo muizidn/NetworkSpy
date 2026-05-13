@@ -3,6 +3,11 @@ import { useTrafficListContext } from "./context/TrafficList";
 import { twMerge } from "tailwind-merge";
 import { FiExternalLink, FiGlobe, FiClock, FiBox, FiShield, FiLock, FiChevronRight, FiChevronDown } from "react-icons/fi";
 import { useTagContext } from "@src/context/TagContext";
+import { getHttpStatusInfo } from "@src/utils/httpStatusCodes";
+import { useSetAtom } from "jotai";
+import { statusInfoDialogAtom } from "@src/utils/trafficAtoms";
+
+
 
 const CustomTag = ({ tagName }: { tagName: string }) => {
   const { tags } = useTagContext();
@@ -170,7 +175,9 @@ const InfoTag = ({ icon: Icon, label, value, className }: { icon?: any, label?: 
 
 export const SelectionViewer = () => {
   const { selections, trafficList, setTrafficList } = useTrafficListContext();
+  const setStatusDialog = useSetAtom(statusInfoDialogAtom);
   const selected = selections.firstSelected;
+
   if (!selected) {
     return (
       <div className="flex items-center justify-center h-full text-zinc-600 italic text-[12px] p-4 bg-[#080808] border-t border-black">
@@ -186,6 +193,9 @@ export const SelectionViewer = () => {
   const status = selected.status as string || '';
   const time = selected.time as string || '';
   const duration = selected.duration as string || '';
+
+  const statusInfo = getHttpStatusInfo(code);
+
 
   const getCodeColor = (code: string) => {
     if (code.startsWith('2')) return 'bg-green-500/10 border-green-500/20 text-green-400';
@@ -247,10 +257,20 @@ export const SelectionViewer = () => {
 
         {/* Status Code Tag */}
         {code && (
-          <div className={twMerge("px-2 py-0.5 rounded text-[10px] font-bold border", getCodeColor(code))}>
-            {code} {status && <span className="opacity-60 ml-1 ml-1">{status}</span>}
+          <div 
+            className={twMerge(
+              "px-2 py-0.5 rounded text-[10px] font-bold border cursor-help transition-all hover:brightness-110 flex items-center gap-1.5 active:scale-95 select-none", 
+              getCodeColor(code)
+            )}
+            title={statusInfo?.description || status}
+            onClick={() => setStatusDialog({ isOpen: true, code })}
+          >
+            <span className="font-black">{code}</span>
+            <span className="opacity-70 font-medium">{statusInfo?.message || status}</span>
           </div>
         )}
+
+
 
         {/* Latency & Size Tags */}
         <div className="flex items-center gap-2 border-l border-zinc-800 ml-1 pl-3">

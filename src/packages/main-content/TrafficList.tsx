@@ -4,7 +4,8 @@ import {
   TableViewContextMenuRenderer,
   TableViewHeader,
 } from "../ui/TableView";
-import { ClientRenderer, ImageRenderer, TagsRenderer, TextRenderer, UrlRenderer } from "./Renderers";
+import { ClientRenderer, ImageRenderer, StatusCodeRenderer, TagsRenderer, TextRenderer, UrlRenderer } from "./Renderers";
+
 import { useTrafficListContext } from "./context/TrafficList";
 import { useFilterContext } from "@src/context/FilterContext";
 import { TrafficItemMap } from "./model/TrafficItemMap";
@@ -74,11 +75,12 @@ export const TrafficList: React.FC = () => {
             if (method === 'CONNECT') return 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.3)]';
             const c = parseInt(code);
             if (isNaN(c)) return 'bg-zinc-600'; // Pending
-            if (c >= 500) return 'bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.4)]';
-            if (c >= 400) return 'bg-red-400 shadow-[0_0_8px_rgba(248,113,113,0.3)]';
-            if (c >= 300) return 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.3)]';
-            if (c >= 200) return 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.3)]';
-            if (c >= 100) return 'bg-zinc-400 shadow-[0_0_8px_rgba(161,161,170,0.3)]';
+            if (c >= 500) return 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]';
+            if (c >= 400) return 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]';
+            if (c >= 300) return 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]';
+            if (c >= 200) return 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]';
+            if (c >= 100) return 'bg-zinc-400 shadow-[0_0_10px_rgba(161,161,170,0.5)]';
+
             return 'bg-zinc-600';
           };
 
@@ -122,7 +124,8 @@ export const TrafficList: React.FC = () => {
     { title: "URL", renderer: new UrlRenderer(), minWidth: 400 },
     { title: "Client", renderer: new ClientRenderer("client"), minWidth: 200 },
     { title: "Method", renderer: new TextRenderer("method") },
-    { title: "Code", renderer: new TextRenderer("code") },
+    { title: "Code", renderer: new StatusCodeRenderer(), minWidth: 100 },
+
     {
       title: "Time",
       renderer: new TextRenderer("time"),
