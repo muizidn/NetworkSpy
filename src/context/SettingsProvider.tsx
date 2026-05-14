@@ -34,6 +34,8 @@ interface SettingsContextInterface {
   revokeLicense: () => Promise<void>;
   startProxyOnLaunch: boolean;
   setStartProxyOnLaunch: (enabled: boolean) => void;
+  bottomPaneTabPosition: 'top' | 'bottom';
+  setBottomPaneTabPosition: (position: 'top' | 'bottom') => void;
 }
 
 
@@ -63,7 +65,9 @@ export const SettingsContext = createContext<SettingsContextInterface>({
   verifyLicense: async () => { },
   revokeLicense: async () => { },
   startProxyOnLaunch: true,
-  setStartProxyOnLaunch: () => { }
+  setStartProxyOnLaunch: () => { },
+  bottomPaneTabPosition: 'top',
+  setBottomPaneTabPosition: () => { }
 });
 
 
@@ -93,6 +97,9 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [startProxyOnLaunch, setStartProxyOnLaunch] = useState(() => {
     return localStorage.getItem("ns_start_proxy_on_launch") !== "false";
+  });
+  const [bottomPaneTabPosition, setBottomPaneTabPosition] = useState<'top' | 'bottom'>(() => {
+    return (localStorage.getItem("ns_bottom_pane_tab_position") as 'top' | 'bottom') || "top";
   });
 
 
@@ -199,6 +206,10 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   }, [startProxyOnLaunch]);
 
   useEffect(() => {
+    localStorage.setItem("ns_bottom_pane_tab_position", bottomPaneTabPosition);
+  }, [bottomPaneTabPosition]);
+
+  useEffect(() => {
 
     if (!isLoaded) return;
 
@@ -241,6 +252,8 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         revokeLicense,
         startProxyOnLaunch,
         setStartProxyOnLaunch,
+        bottomPaneTabPosition,
+        setBottomPaneTabPosition,
       }}>
 
       {children}

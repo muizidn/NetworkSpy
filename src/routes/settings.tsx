@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { invoke } from "@tauri-apps/api/core";
-import { FiSettings, FiTarget, FiInfo, FiTerminal, FiCpu, FiPlay, FiCheckCircle, FiXCircle, FiKey, FiShield, FiZap } from 'react-icons/fi';
+import { FiSettings, FiTarget, FiInfo, FiTerminal, FiCpu, FiPlay, FiCheckCircle, FiXCircle, FiKey, FiShield, FiZap, FiLayers } from 'react-icons/fi';
+import { twMerge } from 'tailwind-merge';
 import { useSettingsContext } from '../context/SettingsProvider';
 import { getVersion } from '@tauri-apps/api/app';
 
@@ -27,6 +28,8 @@ export default function Settings() {
         setOpenRouterModel,
         startProxyOnLaunch,
         setStartProxyOnLaunch,
+        bottomPaneTabPosition,
+        setBottomPaneTabPosition,
     } = useSettingsContext();
 
 
@@ -205,6 +208,43 @@ export default function Settings() {
                         >
                             <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300 ${smartViewerMatch ? 'left-7' : 'left-1'}`} />
                         </button>
+                    </div>
+
+                    <div
+                        className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 flex items-center justify-between group hover:border-zinc-700 transition-all duration-300"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
+                                <FiLayers size={20} />
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-white mb-0.5">Bottom Pane Tab Position</h3>
+                                <p className="text-xs text-zinc-500 max-w-md leading-relaxed">
+                                    Choose whether the viewer tabs (Request, Response, etc.) should appear at the top or bottom of the pane.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex bg-zinc-950 p-1 rounded-xl border border-zinc-800">
+                            <button
+                                onClick={() => setBottomPaneTabPosition('top')}
+                                className={twMerge(
+                                    "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                                    bottomPaneTabPosition === 'top' ? "bg-zinc-800 text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
+                                )}
+                            >
+                                Top
+                            </button>
+                            <button
+                                onClick={() => setBottomPaneTabPosition('bottom')}
+                                className={twMerge(
+                                    "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                                    bottomPaneTabPosition === 'bottom' ? "bg-zinc-800 text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
+                                )}
+                            >
+                                Bottom
+                            </button>
+                        </div>
                     </div>
 
                     <div

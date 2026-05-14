@@ -13,7 +13,7 @@ import { FilterBar } from "../../packages/filter-bar/FilterBar";
 import { MainContent } from "../../packages/main-content/MainContent";
 
 export const CenterPane: React.FC<{ tabId: string }> = ({ tabId }) => {
-  const { sizesCenterPane, setSizesCenterPane } = useSettingsContext();
+  const { sizesCenterPane, setSizesCenterPane, bottomPaneTabPosition } = useSettingsContext();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [restoredHeight, setRestoredHeight] = useState(() => {
@@ -114,33 +114,38 @@ export const CenterPane: React.FC<{ tabId: string }> = ({ tabId }) => {
             <Pane>
               {isDisplayPane.bottom && (
                 <BottomPaneProvider>
-                  <div className="flex flex-col relative w-full h-full">
-                    {splitDirection === "horizontal" && (
-                      <button
-                        onClick={toggleMaximize}
-                        className={twMerge(
-                          "absolute left-1/2 -translate-x-1/2 z-[1000] -top-3",
-                          "flex flex-col items-center gap-0.5 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] shadow-2xl group/maximize-btn rounded-full border",
-                          "backdrop-blur-md bg-[#1e1e1ea0] border-zinc-700/50 text-zinc-500",
-                          "px-6 py-1 opacity-40 hover:opacity-100 hover:px-10 hover:py-1.5 hover:bg-blue-600 hover:border-blue-400 hover:text-white hover:shadow-blue-500/40 active:scale-95"
-                        )}
-                        title={isMaximized ? "Restore size" : "Maximize bottom pane"}
-                      >
-                        <div className="w-8 h-1 bg-zinc-600 rounded-full group-hover/maximize-btn:bg-white/40 transition-colors" />
-                        <div className="flex flex-col items-center">
-                          {isMaximized ? (
-                            <FiChevronDown size={14} className="group-hover/maximize-btn:scale-110 transition-transform" />
-                          ) : (
-                            <FiChevronUp size={14} className="group-hover/maximize-btn:scale-110 transition-transform" />
+                    <div className={twMerge(
+                      "flex relative w-full h-full",
+                      bottomPaneTabPosition === "top" ? "flex-col" : "flex-col-reverse"
+                    )}>
+                      {splitDirection === "horizontal" && (
+                        <button
+                          onClick={toggleMaximize}
+                          className={twMerge(
+                            "absolute left-1/2 -translate-x-1/2 z-[1000] -top-3",
+                            "flex flex-col items-center gap-0.5 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] shadow-2xl group/maximize-btn rounded-full border",
+                            "backdrop-blur-md bg-[#1e1e1ea0] border-zinc-700/50 text-zinc-500",
+                            "px-6 py-1 opacity-40 hover:opacity-100 hover:px-10 hover:py-1.5 hover:bg-blue-600 hover:border-blue-400 hover:text-white hover:shadow-blue-500/40 active:scale-95"
                           )}
-                        </div>
-                      </button>
-                    )}
-                    <div className='w-full bg-[#1e1e1e] z-10'>
-                      <BottomPaneOptions />
+                          title={isMaximized ? "Restore size" : "Maximize bottom pane"}
+                        >
+                          <div className="w-8 h-1 bg-zinc-600 rounded-full group-hover/maximize-btn:bg-white/40 transition-colors" />
+                          <div className="flex flex-col items-center">
+                            {isMaximized ? (
+                              <FiChevronDown size={14} className="group-hover/maximize-btn:scale-110 transition-transform" />
+                            ) : (
+                              <FiChevronUp size={14} className="group-hover/maximize-btn:scale-110 transition-transform" />
+                            )}
+                          </div>
+                        </button>
+                      )}
+                      <div className='w-full bg-[#1e1e1e] z-10'>
+                        <BottomPaneOptions />
+                      </div>
+                      <div className="flex-1 min-h-0">
+                        <BottomPane />
+                      </div>
                     </div>
-                    <BottomPane />
-                  </div>
                 </BottomPaneProvider>
               )}
             </Pane>
