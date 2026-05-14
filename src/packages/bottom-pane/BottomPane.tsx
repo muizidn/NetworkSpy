@@ -16,8 +16,6 @@ import { useLicense } from "@src/hooks/useLicense";
 import { v4 as uuidv4 } from "uuid";
 import { useUpgradeDialog } from "@src/context/UpgradeContext";
 
-import { InterceptionActionBar } from "./BottomPaneComponents/InterceptionActionBar";
-
 export const BottomPane = () => {
   const { mode, selectionType } = useBottomPaneContext();
   const [sizes, setSizes] = useState<any[]>(["50%", "50%"]);
@@ -46,13 +44,13 @@ export const BottomPane = () => {
 
   const checkRuleLimit = async () => {
     try {
-        const limit = await getLimit('max_proxy_rules');
-        const currentRules = await invoke<any[]>("get_proxy_rules");
-        if (currentRules.length >= limit) {
-          openUpgradeDialog();
-          return false;
-        }
-        return true;
+      const limit = await getLimit('max_proxy_rules');
+      const currentRules = await invoke<any[]>("get_proxy_rules");
+      if (currentRules.length >= limit) {
+        openUpgradeDialog();
+        return false;
+      }
+      return true;
     } catch (e) {
       console.error("Limit check failed:", e);
       return true; // Allow if check fails to avoid blocking users unnecessarily
@@ -156,7 +154,7 @@ export const BottomPane = () => {
             Loading viewer...
           </div>
         }>
-          <div className="flex-grow overflow-y-auto h-full custom-scrollbar bg-[#111] pb-12 @container">
+          <div className="flex-grow overflow-y-auto h-full custom-scrollbar bg-[#111] @container">
             <ContainerQueryProvider>
               {(() => {
                 if (!selected) return renderMode(mode, sizes, setSizes);
@@ -224,20 +222,6 @@ export const BottomPane = () => {
           </div>
         </Suspense>
       </ErrorBoundary>
-
-      {selected && (
-        <InterceptionActionBar
-          isMultiple={isMultiple}
-          tunneledCount={tunneledCount}
-          interceptedCount={interceptedCount}
-          isAdded={!!isAdded}
-          isIntercepting={isIntercepting}
-          handleIntercept={handleIntercept}
-          handleInterceptAll={handleInterceptAll}
-          isIntercepted={!!selected.intercepted}
-          isUnencrypted={!((selected.url as string || "").startsWith("https://") || (selected.url as string || "").startsWith("wss://"))}
-        />
-      )}
 
       <Dialog
         isOpen={dialogConfig.isOpen}

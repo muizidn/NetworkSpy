@@ -151,7 +151,7 @@ export const NotInterceptedMode: React.FC<NotInterceptedModeProps> = ({
                     <button
                         onClick={handleIntercept}
                         disabled={isIntercepting}
-                        className="flex items-center justify-center gap-3 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-xs transition-all active:scale-95 disabled:opacity-50 shadow-2xl shadow-indigo-900/40 min-w-[280px]"
+                        className="flex items-center justify-center gap-3 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-lg font-black text-xs transition-all active:scale-95 disabled:opacity-50 border border-zinc-800 min-w-[280px]"
                     >
                         <FiUnlock size={18} />
                         {isIntercepting ? "Adding..." : (
@@ -160,12 +160,12 @@ export const NotInterceptedMode: React.FC<NotInterceptedModeProps> = ({
                             </span>
                         )}
                     </button>
-    
+
                     {clientName && clientName !== "-" && (
                         <button
                             onClick={() => onInterceptClient(clientName)}
                             disabled={isIntercepting}
-                            className="flex items-center justify-center gap-3 px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-2xl font-black text-xs transition-all active:scale-95 disabled:opacity-50 border border-zinc-800 min-w-[280px]"
+                            className="flex items-center justify-center gap-3 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-lg font-black text-xs transition-all active:scale-95 disabled:opacity-50 border border-zinc-800 min-w-[280px]"
                         >
                             <FiShield size={18} />
                             {isIntercepting ? "Adding..." : (
