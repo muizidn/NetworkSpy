@@ -21,12 +21,16 @@ export default function Layout() {
       return true;
     }
   });
+  const [isMac] = useState(() => navigator.platform.toUpperCase().indexOf('MAC') >= 0);
 
   const openProDialog = (status: 'trial' | 'pro') => {
     setProDialogStatus(status);
     setIsProDialogOpen(true);
   };
 
+
+  const location = useLocation();
+  const isTrafficList = location.pathname === "/";
 
   return (
     <div className={twMerge(
@@ -35,7 +39,16 @@ export default function Layout() {
     )}>
 
 
-      <TitleBar />
+      {isTrafficList ? (
+        <TitleBar />
+      ) : (
+        /* Ghost TitleBar for Mac to prevent overlapping native buttons */
+        isMac && (
+          <div className="h-8 shrink-0 flex items-center pointer-events-none" data-tauri-drag-region>
+             <div className="w-20 shrink-0 h-full" data-tauri-drag-region />
+          </div>
+        )
+      )}
       
       <div className="flex flex-row flex-grow overflow-hidden">
         {isMainWindow && <LeftSidebar />}
