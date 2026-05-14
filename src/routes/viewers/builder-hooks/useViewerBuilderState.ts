@@ -49,6 +49,7 @@ export const useViewerBuilderState = (initialViewer: Viewer) => {
     const [isToolboxVisible, setIsToolboxVisible] = useAtom(viewerBuilderToolboxVisibleAtom(initialViewer.id));
     const [maximizedBlockId, setMaximizedBlockId] = useAtom(viewerBuilderMaximizedBlockIdAtom(initialViewer.id));
     const [sessionTraffic, setSessionTraffic] = useState<any[]>([]);
+    const [isSessionLoading, setIsSessionLoading] = useState(false);
     const [testResults, setTestResults] = useState<Record<string, any>>({});
     const [isRunning, setIsRunning] = useState(false);
     const [isSourceDialogOpen, setIsSourceDialogOpen] = useState(false);
@@ -57,11 +58,19 @@ export const useViewerBuilderState = (initialViewer: Viewer) => {
 
     useEffect(() => {
         if (testSource === 'session' && selectedSessionId) {
+            setIsSessionLoading(true);
             invoke("get_session_traffic", { id: selectedSessionId })
-                .then((data: any) => setSessionTraffic(data))
-                .catch(console.error);
+                .then((data: any) => {
+                    setSessionTraffic(data);
+                    setIsSessionLoading(false);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    setIsSessionLoading(false);
+                });
         } else {
             setSessionTraffic([]);
+            setIsSessionLoading(false);
         }
     }, [testSource, selectedSessionId]);
 
@@ -248,6 +257,7 @@ export const useViewerBuilderState = (initialViewer: Viewer) => {
         maximizedBlockId, setMaximizedBlockId,
         testResults,
         isRunning,
+        isSessionLoading,
         isSourceDialogOpen, setIsSourceDialogOpen,
         viewMode: viewMode || 'preview', setViewMode,
         filteredTraffic,

@@ -359,8 +359,12 @@ pub async fn get_session_traffic(
     id: String,
 ) -> Result<Vec<crate::traffic::db::TrafficMetadata>, String> {
     let db_path = manager.get_session_db_path(id).map_err(|e| e.to_string())?;
-    let db = crate::traffic::db::TrafficDb::new_readonly(db_path).map_err(|e| e.to_string())?;
-    Ok(db.get_recent_traffic(100000)) 
+    
+    // Offload the potentially heavy DB query to a background thread
+    tokio::task::spawn_blocking(move || {
+        let db = crate::traffic::db::TrafficDb::new_readonly(db_path).map_err(|e| e.to_string())?;
+        Ok(db.get_recent_traffic(100000))
+    }).await.map_err(|e| e.to_string())?
 }
 
 #[tauri::command]

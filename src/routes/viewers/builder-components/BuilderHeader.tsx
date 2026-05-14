@@ -43,10 +43,10 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
 
                 <button
                     onClick={handleSave}
-                    className="flex items-center gap-1.5 px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[9px] font-black transition-all active:scale-95 border border-white/10 mr-2"
+                    className="flex items-center gap-1.5 px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[9px] font-bold transition-all active:scale-95 border border-white/10 mr-2"
                 >
                     <FiSave size={12} />
-                    SAVE
+                    Save
                 </button>
                 
                 <div className="flex items-center gap-2">
@@ -66,7 +66,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
                         </div>
                     ) : (
                         <div className="flex items-center gap-2 group cursor-pointer" onClick={() => setIsEditingName(true)}>
-                            <span className="text-[11px] font-black text-white italic tracking-tighter uppercase">{viewerName}</span>
+                            <span className="text-[11px] font-black text-white italic tracking-tighter">{viewerName}</span>
                             <FiEdit2 size={10} className="opacity-0 group-hover:opacity-100 text-zinc-600 transition-all" />
                         </div>
                     )}
@@ -79,19 +79,19 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
                     <button
                         onClick={() => setViewMode('preview')}
                         className={twMerge(
-                            "flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-black transition-all",
+                            "flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-bold transition-all",
                             viewMode === 'preview' 
                                 ? "bg-white/10 text-white" 
                                 : "text-zinc-500 hover:text-zinc-300"
                         )}
                     >
                         <FiEye size={12} />
-                        PREVIEW
+                        Preview
                     </button>
                     <button
                         onClick={() => setViewMode('json')}
                         className={twMerge(
-                            "flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-black transition-all",
+                            "flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-bold transition-all",
                             viewMode === 'json' 
                                 ? "bg-white/10 text-blue-400" 
                                 : "text-zinc-500 hover:text-zinc-300"
@@ -110,7 +110,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
                         )}
                     >
                         <FiCode size={12} />
-                        SOURCE
+                        Source
                     </button>
                 </div>
 

@@ -49,7 +49,8 @@ const ViewerBuilder: React.FC<ViewerBuilderProps> = ({ viewer: initialViewer, on
         goPrev,
         sessions,
         isAiAssistantVisible,
-        setIsAiAssistantVisible
+        setIsAiAssistantVisible,
+        isSessionLoading
     } = useViewerBuilderState(initialViewer);
 
     const [, setTitleBarContent] = useAtom(titleBarContentAtom);
@@ -207,6 +208,7 @@ const ViewerBuilder: React.FC<ViewerBuilderProps> = ({ viewer: initialViewer, on
                 setFilter={setFilter}
                 filteredTraffic={filteredTraffic}
                 sessions={sessions}
+                isSessionLoading={isSessionLoading}
             />
         </div>
     );
