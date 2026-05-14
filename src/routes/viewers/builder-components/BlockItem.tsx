@@ -15,9 +15,10 @@ interface BlockItemProps {
     onDebugWithAi?: (blockId: string, error: string) => void;
     index?: number;
     total?: number;
+    placement?: 'top' | 'bottom' | 'left' | 'right';
 }
 
-export const BlockItem = ({ block, result, onDelete, onUpdate, isViewerMode = false, onDebugWithAi, index = 0, total = 0 }: BlockItemProps) => {
+export const BlockItem = ({ block, result, onDelete, onUpdate, isViewerMode = false, onDebugWithAi, index = 0, total = 0, placement = 'top' }: BlockItemProps) => {
     const [isEditingCode, setIsEditingCode] = useState(false);
     const [activeTab, setActiveTab] = useState<'js' | 'html' | 'css' | 'output'>('js');
     const [isMaximized, setIsMaximized] = useState(false);
@@ -28,14 +29,24 @@ export const BlockItem = ({ block, result, onDelete, onUpdate, isViewerMode = fa
 
     const isSideBySide = isEditingCode && (block.colSpan >= 8 || isMaximized);
 
-    const placement = index === 0 ? 'bottom' : 'top';
+    const gridClass = [
+        "col-span-1", "col-span-2", "col-span-3", "col-span-4", 
+        "col-span-5", "col-span-6", "col-span-7", "col-span-8", 
+        "col-span-9", "col-span-10", "col-span-11", "col-span-12"
+    ][(block.colSpan || 12) - 1];
 
     const component = (
-        <div className={twMerge(
-            `relative group bg-zinc-900/40 transition-all shadow-xl ${["col-span-1", "col-span-2", "col-span-3", "col-span-4", "col-span-5", "col-span-6", "col-span-7", "col-span-8", "col-span-9", "col-span-10", "col-span-11", "col-span-12"][(block.colSpan || 12) - 1]}`,
-            isViewerMode ? "" : `border border-zinc-800 hover:border-blue-500`,
-            isMaximized ? "h-full w-full" : ""
-        )}>
+        <div 
+            className={twMerge(
+                "relative group bg-zinc-900/40 transition-all shadow-xl",
+                gridClass,
+                isViewerMode ? "" : "border border-zinc-800 hover:border-blue-500",
+                isMaximized ? "h-full w-full" : ""
+            )}
+            style={{ 
+                gridColumn: isMaximized ? "span 12 / span 12" : `span ${block.colSpan || 12} / span ${block.colSpan || 12}` 
+            }}
+        >
             {/* CONTROL BAR */}
             {!isViewerMode && (
                 <BlockIndicator

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { ViewerBlock } from "@src/context/ViewerContext";
 import { BlockItem } from "./BlockItem";
 import { MaximizedBlock } from "./MaximizedBlock";
@@ -46,14 +46,23 @@ export const Canvas: React.FC<CanvasProps> = ({
         }
     }
 
+    const placements = useMemo(() => {
+        let cumulativeSpan = 0;
+        return blocks.map((block) => {
+            const isFirstRow = cumulativeSpan < 12;
+            cumulativeSpan += block.colSpan || 12;
+            return isFirstRow ? 'bottom' : 'top';
+        });
+    }, [blocks]);
+
     return (
-        <div 
-            id="canvas-container" 
+        <div
+            id="canvas-container"
             className="h-full w-full overflow-y-auto custom-scrollbar bg-[#080808]"
             style={{ padding: `${canvasPadding}px` }}
         >
-            <div 
-                id="viewerbuilder-canvas" 
+            <div
+                id="viewerbuilder-canvas"
                 className="grid grid-cols-12 w-full items-start"
                 style={{ gap: `${gridGap}px` }}
             >
@@ -72,6 +81,7 @@ export const Canvas: React.FC<CanvasProps> = ({
                             block={block}
                             index={index}
                             total={blocks.length}
+                            placement={placements[index]}
                             isViewerMode={isViewerMode}
                             result={testResults && testResults[block.id]}
                             onDelete={deleteBlock ? (() => deleteBlock(block.id)) : undefined}
