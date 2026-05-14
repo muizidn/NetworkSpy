@@ -42,5 +42,21 @@ export default defineConfig({
     minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
     // produce sourcemaps for debug builds, or for Sentry in production
     sourcemap: !!process.env.SENTRY_AUTH_TOKEN || !!process.env.TAURI_DEBUG,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('swagger-ui-react')) return 'swagger';
+            if (id.includes('monaco-editor')) return 'monaco';
+            if (id.includes('recharts')) return 'recharts';
+            if (id.includes('@sentry')) return 'sentry';
+            if (id.includes('@tauri-apps')) return 'tauri';
+            if (id.includes('react-icons') || id.includes('iconsax-react')) return 'vendor-ui';
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom') || id.includes('jotai')) return 'vendor-core';
+            return 'vendor';
+          }
+        }
+      }
+    }
   },
 });

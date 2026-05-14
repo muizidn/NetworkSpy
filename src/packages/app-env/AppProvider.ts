@@ -6,6 +6,7 @@ import { Traffic } from "@src/models/Traffic";
 import { Payload } from "@src/models/Payload";
 import { generateJson } from "@src/routes/home/trafficGenerator";
 import { readFile } from "@tauri-apps/plugin-fs";
+import { message, save, open } from "@tauri-apps/plugin-dialog";
 
 const formatTimestamp = (date: Date) => {
   const h = date.getHours().toString().padStart(2, '0');
@@ -111,12 +112,10 @@ export class TauriAppProvider implements IAppProvider {
   }
 
   async message(messageText: string, options?: { title?: string, type?: 'info' | 'error' | 'warning' }): Promise<void> {
-    const { message } = await import("@tauri-apps/plugin-dialog");
     await message(messageText, options);
   }
 
   async saveSession(): Promise<void> {
-    const { save } = await import("@tauri-apps/plugin-dialog");
     const path = await save({
       filters: [{ name: "HAR", extensions: ["har"] }],
       defaultPath: "session.har"
@@ -127,7 +126,6 @@ export class TauriAppProvider implements IAppProvider {
   }
 
   async loadSession(): Promise<void> {
-    const { open } = await import("@tauri-apps/plugin-dialog");
     const path = await open({
       filters: [{ name: "HAR", extensions: ["har"] }],
       multiple: false
