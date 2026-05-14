@@ -61,6 +61,16 @@ export const CustomViewerMode: React.FC<CustomViewerModeProps> = ({ viewerId }) 
         }
     }, [selectedViewer, viewerId]);
 
+    const viewerContent = useMemo<ViewerContent | null>(() => {
+        if (!selectedViewer) return null;
+        try {
+            return JSON.parse(selectedViewer.content);
+        } catch (e) {
+            console.error("Failed to parse viewer content", e);
+            return null;
+        }
+    }, [selectedViewer]);
+
     const trafficId = useMemo(() => selections.firstSelected?.id as string, [selections]);
 
     const filteredViewers = useMemo(() => {
@@ -83,13 +93,13 @@ export const CustomViewerMode: React.FC<CustomViewerModeProps> = ({ viewerId }) 
         }
 
         const runViewer = async () => {
+            if (!viewerContent) return;
             setIsLoading(true);
             try {
-                const content: ViewerContent = JSON.parse(selectedViewer.content);
                 const results: Record<string, any> = {};
 
                 // Use Promise.all for faster execution in real viewer if blocks are independent
-                const blockPromises = content.blocks.map(async (block) => {
+                const blockPromises = viewerContent.blocks.map(async (block) => {
                     results[block.id] = await executeBlock(block);
                 });
 
@@ -103,7 +113,7 @@ export const CustomViewerMode: React.FC<CustomViewerModeProps> = ({ viewerId }) 
         };
 
         runViewer();
-    }, [selectedViewer, trafficId, isReviewMode, reviewedSession, provider]);
+    }, [selectedViewer, viewerContent, trafficId, isReviewMode, reviewedSession, provider]);
 
     if (!trafficId) return <Placeholder text="Select a request to apply custom viewer" />;
 
@@ -181,11 +191,13 @@ export const CustomViewerMode: React.FC<CustomViewerModeProps> = ({ viewerId }) 
                             <span className="text-[10px] font-black text-zinc-600 tracking-[0.2em]">Executing Logic Blocks...</span>
                         </div>
                     </div>
-                ) : (
+                ) : viewerContent && (
                     <Canvas
-                        blocks={JSON.parse(selectedViewer.content).blocks}
+                        blocks={viewerContent.blocks}
                         testResults={runningViewers}
                         isViewerMode={true}
+                        canvasPadding={viewerContent.layoutConfig?.canvasPadding}
+                        gridGap={viewerContent.layoutConfig?.gridGap}
                     />
                 )}
             </div>
