@@ -100,6 +100,8 @@ macro_rules! generate_handler {
             crate::commands::delete_map_remote_rule,
             crate::commands::set_map_remote_enabled,
             crate::commands::get_map_remote_enabled,
+            crate::commands::select_workspace_dir,
+            crate::commands::get_current_workspace,
         ]
     };
 }

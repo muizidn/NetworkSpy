@@ -18,81 +18,50 @@ pub struct CustomChecker {
 }
 
 pub struct BottomPaneManager {
-    db: Arc<Mutex<Connection>>,
+    config: Arc<crate::config::ConfigManager>,
 }
 
 impl BottomPaneManager {
-    pub fn new(app_data_dir: PathBuf) -> Self {
-        let db_path = app_data_dir.join("bottom-pane.db");
-        let conn = Connection::open(db_path).expect("Failed to open bottom-pane DB");
-
-        conn.execute(
-            "CREATE TABLE IF NOT EXISTS custom_checkers (
-                id TEXT PRIMARY KEY,
-                name TEXT NOT NULL,
-                description TEXT,
-                script TEXT NOT NULL,
-                enabled INTEGER DEFAULT 1,
-                category TEXT NOT NULL,
-                created_at TEXT NOT NULL
-            )",
-            [],
-        ).unwrap();
-
-        Self {
-            db: Arc::new(Mutex::new(conn)),
-        }
+    pub fn new(config: Arc<crate::config::ConfigManager>) -> Self {
+        Self { config }
     }
 
     pub fn get_custom_checkers(&self, category: String) -> rusqlite::Result<Vec<CustomChecker>> {
-        let conn = self.db.lock().unwrap();
-        let query = format!("SELECT id, name, description, script, enabled, category, created_at FROM custom_checkers WHERE category = '{}' ORDER BY created_at DESC", category);
-
-        let mut stmt = conn.prepare(&query)?;
-        let rows = stmt.query_map([], |row| {
-            Ok(CustomChecker {
-                id: row.get(0)?,
-                name: row.get(1)?,
-                description: row.get(2).unwrap_or_default(),
-                script: row.get(3)?,
-                enabled: row.get::<_, i32>(4)? != 0,
-                category: row.get(5)?,
-                created_at: row.get(6)?,
-            })
-        })?;
-
-        let mut checkers = Vec::new();
-        for row in rows {
-            checkers.push(row?);
-        }
-        Ok(checkers)
+        let config = self.config.get_config();
+        Ok(config.custom_checkers.into_iter()
+            .filter(|c| c.category == category)
+            .collect())
     }
 
     pub fn save_custom_checker(&self, id: Option<String>, name: String, description: String, script: String, enabled: bool, category: String) -> rusqlite::Result<CustomChecker> {
         let final_id = id.unwrap_or_else(|| Uuid::new_v4().to_string());
         let created_at = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
-        let conn = self.db.lock().unwrap();
         
-        conn.execute(
-            "INSERT INTO custom_checkers (id, name, description, script, enabled, category, created_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
-             ON CONFLICT(id) DO UPDATE SET name=?2, description=?3, script=?4, enabled=?5, category=?6",
-            params![final_id, name, description, script, if enabled { 1 } else { 0 }, category, created_at],
-        )?;
-
-        Ok(CustomChecker {
-            id: final_id,
+        let checker = CustomChecker {
+            id: final_id.clone(),
             name,
             description,
             script,
             enabled,
             category,
             created_at,
-        })
+        };
+
+        let _ = self.config.update(|c| {
+            if let Some(pos) = c.custom_checkers.iter().position(|chk| chk.id == final_id) {
+                c.custom_checkers[pos] = checker.clone();
+            } else {
+                c.custom_checkers.push(checker.clone());
+            }
+        });
+
+        Ok(checker)
     }
 
     pub fn delete_custom_checker(&self, id: String) -> rusqlite::Result<()> {
-        let conn = self.db.lock().unwrap();
-        conn.execute("DELETE FROM custom_checkers WHERE id = ?1", params![id])?;
+        let _ = self.config.update(|c| {
+            c.custom_checkers.retain(|chk| chk.id != id);
+        });
         Ok(())
     }
 }

@@ -24,127 +24,91 @@ pub struct ViewerFolder {
 }
 
 pub struct ViewerManager {
-    db: Arc<Mutex<Connection>>,
+    config: Arc<crate::config::ConfigManager>,
 }
 
 impl ViewerManager {
-    pub fn new(app_data_dir: PathBuf) -> Self {
-        let db_path = app_data_dir.join("viewers.db");
-        let conn = Connection::open(db_path).expect("Failed to open viewers DB");
-
-        conn.execute(
-            "CREATE TABLE IF NOT EXISTS viewer_folders (
-                id TEXT PRIMARY KEY,
-                name TEXT NOT NULL UNIQUE
-            )",
-            [],
-        ).unwrap();
-
-        conn.execute(
-            "CREATE TABLE IF NOT EXISTS viewers (
-                id TEXT PRIMARY KEY,
-                name TEXT NOT NULL,
-                folder_id TEXT,
-                content TEXT NOT NULL,
-                created_at TEXT NOT NULL,
-                FOREIGN KEY(folder_id) REFERENCES viewer_folders(id) ON DELETE SET NULL
-            )",
-            [],
-        ).unwrap();
-
-        Self {
-            db: Arc::new(Mutex::new(conn)),
-        }
+    pub fn new(config: Arc<crate::config::ConfigManager>) -> Self {
+        Self { config }
     }
 
     pub fn get_viewers(&self) -> rusqlite::Result<Vec<Viewer>> {
-        let conn = self.db.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT id, name, folder_id, content, created_at FROM viewers ORDER BY created_at DESC")?;
-        let rows = stmt.query_map([], |row| {
-            Ok(Viewer {
-                id: row.get(0)?,
-                name: row.get(1)?,
-                folder_id: row.get(2)?,
-                content: row.get(3)?,
-                created_at: row.get(4)?,
-            })
-        })?;
-
-        let mut viewers = Vec::new();
-        for row in rows {
-            viewers.push(row?);
-        }
-        Ok(viewers)
+        Ok(self.config.get_config().viewers)
     }
 
     pub fn get_folders(&self) -> rusqlite::Result<Vec<ViewerFolder>> {
-        let conn = self.db.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT id, name FROM viewer_folders ORDER BY name ASC")?;
-        let rows = stmt.query_map([], |row| {
-            Ok(ViewerFolder {
-                id: row.get(0)?,
-                name: row.get(1)?,
-            })
-        })?;
-
-        let mut folders = Vec::new();
-        for row in rows {
-            folders.push(row?);
-        }
-        Ok(folders)
+        Ok(self.config.get_config().viewer_folders)
     }
 
     pub fn save_viewer(&self, id: Option<String>, name: String, folder_id: Option<String>, content: String) -> rusqlite::Result<Viewer> {
         let final_id = id.unwrap_or_else(|| Uuid::new_v4().to_string());
         let created_at = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
-        let conn = self.db.lock().unwrap();
         
-        conn.execute(
-            "INSERT INTO viewers (id, name, folder_id, content, created_at) VALUES (?1, ?2, ?3, ?4, ?5)
-             ON CONFLICT(id) DO UPDATE SET name=?2, folder_id=?3, content=?4",
-            params![final_id, name, folder_id, content, created_at],
-        )?;
-
-        Ok(Viewer {
-            id: final_id,
+        let viewer = Viewer {
+            id: final_id.clone(),
             name,
             folder_id,
             content,
             created_at,
-        })
+        };
+
+        let _ = self.config.update(|c| {
+            if let Some(pos) = c.viewers.iter().position(|v| v.id == final_id) {
+                c.viewers[pos] = viewer.clone();
+            } else {
+                c.viewers.push(viewer.clone());
+            }
+        });
+
+        Ok(viewer)
     }
 
     pub fn add_folder(&self, name: String) -> rusqlite::Result<ViewerFolder> {
         let id = Uuid::new_v4().to_string();
-        let conn = self.db.lock().unwrap();
-        conn.execute(
-            "INSERT INTO viewer_folders (id, name) VALUES (?1, ?2)",
-            params![id, name],
-        )?;
-        Ok(ViewerFolder { id, name })
+        let folder = ViewerFolder { id: id.clone(), name };
+        
+        let _ = self.config.update(|c| {
+            c.viewer_folders.push(folder.clone());
+        });
+        
+        Ok(folder)
     }
 
     pub fn delete_folder(&self, id: String) -> rusqlite::Result<()> {
-        let conn = self.db.lock().unwrap();
-        conn.execute("DELETE FROM viewer_folders WHERE id = ?1", params![id])?;
+        let _ = self.config.update(|c| {
+            c.viewer_folders.retain(|f| f.id != id);
+            // Optional: reset folder_id for viewers in this folder
+            for viewer in c.viewers.iter_mut() {
+                if viewer.folder_id == Some(id.clone()) {
+                    viewer.folder_id = None;
+                }
+            }
+        });
         Ok(())
     }
 
     pub fn rename_folder(&self, id: String, new_name: String) -> rusqlite::Result<()> {
-        let conn = self.db.lock().unwrap();
-        conn.execute("UPDATE viewer_folders SET name = ?1 WHERE id = ?2", params![new_name, id])?;
+        let _ = self.config.update(|c| {
+            if let Some(folder) = c.viewer_folders.iter_mut().find(|f| f.id == id) {
+                folder.name = new_name;
+            }
+        });
         Ok(())
     }
 
     pub fn move_viewer(&self, id: String, folder_id: Option<String>) -> rusqlite::Result<()> {
-        let conn = self.db.lock().unwrap();
-        conn.execute("UPDATE viewers SET folder_id = ?1 WHERE id = ?2", params![folder_id, id])?;
+        let _ = self.config.update(|c| {
+            if let Some(viewer) = c.viewers.iter_mut().find(|v| v.id == id) {
+                viewer.folder_id = folder_id;
+            }
+        });
         Ok(())
     }
 
     pub fn delete_viewer(&self, id: String) -> rusqlite::Result<()> {
-        let conn = self.db.lock().unwrap();
-        conn.execute("DELETE FROM viewers WHERE id = ?1", params![id])?;
+        let _ = self.config.update(|c| {
+            c.viewers.retain(|v| v.id != id);
+        });
         Ok(())
     }
 }

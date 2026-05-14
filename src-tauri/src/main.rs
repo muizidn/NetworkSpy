@@ -19,6 +19,8 @@ pub mod handler;
 pub mod map_local;
 pub mod map_remote;
 pub mod mac_window;
+pub mod config;
+mod workspace;
 use crate::map_local::MapLocalManager;
 use crate::map_remote::MapRemoteManager;
 
@@ -172,7 +174,10 @@ fn main() {
             // Event handling is unified below in the global handler
 
             let app_handle = app.app_handle();
-            let app_data_dir = get_app_data_dir();
+            let app_data_dir = workspace::get_active_config_dir();
+            
+            #[cfg(debug_assertions)]
+            println!("Active Config Dir: {}", app_data_dir.display());
 
             if !app_data_dir.exists() {
                 fs::create_dir_all(&app_data_dir).expect("Failed to create app data directory");
@@ -186,16 +191,19 @@ fn main() {
             let traffic_db = Arc::new(TrafficDb::new(db_path).expect("Failed to initialize database"));
             app_handle.manage(Arc::clone(&traffic_db));
 
+            let config_manager = Arc::new(crate::config::ConfigManager::new(app_data_dir.clone()));
+            app_handle.manage(Arc::clone(&config_manager));
+
             let tag_manager = Arc::new(TagManager::new(Arc::clone(&traffic_db)));
             app_handle.manage(Arc::clone(&tag_manager));
 
-            let session_manager = Arc::new(SessionManager::new(app_data_dir.clone()));
+            let session_manager = Arc::new(SessionManager::new(app_data_dir.clone(), Arc::clone(&config_manager)));
             app_handle.manage(Arc::clone(&session_manager));
 
-            let viewer_manager = Arc::new(ViewerManager::new(app_data_dir.clone()));
+            let viewer_manager = Arc::new(ViewerManager::new(Arc::clone(&config_manager)));
             app_handle.manage(Arc::clone(&viewer_manager));
 
-            let bottom_pane_manager = Arc::new(BottomPaneManager::new(app_data_dir.clone()));
+            let bottom_pane_manager = Arc::new(BottomPaneManager::new(Arc::clone(&config_manager)));
             app_handle.manage(Arc::clone(&bottom_pane_manager));
 
             let breakpoint_manager = Arc::new(BreakpointManager::new());
@@ -210,19 +218,15 @@ fn main() {
             let map_remote_manager = Arc::new(MapRemoteManager::new());
             app_handle.manage(Arc::clone(&map_remote_manager));
 
-            // Load settings from DB
-            let proxy_settings_data = if let Ok(Some(val)) = traffic_db.get_setting("proxy_settings") {
-                serde_json::from_str::<ProxySettings>(&val).unwrap_or_default()
-            } else {
-                ProxySettings::default()
-            };
+            // Load settings from ConfigManager
+            let proxy_settings_data = config_manager.get_proxy_settings();
             let proxy_settings = Arc::new(std::sync::RwLock::new(proxy_settings_data));
             app_handle.manage(ManagedProxySettings(Arc::clone(&proxy_settings)));
 
             // Start MCP Server for LLM/Claude Code integration
             mcp::spawn_mcp_server(app_handle.clone());
 
-            let rules = traffic_db.get_proxy_rules().expect("Failed to get proxy rules from DB");
+            let rules = config_manager.get_proxy_rules();
             let list: Vec<network_spy_proxy::ProxyRule> = rules.into_iter()
                 .filter(|rule| rule.enabled)
                 .map(|rule| network_spy_proxy::ProxyRule {

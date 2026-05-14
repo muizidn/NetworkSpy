@@ -29,14 +29,13 @@ pub async fn get_proxy_settings(state: tauri::State<'_, ManagedProxySettings>) -
 #[tauri::command]
 pub async fn update_proxy_settings(
     state: tauri::State<'_, ManagedProxySettings>,
-    db: tauri::State<'_, Arc<TrafficDb>>,
+    config: tauri::State<'_, Arc<crate::config::ConfigManager>>,
     new_settings: ProxySettings,
 ) -> Result<(), String> {
     let mut settings = state.0.write().map_err(|e| e.to_string())?;
     *settings = new_settings.clone();
     
-    let val = serde_json::to_string(&new_settings).map_err(|e| e.to_string())?;
-    let _ = db.set_setting("proxy_settings", &val);
+    config.set_proxy_settings(new_settings).map_err(|e| e.to_string())?;
     Ok(())
 }
 
@@ -137,97 +136,97 @@ pub async fn get_paused_breakpoints(state: tauri::State<'_, Arc<BreakpointManage
 }
 
 #[tauri::command]
-pub fn get_breakpoints(db: tauri::State<'_, Arc<TrafficDb>>) -> Result<Vec<traffic::db::BreakpointRule>, String> {
-    db.get_breakpoints().map_err(|e| e.to_string())
+pub fn get_breakpoints(config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<Vec<traffic::db::BreakpointRule>, String> {
+    Ok(config.get_breakpoints())
 }
 
 #[tauri::command]
-pub fn save_breakpoint(rule: traffic::db::BreakpointRule, db: tauri::State<'_, Arc<TrafficDb>>) -> Result<(), String> {
-    db.save_breakpoint(rule).map_err(|e| e.to_string())
+pub fn save_breakpoint(rule: traffic::db::BreakpointRule, config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<(), String> {
+    config.save_breakpoint(rule).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn delete_breakpoint(id: String, db: tauri::State<'_, Arc<TrafficDb>>) -> Result<(), String> {
-    db.delete_breakpoint(id).map_err(|e| e.to_string())
+pub fn delete_breakpoint(id: String, config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<(), String> {
+    config.delete_breakpoint(id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn get_scripts(db: tauri::State<'_, Arc<TrafficDb>>) -> Result<Vec<traffic::db::ScriptRule>, String> {
-    db.get_scripts().map_err(|e| e.to_string())
+pub fn get_scripts(config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<Vec<traffic::db::ScriptRule>, String> {
+    Ok(config.get_scripts())
 }
 
 #[tauri::command]
-pub fn save_script(rule: traffic::db::ScriptRule, db: tauri::State<'_, Arc<TrafficDb>>) -> Result<(), String> {
-    db.save_script(rule).map_err(|e| e.to_string())
+pub fn save_script(rule: traffic::db::ScriptRule, config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<(), String> {
+    config.save_script(rule).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn delete_script(id: String, db: tauri::State<'_, Arc<TrafficDb>>) -> Result<(), String> {
-    db.delete_script(id).map_err(|e| e.to_string())
+pub fn delete_script(id: String, config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<(), String> {
+    config.delete_script(id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn get_map_local_rules(db: tauri::State<'_, Arc<TrafficDb>>) -> Result<Vec<crate::traffic::db::MapLocalRule>, String> {
-    db.get_map_local_rules().map_err(|e| e.to_string())
+pub async fn get_map_local_rules(config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<Vec<crate::traffic::db::MapLocalRule>, String> {
+    Ok(config.get_map_local_rules())
 }
 
 #[tauri::command]
-pub async fn save_map_local_rule(db: tauri::State<'_, Arc<TrafficDb>>, rule: crate::traffic::db::MapLocalRule) -> Result<(), String> {
-    db.save_map_local_rule(rule).map_err(|e| e.to_string())
+pub async fn save_map_local_rule(config: tauri::State<'_, Arc<crate::config::ConfigManager>>, rule: crate::traffic::db::MapLocalRule) -> Result<(), String> {
+    config.save_map_local_rule(rule).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn delete_map_local_rule(db: tauri::State<'_, Arc<TrafficDb>>, id: String) -> Result<(), String> {
-    db.delete_map_local_rule(id).map_err(|e| e.to_string())
+pub async fn delete_map_local_rule(config: tauri::State<'_, Arc<crate::config::ConfigManager>>, id: String) -> Result<(), String> {
+    config.delete_map_local_rule(id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn get_map_remote_rules(db: tauri::State<'_, Arc<TrafficDb>>) -> Result<Vec<crate::traffic::schema::map_remote::MapRemoteRule>, String> {
-    db.get_map_remote_rules().map_err(|e| e.to_string())
+pub async fn get_map_remote_rules(config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<Vec<crate::traffic::schema::map_remote::MapRemoteRule>, String> {
+    Ok(config.get_map_remote_rules())
 }
 
 #[tauri::command]
-pub async fn save_map_remote_rule(db: tauri::State<'_, Arc<TrafficDb>>, rule: crate::traffic::schema::map_remote::MapRemoteRule) -> Result<(), String> {
-    db.save_map_remote_rule(rule).map_err(|e| e.to_string())
+pub async fn save_map_remote_rule(config: tauri::State<'_, Arc<crate::config::ConfigManager>>, rule: crate::traffic::schema::map_remote::MapRemoteRule) -> Result<(), String> {
+    config.save_map_remote_rule(rule).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn delete_map_remote_rule(db: tauri::State<'_, Arc<TrafficDb>>, id: i64) -> Result<(), String> {
-    db.delete_map_remote_rule(id).map_err(|e| e.to_string())
+pub async fn delete_map_remote_rule(config: tauri::State<'_, Arc<crate::config::ConfigManager>>, id: i64) -> Result<(), String> {
+    config.delete_map_remote_rule(id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn get_proxy_rules(db: tauri::State<'_, Arc<TrafficDb>>) -> Result<Vec<traffic::db::ProxyRule>, String> {
-    db.get_proxy_rules().map_err(|e| e.to_string())
+pub fn get_proxy_rules(config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<Vec<traffic::db::ProxyRule>, String> {
+    Ok(config.get_proxy_rules())
 }
 
 #[tauri::command]
 pub async fn save_proxy_rule(
     rule: traffic::db::ProxyRule, 
-    db: tauri::State<'_, Arc<TrafficDb>>,
+    config: tauri::State<'_, Arc<crate::config::ConfigManager>>,
     state: tauri::State<'_, InterceptAllowList>
 ) -> Result<(), String> {
-    db.save_proxy_rule(rule).map_err(|e| e.to_string())?;
-    refresh_active_proxy_intercept_list(&state, &db).await?;
+    config.save_proxy_rule(rule).map_err(|e| e.to_string())?;
+    refresh_active_proxy_intercept_list(&state, &config).await?;
     Ok(())
 }
 
 #[tauri::command]
 pub async fn delete_proxy_rule(
     id: String, 
-    db: tauri::State<'_, Arc<TrafficDb>>,
+    config: tauri::State<'_, Arc<crate::config::ConfigManager>>,
     state: tauri::State<'_, InterceptAllowList>
 ) -> Result<(), String> {
-    db.delete_proxy_rule(id).map_err(|e| e.to_string())?;
-    refresh_active_proxy_intercept_list(&state, &db).await?;
+    config.delete_proxy_rule(id).map_err(|e| e.to_string())?;
+    refresh_active_proxy_intercept_list(&state, &config).await?;
     Ok(())
 }
 
 async fn refresh_active_proxy_intercept_list(
     state: &InterceptAllowList,
-    db: &TrafficDb,
+    config: &crate::config::ConfigManager,
 ) -> Result<(), String> {
-    let rules = db.get_proxy_rules().map_err(|e| e.to_string())?;
+    let rules = config.get_proxy_rules();
     let mut new_list = Vec::new();
     for rule in rules {
         if rule.enabled {
@@ -351,13 +350,13 @@ pub fn get_all_metadata(
 }
 
 #[tauri::command]
-pub fn get_filter_presets(db: tauri::State<'_, Arc<TrafficDb>>) -> Result<Vec<traffic::db::FilterPreset>, String> {
-    db.get_filter_presets().map_err(|e| e.to_string())
+pub fn get_filter_presets(config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<Vec<traffic::db::FilterPreset>, String> {
+    Ok(config.get_filter_presets())
 }
 
 #[tauri::command]
-pub fn add_filter_preset(preset: traffic::db::FilterPreset, db: tauri::State<'_, Arc<TrafficDb>>) -> Result<(), String> {
-    db.add_filter_preset(preset).map_err(|e| e.to_string())
+pub fn add_filter_preset(preset: traffic::db::FilterPreset, config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<(), String> {
+    config.add_filter_preset(preset).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -366,14 +365,14 @@ pub fn update_filter_preset(
     name: Option<String>, 
     description: Option<String>, 
     filters: Option<String>, 
-    db: tauri::State<'_, Arc<TrafficDb>>
+    config: tauri::State<'_, Arc<crate::config::ConfigManager>>
 ) -> Result<(), String> {
-    db.update_filter_preset(id, name, description, filters).map_err(|e| e.to_string())
+    config.update_filter_preset(id, name, description, filters).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn delete_filter_preset(id: String, db: tauri::State<'_, Arc<TrafficDb>>) -> Result<(), String> {
-    db.delete_filter_preset(id).map_err(|e| e.to_string())
+pub fn delete_filter_preset(id: String, config: tauri::State<'_, Arc<crate::config::ConfigManager>>) -> Result<(), String> {
+    config.delete_filter_preset(id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -699,4 +698,49 @@ pub async fn load_session(path: String, db: tauri::State<'_, Arc<TrafficDb>>, ap
 #[tauri::command]
 pub fn validate_filter_preset_command(preset: serde_json::Value) -> Result<(), String> {
     crate::mcp::validator::validate_filter_preset(&preset)
+}
+
+#[tauri::command]
+pub async fn select_workspace_dir(
+    app_handle: tauri::AppHandle,
+    config_manager: tauri::State<'_, Arc<crate::config::ConfigManager>>,
+    session_manager: tauri::State<'_, Arc<crate::traffic::sessions::SessionManager>>,
+) -> Result<String, String> {
+    use tauri_plugin_dialog::DialogExt;
+    
+    let (tx, rx) = std::sync::mpsc::channel();
+    
+    app_handle.dialog().file().pick_folder(move |folder| {
+        let _ = tx.send(folder);
+    });
+    
+    let folder = rx.recv().map_err(|e| e.to_string())?;
+    
+    if let Some(path) = folder {
+        let path_buf = match path {
+            tauri_plugin_dialog::FilePath::Path(p) => p,
+            tauri_plugin_dialog::FilePath::Url(u) => u.to_file_path().map_err(|_| "Invalid file URL".to_string())?,
+        };
+        
+        // Update ConfigManager
+        config_manager.set_base_dir(path_buf.clone()).map_err(|e| e.to_string())?;
+        
+        // Update SessionManager
+        session_manager.set_sessions_dir(path_buf.join("sessions"));
+        
+        // Save Workspace State
+        let mut state = crate::workspace::load_workspace_state();
+        state.current_workspace_path = Some(path_buf.clone());
+        crate::workspace::save_workspace_state(&state).map_err(|e| e.to_string())?;
+        
+        Ok(path_buf.to_string_lossy().to_string())
+    } else {
+        Err("No folder selected".to_string())
+    }
+}
+
+#[tauri::command]
+pub fn get_current_workspace() -> Option<String> {
+    let state = crate::workspace::load_workspace_state();
+    state.current_workspace_path.map(|p| p.to_string_lossy().to_string())
 }

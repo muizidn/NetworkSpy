@@ -1,7 +1,7 @@
 use tauri::Manager;
 use rusqlite::{params, Connection};
 use std::path::PathBuf;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, RwLock};
 use serde::{Serialize, Deserialize};
 use std::fs;
 use uuid::Uuid;
@@ -25,114 +25,67 @@ pub struct SessionFolder {
 }
 
 pub struct SessionManager {
-    db: Arc<Mutex<Connection>>,
-    sessions_dir: PathBuf,
+    config: Arc<crate::config::ConfigManager>,
+    sessions_dir: Arc<RwLock<PathBuf>>,
 }
 
 impl SessionManager {
-    pub fn new(app_data_dir: PathBuf) -> Self {
+    pub fn new(app_data_dir: PathBuf, config: Arc<crate::config::ConfigManager>) -> Self {
         let sessions_dir = app_data_dir.join("sessions");
         if !sessions_dir.exists() {
             fs::create_dir_all(&sessions_dir).expect("Failed to create sessions directory");
         }
 
-        let db_path = app_data_dir.join("sessions_meta.db");
-        let conn = Connection::open(db_path).expect("Failed to open sessions metadata DB");
-
-        conn.execute(
-            "CREATE TABLE IF NOT EXISTS session_folders (
-                id TEXT PRIMARY KEY,
-                name TEXT NOT NULL UNIQUE
-            )",
-            [],
-        ).unwrap();
-
-        conn.execute(
-            "CREATE TABLE IF NOT EXISTS sessions (
-                id TEXT PRIMARY KEY,
-                name TEXT NOT NULL,
-                folder_id TEXT,
-                created_at TEXT NOT NULL,
-                db_file TEXT NOT NULL,
-                FOREIGN KEY(folder_id) REFERENCES session_folders(id) ON DELETE SET NULL
-            )",
-            [],
-        ).unwrap();
-
-        // Migration: Ensure folder_id column exists for existing tables
-        let _ = conn.execute("ALTER TABLE sessions ADD COLUMN folder_id TEXT", []);
-
         Self {
-            db: Arc::new(Mutex::new(conn)),
-            sessions_dir,
+            config,
+            sessions_dir: Arc::new(RwLock::new(sessions_dir)),
         }
+    }
+
+    pub fn set_sessions_dir(&self, sessions_dir: PathBuf) {
+        if !sessions_dir.exists() {
+            let _ = fs::create_dir_all(&sessions_dir);
+        }
+        *self.sessions_dir.write().unwrap() = sessions_dir;
     }
 
     pub fn get_sessions(&self) -> rusqlite::Result<Vec<Session>> {
-        let conn = self.db.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT id, name, folder_id, created_at, db_file FROM sessions ORDER BY created_at DESC")?;
-        let rows = stmt.query_map([], |row| {
-            Ok(Session {
-                id: row.get(0)?,
-                name: row.get(1)?,
-                folder_id: row.get(2)?,
-                created_at: row.get(3)?,
-                db_file: row.get(4)?,
-            })
-        })?;
-
-        let mut sessions = Vec::new();
-        for row in rows {
-            sessions.push(row?);
-        }
-        Ok(sessions)
+        Ok(self.config.get_config().sessions)
     }
 
     pub fn get_folders(&self) -> rusqlite::Result<Vec<SessionFolder>> {
-        let conn = self.db.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT id, name FROM session_folders ORDER BY name ASC")?;
-        let rows = stmt.query_map([], |row| {
-            Ok(SessionFolder {
-                id: row.get(0)?,
-                name: row.get(1)?,
-            })
-        })?;
-
-        let mut folders = Vec::new();
-        for row in rows {
-            folders.push(row?);
-        }
-        Ok(folders)
+        Ok(self.config.get_config().session_folders)
     }
 
     pub fn save_capture(&self, name: String, folder_id: Option<String>, live_db_path: PathBuf) -> rusqlite::Result<Session> {
         let id = Uuid::new_v4().to_string();
         let db_file_name = format!("{}.db", id);
-        let dest_path = self.sessions_dir.join(&db_file_name);
+        let dest_path = self.sessions_dir.read().unwrap().join(&db_file_name);
         
         // Copy the live DB file
         fs::copy(&live_db_path, &dest_path).map_err(|e| rusqlite::Error::ToSqlConversionFailure(Box::new(e)))?;
 
         let created_at = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
-        let conn = self.db.lock().unwrap();
-        conn.execute(
-            "INSERT INTO sessions (id, name, folder_id, created_at, db_file) VALUES (?1, ?2, ?3, ?4, ?5)",
-            params![id, name, folder_id, created_at, db_file_name],
-        )?;
-
-        Ok(Session {
+        
+        let session = Session {
             id,
             name,
             folder_id,
             created_at,
             db_file: db_file_name,
-        })
+        };
+
+        let _ = self.config.update(|c| {
+            c.sessions.push(session.clone());
+        });
+
+        Ok(session)
     }
 
     pub fn import_har(&self, name: String, folder_id: Option<String>, har_path: PathBuf) -> Result<Session, String> {
         let id = Uuid::new_v4().to_string();
         let db_file_name = format!("{}.db", id);
-        let dest_path = self.sessions_dir.join(&db_file_name);
+        let dest_path = self.sessions_dir.read().unwrap().join(&db_file_name);
 
         // Create a new empty TrafficDb
         let db = crate::traffic::db::TrafficDb::new(dest_path).map_err(|e| e.to_string())?;
@@ -206,60 +159,75 @@ impl SessionManager {
         db.shutdown();
 
         let created_at = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
-        let conn = self.db.lock().unwrap();
-        conn.execute(
-            "INSERT INTO sessions (id, name, folder_id, created_at, db_file) VALUES (?1, ?2, ?3, ?4, ?5)",
-            params![id, name, folder_id, created_at, db_file_name],
-        ).map_err(|e| e.to_string())?;
-
-        Ok(Session {
+        
+        let session = Session {
             id,
             name,
             folder_id,
             created_at,
             db_file: db_file_name,
-        })
+        };
+
+        let _ = self.config.update(|c| {
+            c.sessions.push(session.clone());
+        });
+
+        Ok(session)
     }
 
     pub fn add_folder(&self, name: String) -> rusqlite::Result<SessionFolder> {
         let id = Uuid::new_v4().to_string();
-        let conn = self.db.lock().unwrap();
-        conn.execute(
-            "INSERT INTO session_folders (id, name) VALUES (?1, ?2)",
-            params![id, name],
-        )?;
-        Ok(SessionFolder { id, name })
+        let folder = SessionFolder { id: id.clone(), name };
+        
+        let _ = self.config.update(|c| {
+            c.session_folders.push(folder.clone());
+        });
+        
+        Ok(folder)
     }
 
     pub fn delete_folder(&self, id: String) -> rusqlite::Result<()> {
-        let conn = self.db.lock().unwrap();
-        conn.execute("DELETE FROM session_folders WHERE id = ?1", params![id])?;
+        let _ = self.config.update(|c| {
+            c.session_folders.retain(|f| f.id != id);
+            for session in c.sessions.iter_mut() {
+                if session.folder_id == Some(id.clone()) {
+                    session.folder_id = None;
+                }
+            }
+        });
         Ok(())
     }
 
     pub fn rename_folder(&self, id: String, new_name: String) -> rusqlite::Result<()> {
-        let conn = self.db.lock().unwrap();
-        conn.execute("UPDATE session_folders SET name = ?1 WHERE id = ?2", params![new_name, id])?;
+        let _ = self.config.update(|c| {
+            if let Some(folder) = c.session_folders.iter_mut().find(|f| f.id == id) {
+                folder.name = new_name;
+            }
+        });
         Ok(())
     }
 
     pub fn move_session(&self, id: String, folder_id: Option<String>) -> rusqlite::Result<()> {
-        let conn = self.db.lock().unwrap();
-        conn.execute("UPDATE sessions SET folder_id = ?1 WHERE id = ?2", params![folder_id, id])?;
+        let _ = self.config.update(|c| {
+            if let Some(session) = c.sessions.iter_mut().find(|s| s.id == id) {
+                session.folder_id = folder_id;
+            }
+        });
         Ok(())
     }
 
     pub fn delete_session(&self, id: String) -> rusqlite::Result<()> {
-        let conn = self.db.lock().unwrap();
-        
-        // Get DB file name first
-        let db_file: String = conn.query_row("SELECT db_file FROM sessions WHERE id = ?1", params![id], |row| row.get(0))?;
-        
-        // Delete from DB
-        conn.execute("DELETE FROM sessions WHERE id = ?1", params![id])?;
+        let db_file = self.config.get_config().sessions.iter()
+            .find(|s| s.id == id)
+            .map(|s| s.db_file.clone())
+            .ok_or_else(|| rusqlite::Error::QueryReturnedNoRows)?;
+
+        let _ = self.config.update(|c| {
+            c.sessions.retain(|s| s.id != id);
+        });
         
         // Delete the physical file
-        let file_path = self.sessions_dir.join(db_file);
+        let file_path = self.sessions_dir.read().unwrap().join(db_file);
         if file_path.exists() {
             let _ = fs::remove_file(file_path);
         }
@@ -268,9 +236,11 @@ impl SessionManager {
     }
 
     pub fn get_session_db_path(&self, id: String) -> rusqlite::Result<PathBuf> {
-        let conn = self.db.lock().unwrap();
-        let db_file: String = conn.query_row("SELECT db_file FROM sessions WHERE id = ?1", params![id], |row| row.get(0))?;
-        Ok(self.sessions_dir.join(db_file))
+        let db_file = self.config.get_config().sessions.iter()
+            .find(|s| s.id == id)
+            .map(|s| s.db_file.clone())
+            .ok_or_else(|| rusqlite::Error::QueryReturnedNoRows)?;
+        Ok(self.sessions_dir.read().unwrap().join(db_file))
     }
 }
 

@@ -10,13 +10,16 @@ import { SaveSessionDialog } from '../header/components/SaveSessionDialog';
 import { twMerge } from 'tailwind-merge';
 import { useAtom } from 'jotai';
 import { workspaceTabsAtom, activeTabIdAtom, WorkspaceTab, titleBarContentAtom } from '@src/utils/trafficAtoms';
+import { useSettingsContext } from '@src/context/SettingsProvider';
+import { UpgradeDialog } from '../header/components/UpgradeDialog';
+import { invoke } from '@tauri-apps/api/core';
 
 const appWindow = getCurrentWindow();
 
 export const TitleBar: React.FC = () => {
   const [os, setOs] = useState<string>('macos');
   const [isMaximized, setIsMaximized] = useState(false);
-  
+
   const { isRun, setIsRun, clearData, provider, currentPort, pausedBreakpoints, openNewWindow } = useAppProvider();
   const { isReviewMode, reviewedSession, viewSession, saveCapture, folders } = useSessionContext();
   const { isDisplayPane, setIsDisplayPane } = usePaneContext();
@@ -65,20 +68,20 @@ export const TitleBar: React.FC = () => {
 
   const isMac = os === 'macos';
 
-  const ActionButton = ({ 
-    onClick, 
-    icon: Icon, 
-    active = false, 
+  const ActionButton = ({
+    onClick,
+    icon: Icon,
+    active = false,
     variant = 'default',
     label
-  }: { 
-    onClick: () => void, 
-    icon: any, 
+  }: {
+    onClick: () => void,
+    icon: any,
     active?: boolean,
     variant?: 'default' | 'danger' | 'success' | 'warning',
     label?: string
   }) => (
-    <button 
+    <button
       onClick={(e) => { e.stopPropagation(); onClick(); }}
       title={label}
       className={twMerge(
@@ -122,8 +125,8 @@ export const TitleBar: React.FC = () => {
 
   if (customContent) {
     return (
-      <div 
-        data-tauri-drag-region 
+      <div
+        data-tauri-drag-region
         className="flex items-center h-8 bg-black/40 backdrop-blur-xl border-b border-white/5 select-none shrink-0 z-[1000] px-2 gap-2"
       >
         {isMac && (
@@ -132,7 +135,7 @@ export const TitleBar: React.FC = () => {
         <div className="flex-1 h-full" data-tauri-drag-region>
           {customContent}
         </div>
-        
+
         {/* Platform Controls (Right for Win/Linux) */}
         {!isMac && (
           <div className="flex items-center h-full ml-2">
@@ -145,9 +148,38 @@ export const TitleBar: React.FC = () => {
     );
   }
 
+  const [currentWorkspace, setCurrentWorkspace] = useState<string | null>(null);
+
+  useEffect(() => {
+    invoke<string | null>('get_current_workspace').then(setCurrentWorkspace);
+  }, []);
+
+  const { plan, isVerified } = useSettingsContext();
+  const [isUpgradeDialogOpen, setIsUpgradeDialogOpen] = useState(false);
+
+  const handleSelectWorkspace = async () => {
+    if (!isVerified) {
+      setIsUpgradeDialogOpen(true);
+      return;
+    }
+
+    try {
+      const path = await invoke<string>('select_workspace_dir');
+      setCurrentWorkspace(path);
+      // Optional: Refresh other parts of the app if needed
+      window.location.reload(); // Hard reload to ensure all managers pick up new config
+    } catch (e) {
+      console.error("Failed to select workspace", e);
+    }
+  };
+
+  const getWorkspaceName = (path: string) => {
+    return path.split(/[\\/]/).pop() || path;
+  };
+
   return (
-    <div 
-      data-tauri-drag-region 
+    <div
+      data-tauri-drag-region
       className="flex items-center h-8 bg-black/40 backdrop-blur-xl border-b border-white/5 select-none shrink-0 z-[1000] px-2 gap-2"
     >
       {/* Platform Controls Spacer (Left for Mac) */}
@@ -156,26 +188,50 @@ export const TitleBar: React.FC = () => {
       )}
 
 
+      {/* Workspace Indicator */}
+      <div className="flex items-center gap-1.5 shrink-0 h-full" data-tauri-drag-region>
+        <button
+          onClick={handleSelectWorkspace}
+          className={twMerge(
+            "flex items-center gap-2 px-2 h-6 rounded-md border transition-all",
+            currentWorkspace
+              ? "bg-blue-500/10 border-blue-500/20 text-blue-400 hover:bg-blue-500/20"
+              : "bg-white/5 border-white/5 text-zinc-500 hover:bg-white/10"
+          )}
+          title={currentWorkspace || "Default Workspace (~/.network-spy)"}
+        >
+          <FiMonitor size={12} className={currentWorkspace ? "text-blue-400" : "text-zinc-600"} />
+          <span className="text-[10px] font-bold uppercase tracking-tight truncate max-w-[150px]">
+            {currentWorkspace ? getWorkspaceName(currentWorkspace) : "Default Workspace"}
+          </span>
+          {currentWorkspace && (
+            <span className="w-1 h-1 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
+          )}
+        </button>
+      </div>
+
+      <div className="w-px h-4 bg-white/10 mx-1" />
+
       {/* Main Actions Area */}
       <div className="flex items-center gap-2 shrink-0 h-full" data-tauri-drag-region>
         <div className="flex items-center gap-0.5 bg-white/5 p-0.5 rounded-md border border-white/5 shadow-inner">
           {!isReviewMode ? (
             <>
-              <ActionButton 
-                icon={isRun ? FiPause : FiPlay} 
+              <ActionButton
+                icon={isRun ? FiPause : FiPlay}
                 active={isRun}
                 variant="success"
                 label={isRun ? "Stop Capturing" : "Start Capturing"}
-                onClick={() => setIsRun(!isRun)} 
+                onClick={() => setIsRun(!isRun)}
               />
-              <ActionButton 
-                icon={FiTrash2} 
+              <ActionButton
+                icon={FiTrash2}
                 variant="danger"
                 label="Clear All Traffic"
-                onClick={clearData} 
+                onClick={clearData}
               />
               <div className="w-px h-3 bg-white/10 mx-1" />
-              <button 
+              <button
                 onClick={() => setIsPortDialogOpen(true)}
                 className={twMerge(
                   "px-2 h-6 flex items-center gap-1.5 hover:bg-white/5 rounded transition-all text-[10px] font-bold uppercase tracking-tight",
@@ -189,10 +245,10 @@ export const TitleBar: React.FC = () => {
                 {isRun ? `:${currentPort}` : "Proxy Paused"}
               </button>
               <div className="w-px h-3 bg-white/10 mx-1" />
-              <ActionButton 
-                icon={FiSave} 
+              <ActionButton
+                icon={FiSave}
                 label="Save Current Session"
-                onClick={() => setIsSaveDialogOpen(true)} 
+                onClick={() => setIsSaveDialogOpen(true)}
               />
             </>
 
@@ -210,14 +266,14 @@ export const TitleBar: React.FC = () => {
       {/* Tabs Area */}
       <div className="flex-grow flex items-center gap-1 overflow-x-auto no-scrollbar h-full px-2" data-tauri-drag-region>
         {tabsList.map((tab) => (
-          <div 
+          <div
             key={tab.id}
             onClick={() => setActiveTabId(tab.id)}
             onDoubleClick={() => startEditing(tab)}
             className={twMerge(
               "group flex items-center gap-2 px-3 h-6 rounded-md border transition-all cursor-pointer min-w-[80px] max-w-[180px] shrink-0",
-              activeTabId === tab.id 
-                ? "bg-white/10 border-white/10 text-white shadow-sm" 
+              activeTabId === tab.id
+                ? "bg-white/10 border-white/10 text-white shadow-sm"
                 : "bg-transparent border-transparent text-zinc-500 hover:bg-white/5 hover:text-zinc-300"
             )}
           >
@@ -225,7 +281,7 @@ export const TitleBar: React.FC = () => {
               "w-1 h-1 rounded-full shrink-0",
               activeTabId === tab.id ? "bg-blue-400" : "bg-zinc-700"
             )} />
-            
+
             {editingTabId === tab.id ? (
               <input
                 autoFocus
@@ -239,7 +295,7 @@ export const TitleBar: React.FC = () => {
             ) : (
               <span className="text-[10px] font-bold truncate flex-grow">{tab.title}</span>
             )}
-            <button 
+            <button
               onClick={(e) => { e.stopPropagation(); handleCloseTab(tab.id); }}
               className="opacity-0 group-hover:opacity-100 hover:text-red-400 transition-all p-0.5"
             >
@@ -247,7 +303,7 @@ export const TitleBar: React.FC = () => {
             </button>
           </div>
         ))}
-        <button 
+        <button
           onClick={handleAddTab}
           className="w-6 h-6 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-white/5 rounded-md transition-all shrink-0"
         >
@@ -258,30 +314,30 @@ export const TitleBar: React.FC = () => {
       {/* Right Side Tools */}
       <div className="flex items-center gap-2 shrink-0 h-full" data-tauri-drag-region>
         <div className="flex items-center gap-0.5 bg-white/5 p-0.5 rounded-md border border-white/5 shadow-inner">
-          <ActionButton 
-            icon={FiColumns} 
+          <ActionButton
+            icon={FiColumns}
             active={isDisplayPane.centerLayout === "horizontal"}
             label="Vertical Split"
-            onClick={() => setIsDisplayPane(prev => ({ ...prev, centerLayout: "horizontal" }))} 
+            onClick={() => setIsDisplayPane(prev => ({ ...prev, centerLayout: "horizontal" }))}
           />
-          <ActionButton 
-            icon={FiLayout} 
+          <ActionButton
+            icon={FiLayout}
             active={isDisplayPane.centerLayout === "vertical"}
             label="Horizontal Split"
-            onClick={() => setIsDisplayPane(prev => ({ ...prev, centerLayout: "vertical" }))} 
+            onClick={() => setIsDisplayPane(prev => ({ ...prev, centerLayout: "vertical" }))}
           />
           <div className="w-px h-3 bg-white/10 mx-1" />
-          <ActionButton 
-            icon={FiMonitor} 
+          <ActionButton
+            icon={FiMonitor}
             active={isDisplayPane.bottom}
             label="Toggle Bottom Inspector"
-            onClick={() => setIsDisplayPane(prev => ({ ...prev, bottom: !prev.bottom }))} 
+            onClick={() => setIsDisplayPane(prev => ({ ...prev, bottom: !prev.bottom }))}
           />
-          <ActionButton 
-            icon={FiSidebar} 
+          <ActionButton
+            icon={FiSidebar}
             active={isDisplayPane.right}
             label="Toggle Right Pane"
-            onClick={() => setIsDisplayPane(prev => ({ ...prev, right: !prev.right }))} 
+            onClick={() => setIsDisplayPane(prev => ({ ...prev, right: !prev.right }))}
           />
         </div>
 
@@ -314,6 +370,10 @@ export const TitleBar: React.FC = () => {
             alert("Failed to save session: " + e);
           }
         }}
+      />
+      <UpgradeDialog
+        isOpen={isUpgradeDialogOpen}
+        onClose={() => setIsUpgradeDialogOpen(false)}
       />
     </div>
   );
