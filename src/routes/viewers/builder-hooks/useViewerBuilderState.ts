@@ -60,6 +60,9 @@ export const useViewerBuilderState = (initialViewer: Viewer) => {
     
     const [canvasPadding, setCanvasPadding] = useAtom(viewerBuilderCanvasPaddingAtom(initialViewer.id));
     const [gridGap, setGridGap] = useAtom(viewerBuilderGridGapAtom(initialViewer.id));
+    
+    const [isSaving, setIsSaving] = useState(false);
+    const [saveSuccess, setSaveSuccess] = useState(false);
 
     useEffect(() => {
         if (testSource === 'session' && selectedSessionId) {
@@ -210,8 +213,11 @@ export const useViewerBuilderState = (initialViewer: Viewer) => {
                 gridGap: gridGap ?? 48
             }
         };
+        setIsSaving(true);
         await saveViewer(viewerName || initialViewer.name, JSON.stringify(content), initialViewer.id, initialViewer.folderId);
-        alert("Viewer saved successfully!");
+        setIsSaving(false);
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 3000);
     };
 
     const addBlock = (type: ViewerBlock['type']) => {
@@ -290,6 +296,8 @@ export const useViewerBuilderState = (initialViewer: Viewer) => {
         canvasPadding: canvasPadding ?? 48,
         setCanvasPadding,
         gridGap: gridGap ?? 48,
-        setGridGap
+        setGridGap,
+        isSaving,
+        saveSuccess
     };
 };

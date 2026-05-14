@@ -13,6 +13,8 @@ interface BuilderHeaderProps {
     isAiAssistantVisible: boolean;
     setIsAiAssistantVisible: (visible: boolean) => void;
     handleSave: () => void;
+    isSaving?: boolean;
+    saveSuccess?: boolean;
     blocks: ViewerBlock[];
     testResults: Record<string, any>;
     viewMode: 'preview' | 'source' | 'json';
@@ -24,7 +26,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
     viewerName, setViewerName, isEditingName, setIsEditingName,
     isToolboxVisible, setIsToolboxVisible, 
     isAiAssistantVisible, setIsAiAssistantVisible,
-    handleSave,
+    handleSave, isSaving = false, saveSuccess = false,
     viewMode, setViewMode,
     onBack
 }) => {
@@ -43,10 +45,23 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
 
                 <button
                     onClick={handleSave}
-                    className="flex items-center gap-1.5 px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[9px] font-bold transition-all active:scale-95 border border-white/10 mr-2"
+                    disabled={isSaving}
+                    className={twMerge(
+                        "flex items-center gap-1.5 px-3 py-1 rounded-lg text-[9px] font-bold transition-all active:scale-95 border border-white/10 mr-2",
+                        saveSuccess 
+                            ? "bg-emerald-600 text-white" 
+                            : "bg-blue-600 hover:bg-blue-500 text-white",
+                        isSaving ? "opacity-50 cursor-wait" : ""
+                    )}
                 >
-                    <FiSave size={12} />
-                    Save
+                    {isSaving ? (
+                        <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : saveSuccess ? (
+                        <FiCheck size={12} />
+                    ) : (
+                        <FiSave size={12} />
+                    )}
+                    {isSaving ? "Saving..." : saveSuccess ? "Saved!" : "Save"}
                 </button>
                 
                 <div className="flex items-center gap-2">

@@ -54,6 +54,8 @@ const ViewerBuilder: React.FC<ViewerBuilderProps> = ({ viewer: initialViewer, on
         setCanvasPadding,
         gridGap,
         setGridGap,
+        isSaving,
+        saveSuccess,
         isSessionLoading
     } = useViewerBuilderState(initialViewer);
 
@@ -71,6 +73,8 @@ const ViewerBuilder: React.FC<ViewerBuilderProps> = ({ viewer: initialViewer, on
                 isAiAssistantVisible={isAiAssistantVisible}
                 setIsAiAssistantVisible={setIsAiAssistantVisible}
                 handleSave={handleSave}
+                isSaving={isSaving}
+                saveSuccess={saveSuccess}
                 blocks={blocks}
                 testResults={testResults}
                 viewMode={viewMode}
