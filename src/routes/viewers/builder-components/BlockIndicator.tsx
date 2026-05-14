@@ -125,10 +125,10 @@ export const BlockIndicator = ({
         let classes = "absolute hidden group-hover:flex z-[60] transition-all ";
         
         if (outside) {
-            if (placement === 'top') classes += "bottom-full left-0 right-0 pb-1 h-9 items-start";
-            if (placement === 'bottom') classes += "top-full left-0 right-0 pt-1 h-9 items-end";
-            if (placement === 'left') classes += "right-full top-0 bottom-0 pr-1 w-9 flex-col items-start";
-            if (placement === 'right') classes += "left-full top-0 bottom-0 pl-1 w-9 flex-col items-end";
+            if (placement === 'top') classes += "bottom-full left-[-1px] right-[-1px] mb-[-2px] h-8 items-start";
+            if (placement === 'bottom') classes += "top-full left-[-1px] right-[-1px] mt-[-2px] h-8 items-end";
+            if (placement === 'left') classes += "right-full top-[-1px] bottom-[-1px] mr-[-2px] w-8 flex-col items-start";
+            if (placement === 'right') classes += "left-full top-[-1px] bottom-[-1px] ml-[-2px] w-8 flex-col items-end";
         } else {
             if (placement === 'top') classes += "top-0 left-0 right-0 h-8 bg-blue-600";
             if (placement === 'bottom') classes += "bottom-0 left-0 right-0 h-8 bg-blue-600";
