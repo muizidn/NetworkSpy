@@ -1,5 +1,6 @@
 import React from "react";
-import { FiLock, FiUnlock, FiShield, FiCheckCircle, FiGlobe, FiCpu } from "react-icons/fi";
+import { twMerge } from "tailwind-merge";
+import { FiLock, FiUnlock, FiShield, FiCheckCircle, FiGlobe, FiCpu, FiMonitor, FiSmartphone, FiTablet } from "react-icons/fi";
 
 interface NotInterceptedModeProps {
     domain: string;
@@ -22,8 +23,30 @@ const TrafficFlow = ({ intercepted = false }: { intercepted?: boolean }) => (
     <div className="flex items-center justify-center gap-8 mb-12 relative w-full max-w-lg">
         {/* Source: App/Client */}
         <div className="relative z-10 flex flex-col items-center gap-3">
-            <div className={`w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-2xl relative ${!intercepted ? 'animate-icon-glow' : ''}`}>
-                <FiCpu size={32} className={intercepted ? 'text-emerald-500/50' : 'text-zinc-400'} />
+            <div className={`w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-2xl relative ${!intercepted ? 'animate-icon-glow' : ''}`}>
+                <div className="relative flex items-center justify-center">
+                    <FiMonitor 
+                        size={24} 
+                        className={twMerge(
+                            "absolute -translate-x-2 -translate-y-1 transition-all duration-500",
+                            intercepted ? 'text-emerald-500/30' : 'text-zinc-500'
+                        )} 
+                    />
+                    <FiTablet 
+                        size={20} 
+                        className={twMerge(
+                            "absolute translate-x-2 translate-y-2 transition-all duration-500",
+                            intercepted ? 'text-emerald-500/40' : 'text-zinc-400'
+                        )} 
+                    />
+                    <FiSmartphone 
+                        size={18} 
+                        className={twMerge(
+                            "absolute -translate-y-3 translate-x-4 transition-all duration-500",
+                            intercepted ? 'text-emerald-500/50' : 'text-zinc-300'
+                        )} 
+                    />
+                </div>
                 {!intercepted && <TrafficLightIndicator />}
             </div>
             <span className="text-[10px] font-bold text-zinc-500 tracking-widest">Client App</span>
@@ -63,7 +86,7 @@ const TrafficFlow = ({ intercepted = false }: { intercepted?: boolean }) => (
 
         {/* Destination: Server/Globe */}
         <div className="relative z-10 flex flex-col items-center gap-3">
-            <div className={`w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-2xl relative ${!intercepted ? 'animate-icon-glow' : ''}`}>
+            <div className={`w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-2xl relative ${!intercepted ? 'animate-icon-glow' : ''}`}>
                 <FiGlobe size={32} className={intercepted ? 'text-emerald-500/50' : 'text-zinc-400'} />
                 {!intercepted && <TrafficLightIndicator />}
             </div>
@@ -126,7 +149,7 @@ export const NotInterceptedMode: React.FC<NotInterceptedModeProps> = ({
                     <p className="text-zinc-500 max-w-md text-sm leading-relaxed mb-4">
                         Interception rule has been created for <span className="text-emerald-400 font-mono">{domain}</span>.
                     </p>
-                    <div className="flex flex-col items-center gap-4 bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 max-w-sm">
+                    <div className="flex flex-col items-center gap-4 bg-zinc-900/50 p-6 rounded-2xl max-w-sm">
                         <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500 mb-2">
                             <FiCheckCircle size={24} />
                         </div>
@@ -151,7 +174,7 @@ export const NotInterceptedMode: React.FC<NotInterceptedModeProps> = ({
                     <button
                         onClick={handleIntercept}
                         disabled={isIntercepting}
-                        className="flex items-center justify-center gap-3 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-lg font-black text-xs transition-all active:scale-95 disabled:opacity-50 border border-zinc-800 min-w-[280px]"
+                        className="flex items-center justify-center gap-3 px-4 py-2 hover:bg-zinc-800 text-zinc-300 rounded-lg font-black text-xs transition-all active:scale-95 disabled:opacity-50"
                     >
                         <FiUnlock size={18} />
                         {isIntercepting ? "Adding..." : (
@@ -165,7 +188,7 @@ export const NotInterceptedMode: React.FC<NotInterceptedModeProps> = ({
                         <button
                             onClick={() => onInterceptClient(clientName)}
                             disabled={isIntercepting}
-                            className="flex items-center justify-center gap-3 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-lg font-black text-xs transition-all active:scale-95 disabled:opacity-50 border border-zinc-800 min-w-[280px]"
+                            className="flex items-center justify-center gap-3 px-4 py-2 hover:bg-zinc-800 text-zinc-300 rounded-lg font-black text-xs transition-all active:scale-95 disabled:opacity-50"
                         >
                             <FiShield size={18} />
                             {isIntercepting ? "Adding..." : (
