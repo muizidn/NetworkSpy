@@ -482,6 +482,10 @@ fn main() {
         .expect("error while building tauri application")
         .run(|_app_handle, event| match event {
             tauri::RunEvent::ExitRequested { .. } | tauri::RunEvent::Exit => {
+                if let Some(db) = _app_handle.try_state::<Arc<TrafficDb>>() {
+                    let _ = db.clear_all();
+                    println!("Traffic DB cleared (Application Exit)");
+                }
                 if let Some(toggle) = PROXY_TOGGLE.get() {
                     toggle.turn_off();
                     println!("Proxy turned off (Application Exit)");
