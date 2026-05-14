@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Viewer, ViewerBlock } from "@src/context/ViewerContext";
 import { useViewerBuilderState } from "./builder-hooks/useViewerBuilderState";
+import { useAtom } from "jotai";
+import { titleBarContentAtom } from "@src/utils/trafficAtoms";
 
 // Components
 import { BuilderHeader } from "./builder-components/BuilderHeader";
@@ -49,6 +51,35 @@ const ViewerBuilder: React.FC<ViewerBuilderProps> = ({ viewer: initialViewer, on
         isAiAssistantVisible,
         setIsAiAssistantVisible
     } = useViewerBuilderState(initialViewer);
+
+    const [, setTitleBarContent] = useAtom(titleBarContentAtom);
+
+    useEffect(() => {
+        setTitleBarContent(
+            <BuilderHeader
+                viewerName={viewerName}
+                setViewerName={setViewerName}
+                isEditingName={isEditingName}
+                setIsEditingName={setIsEditingName}
+                isToolboxVisible={isToolboxVisible}
+                setIsToolboxVisible={setIsToolboxVisible}
+                isAiAssistantVisible={isAiAssistantVisible}
+                setIsAiAssistantVisible={setIsAiAssistantVisible}
+                handleSave={handleSave}
+                blocks={blocks}
+                testResults={testResults}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                onBack={onBack}
+            />
+        );
+        return () => setTitleBarContent(null);
+    }, [
+        viewerName, isEditingName, isToolboxVisible, 
+        isAiAssistantVisible, viewMode, blocks, testResults,
+        onBack, handleSave, setViewerName, setIsEditingName, 
+        setIsToolboxVisible, setIsAiAssistantVisible, setViewMode, setTitleBarContent
+    ]);
 
     const mainContent = () => {
         switch (viewMode) {
@@ -114,23 +145,6 @@ const ViewerBuilder: React.FC<ViewerBuilderProps> = ({ viewer: initialViewer, on
 
     return (
         <div className="flex flex-col h-full bg-[#050505]">
-            <BuilderHeader
-                viewerName={viewerName}
-                setViewerName={setViewerName}
-                isEditingName={isEditingName}
-                setIsEditingName={setIsEditingName}
-                isToolboxVisible={isToolboxVisible}
-                setIsToolboxVisible={setIsToolboxVisible}
-                isAiAssistantVisible={isAiAssistantVisible}
-                setIsAiAssistantVisible={setIsAiAssistantVisible}
-                handleSave={handleSave}
-                blocks={blocks}
-                testResults={testResults}
-                viewMode={viewMode}
-                setViewMode={setViewMode}
-                onBack={onBack}
-            />
-
             <div className="flex-1 flex overflow-hidden">
                 <div className="flex-1 flex flex-col overflow-hidden relative">
                     <div className="flex-1 flex overflow-hidden">

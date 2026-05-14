@@ -34,3 +34,5 @@ export const statusInfoDialogAtom = atom<{
     isOpen: boolean;
     code?: string | number;
 } | null>(null);
+
+export const titleBarContentAtom = atom<React.ReactNode | null>(null);

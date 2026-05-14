@@ -10,8 +10,12 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { twMerge } from "tailwind-merge";
 import { useAppUpdater } from "./hooks/useAppUpdater";
 
+import { useAtom } from 'jotai';
+import { titleBarContentAtom } from '@src/utils/trafficAtoms';
+
 export default function Layout() {
   useAppUpdater();
+  const [customContent] = useAtom(titleBarContentAtom);
   const [isProDialogOpen, setIsProDialogOpen] = useState(false);
   const [proDialogStatus, setProDialogStatus] = useState<'trial' | 'pro'>('pro');
   const [isMainWindow] = useState(() => {
@@ -31,6 +35,7 @@ export default function Layout() {
 
   const location = useLocation();
   const isTrafficList = location.pathname === "/";
+  const showTitleBar = isTrafficList || !!customContent;
 
   return (
     <div className={twMerge(
@@ -39,7 +44,7 @@ export default function Layout() {
     )}>
 
 
-      {isTrafficList ? (
+      {showTitleBar ? (
         <TitleBar />
       ) : (
         /* Ghost TitleBar for Mac to prevent overlapping native buttons */

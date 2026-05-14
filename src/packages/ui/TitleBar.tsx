@@ -9,7 +9,7 @@ import { PortDialog } from '../header/components/PortDialog';
 import { SaveSessionDialog } from '../header/components/SaveSessionDialog';
 import { twMerge } from 'tailwind-merge';
 import { useAtom } from 'jotai';
-import { workspaceTabsAtom, activeTabIdAtom, WorkspaceTab } from '@src/utils/trafficAtoms';
+import { workspaceTabsAtom, activeTabIdAtom, WorkspaceTab, titleBarContentAtom } from '@src/utils/trafficAtoms';
 
 const appWindow = getCurrentWindow();
 
@@ -117,6 +117,33 @@ export const TitleBar: React.FC = () => {
       setEditingTabId(null);
     }
   };
+
+  const [customContent] = useAtom(titleBarContentAtom);
+
+  if (customContent) {
+    return (
+      <div 
+        data-tauri-drag-region 
+        className="flex items-center h-8 bg-black/40 backdrop-blur-xl border-b border-white/5 select-none shrink-0 z-[1000] px-2 gap-2"
+      >
+        {isMac && (
+          <div className="w-20 shrink-0 h-full" data-tauri-drag-region />
+        )}
+        <div className="flex-1 h-full" data-tauri-drag-region>
+          {customContent}
+        </div>
+        
+        {/* Platform Controls (Right for Win/Linux) */}
+        {!isMac && (
+          <div className="flex items-center h-full ml-2">
+            <button className="h-8 w-10 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors" onClick={() => appWindow.minimize()}><FiMinus size={14} /></button>
+            <button className="h-8 w-10 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors" onClick={() => appWindow.toggleMaximize()}><FiSquare size={14} /></button>
+            <button className="h-8 w-10 flex items-center justify-center hover:bg-red-500 hover:text-white text-zinc-500 transition-colors" onClick={() => appWindow.close()}><FiX size={14} /></button>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div 

@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiCheck, FiEdit2, FiLayers, FiColumns, FiSave, FiCode, FiEye, FiZap, FiChevronLeft } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
-import { ToolBaseHeader } from "@src/packages/ui/ToolBaseHeader";
 import { ViewerBlock } from "@src/context/ViewerContext";
 
 interface BuilderHeaderProps {
@@ -30,116 +29,115 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
     onBack
 }) => {
     return (
-        <ToolBaseHeader
-            title={
+        <div className="flex items-center gap-2 h-full flex-1">
+            <div className="flex items-center gap-2 flex-1">
+                {onBack && (
+                    <button 
+                        onClick={onBack}
+                        className="p-1.5 hover:bg-white/10 rounded-lg text-zinc-500 hover:text-white transition-all active:scale-90"
+                        title="Back to Viewer List"
+                    >
+                        <FiChevronLeft size={18} />
+                    </button>
+                )}
+
+                <button
+                    onClick={handleSave}
+                    className="flex items-center gap-1.5 px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[9px] font-black transition-all active:scale-95 border border-white/10 mr-2"
+                >
+                    <FiSave size={12} />
+                    SAVE
+                </button>
+                
                 <div className="flex items-center gap-2">
-                    {onBack && (
-                        <button 
-                            onClick={onBack}
-                            className="mr-2 p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-500 hover:text-white transition-all active:scale-90"
-                            title="Back to Viewer List"
-                        >
-                            <FiChevronLeft size={20} />
-                        </button>
-                    )}
+                    <div className="w-6 h-6 rounded-md bg-blue-500/20 border border-blue-500/20 flex items-center justify-center text-blue-500 shadow-sm">
+                        <FiLayers size={14} />
+                    </div>
                     {isEditingName ? (
                         <div className="flex items-center gap-2">
                             <input
                                 autoFocus
                                 value={viewerName}
                                 onChange={(e) => setViewerName(e.target.value)}
-                                className="bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-sm font-bold text-white focus:outline-none focus:border-blue-500"
+                                className="bg-zinc-900 border border-zinc-700 rounded px-2 py-0.5 text-xs font-bold text-white focus:outline-none focus:border-blue-500"
                                 onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
+                                onBlur={() => setIsEditingName(false)}
                             />
-                            <button onClick={() => setIsEditingName(false)} className="text-green-500"><FiCheck size={16} /></button>
                         </div>
                     ) : (
-                        <div className="flex items-center gap-2 group border-b border-transparent hover:border-zinc-800 transition-all pb-0.5">
-                            <span className="text-sm font-black text-white italic tracking-tighter">{viewerName}</span>
-                            <button onClick={() => setIsEditingName(true)} className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-blue-400 transition-all">
-                                <FiEdit2 size={12} />
-                            </button>
+                        <div className="flex items-center gap-2 group cursor-pointer" onClick={() => setIsEditingName(true)}>
+                            <span className="text-[11px] font-black text-white italic tracking-tighter uppercase">{viewerName}</span>
+                            <FiEdit2 size={10} className="opacity-0 group-hover:opacity-100 text-zinc-600 transition-all" />
                         </div>
                     )}
                 </div>
-            }
-            description="Build custom UI view for network traffic"
-            icon={<FiLayers size={20} className="text-blue-500" />}
-            actions={
-                <div className="flex items-center gap-3">
-                    {/* View Mode Switcher */}
-                    <div className="flex items-center bg-zinc-900/50 p-1 rounded-xl border border-zinc-800 shadow-inner mr-2">
-                        <button
-                            onClick={() => setViewMode('preview')}
-                            className={twMerge(
-                                "flex items-center gap-2 px-3 py-1 rounded-lg text-[10px] font-black transition-all",
-                                viewMode === 'preview' 
-                                    ? "bg-zinc-800 text-white shadow-lg" 
-                                    : "text-zinc-500 hover:text-zinc-300"
-                            )}
-                        >
-                            <FiEye size={13} />
-                            Preview
-                        </button>
-                        <button
-                            onClick={() => setViewMode('json')}
-                            className={twMerge(
-                                "flex items-center gap-2 px-3 py-1 rounded-lg text-[10px] font-black transition-all",
-                                viewMode === 'json' 
-                                    ? "bg-zinc-800 text-blue-400 shadow-lg" 
-                                    : "text-zinc-500 hover:text-zinc-300"
-                            )}
-                        >
-                            <FiLayers size={13} />
-                            Json
-                        </button>
-                        <button
-                            onClick={() => setViewMode('source')}
-                            className={twMerge(
-                                "flex items-center gap-2 px-3 py-1 rounded-lg text-[10px] font-black transition-all",
-                                viewMode === 'source' 
-                                    ? "bg-zinc-800 text-amber-500 shadow-lg" 
-                                    : "text-zinc-500 hover:text-zinc-300"
-                            )}
-                        >
-                            <FiCode size={13} />
-                            Source
-                        </button>
-                    </div>
+            </div>
 
-                    <div className="h-6 w-[1px] bg-zinc-800 mx-1"></div>
-
+            <div className="flex items-center gap-2">
+                {/* View Mode Switcher */}
+                <div className="flex items-center bg-zinc-900/50 p-0.5 rounded-lg border border-white/5 mr-2">
                     <button
-                        onClick={() => setIsToolboxVisible(!isToolboxVisible)}
+                        onClick={() => setViewMode('preview')}
                         className={twMerge(
-                            "p-2 rounded-xl transition-all border border-transparent shadow-md active:scale-95",
-                            !isToolboxVisible ? "bg-blue-600 text-white shadow-blue-900/20" : "bg-zinc-900 text-zinc-400 hover:text-white hover:border-zinc-700 shadow-black/40"
+                            "flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-black transition-all",
+                            viewMode === 'preview' 
+                                ? "bg-white/10 text-white" 
+                                : "text-zinc-500 hover:text-zinc-300"
                         )}
-                        title="Toggle Toolbox"
                     >
-                        <FiColumns size={16} />
+                        <FiEye size={12} />
+                        PREVIEW
                     </button>
-
                     <button
-                        onClick={() => setIsAiAssistantVisible(!isAiAssistantVisible)}
+                        onClick={() => setViewMode('json')}
                         className={twMerge(
-                            "p-2 rounded-xl transition-all border border-transparent shadow-md active:scale-95",
-                            isAiAssistantVisible ? "bg-purple-600 text-white shadow-purple-900/20" : "bg-zinc-900 text-zinc-400 hover:text-white hover:border-zinc-700 shadow-black/40"
+                            "flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-black transition-all",
+                            viewMode === 'json' 
+                                ? "bg-white/10 text-blue-400" 
+                                : "text-zinc-500 hover:text-zinc-300"
                         )}
-                        title="AI Assistant"
                     >
-                        <FiZap size={16} />
+                        <FiLayers size={12} />
+                        JSON
                     </button>
-                    
                     <button
-                        onClick={handleSave}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-[10px] font-black transition-all shadow-xl shadow-blue-600/20 active:scale-95 border border-blue-400/20"
+                        onClick={() => setViewMode('source')}
+                        className={twMerge(
+                            "flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-black transition-all",
+                            viewMode === 'source' 
+                                ? "bg-white/10 text-amber-500" 
+                                : "text-zinc-500 hover:text-zinc-300"
+                        )}
                     >
-                        <FiSave size={13} />
-                        Save
+                        <FiCode size={12} />
+                        SOURCE
                     </button>
                 </div>
-            }
-        />
+
+                <div className="h-4 w-px bg-white/10 mx-1"></div>
+
+                <button
+                    onClick={() => setIsToolboxVisible(!isToolboxVisible)}
+                    className={twMerge(
+                        "p-1.5 rounded-lg transition-all border border-transparent active:scale-95",
+                        !isToolboxVisible ? "bg-blue-600 text-white" : "bg-white/5 text-zinc-400 hover:text-white"
+                    )}
+                    title="Toggle Toolbox"
+                >
+                    <FiColumns size={14} />
+                </button>
+
+                <button
+                    onClick={() => setIsAiAssistantVisible(!isAiAssistantVisible)}
+                    className={twMerge(
+                        "p-1.5 rounded-lg transition-all border border-transparent active:scale-95",
+                        isAiAssistantVisible ? "bg-purple-600 text-white" : "bg-white/5 text-zinc-400 hover:text-white"
+                    )}
+                    title="AI Assistant"
+                >
+                    <FiZap size={14} />
+                </button>
+            </div>
+        </div>
     );
 };
