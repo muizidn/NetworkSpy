@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { FiMinimize, FiMaximize, FiCode, FiTrash2, FiAlertCircle, FiChevronDown, FiPlus, FiMinus } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
-import { ViewerBlock } from "@src/context/ViewerContext";
+import { ColSpanRange, ViewerBlock } from "@src/context/ViewerContext";
 
 interface BlockIndicatorProps {
     block: ViewerBlock;
@@ -17,10 +17,10 @@ interface BlockIndicatorProps {
     outside?: boolean;
 }
 
-const CustomDropdown = ({ value, options, onChange, label, isVertical, onOpenChange }: { 
-    value: any, 
-    options: number[], 
-    onChange: (val: any) => void, 
+const CustomDropdown = ({ value, options, onChange, label, isVertical, onOpenChange }: {
+    value: any,
+    options: number[],
+    onChange: (val: any) => void,
     label: string,
     isVertical?: boolean,
     onOpenChange?: (open: boolean) => void
@@ -67,7 +67,7 @@ const CustomDropdown = ({ value, options, onChange, label, isVertical, onOpenCha
             </button>
 
             {isOpen && createPortal(
-                <div 
+                <div
                     className="fixed z-[99999] bg-zinc-900 border border-zinc-800 rounded-lg shadow-2xl py-1 overflow-hidden min-w-[60px]"
                     style={{ top: coords.top, left: coords.left }}
                 >
@@ -95,9 +95,9 @@ const CustomDropdown = ({ value, options, onChange, label, isVertical, onOpenCha
     );
 };
 
-const NumericInput = ({ value, onChange, label, isVertical, min = 0, max = 100, step = 4 }: { 
-    value: number, 
-    onChange: (val: number) => void, 
+const NumericInput = ({ value, onChange, label, isVertical, min = 0, max = 100, step = 4 }: {
+    value: number,
+    onChange: (val: number) => void,
     label: string,
     isVertical?: boolean,
     min?: number,
@@ -108,7 +108,7 @@ const NumericInput = ({ value, onChange, label, isVertical, min = 0, max = 100, 
         <div className="flex items-center gap-1">
             {!isVertical && <span className="text-[9px] font-black text-white/60 uppercase tracking-widest leading-none mr-1">{label}</span>}
             <div className="flex items-center bg-white/10 border border-white/20 rounded overflow-hidden">
-                <button 
+                <button
                     onClick={() => onChange(Math.max(min, value - step))}
                     disabled={value <= min}
                     className="p-1 hover:bg-white/10 text-white/60 hover:text-white transition-colors disabled:opacity-20"
@@ -118,7 +118,7 @@ const NumericInput = ({ value, onChange, label, isVertical, min = 0, max = 100, 
                 <div className="px-1 text-[9px] font-black text-white min-w-[20px] text-center border-x border-white/10">
                     {value}
                 </div>
-                <button 
+                <button
                     onClick={() => onChange(Math.min(max, value + step))}
                     disabled={value >= max}
                     className="p-1 hover:bg-white/10 text-white/60 hover:text-white transition-colors disabled:opacity-20"
@@ -147,12 +147,12 @@ export const BlockIndicator = ({
 
     const getPlacementClasses = () => {
         if (isMaximized) return "relative flex w-full bg-blue-600";
-        
+
         let classes = twMerge(
             "absolute z-[60] transition-all",
             hasOpenDropdown ? "flex" : "hidden group-hover:flex"
         );
-        
+
         if (outside) {
             if (placement === 'top') classes += " bottom-full left-[-1px] right-[-1px] mb-[-2px] h-8 items-start";
             if (placement === 'bottom') classes += " top-full left-[-1px] right-[-1px] mt-[-2px] h-8 items-end";
@@ -164,7 +164,7 @@ export const BlockIndicator = ({
             if (placement === 'left') classes += " left-0 top-0 bottom-0 w-8 flex-col bg-blue-600";
             if (placement === 'right') classes += " right-0 top-0 bottom-0 w-8 flex-col bg-blue-600";
         }
-        
+
         return classes;
     };
 
@@ -205,26 +205,26 @@ export const BlockIndicator = ({
                         </button>
                     )}
 
-                        <div className={twMerge(
-                            "flex items-center gap-2 px-2 shrink-0",
-                            isVertical ? "flex-col border-t border-white/20 pt-2 h-auto" : "flex-row border-l border-white/20 ml-1 h-4"
-                        )}>
-                            <NumericInput 
-                                label="W"
-                                value={block.colSpan || 12}
-                                min={1}
-                                max={12}
-                                step={1}
-                                onChange={(val) => onUpdate?.({ colSpan: val })}
-                                isVertical={isVertical}
-                            />
-                        </div>
+                    <div className={twMerge(
+                        "flex items-center gap-2 px-2 shrink-0",
+                        isVertical ? "flex-col border-t border-white/20 pt-2 h-auto" : "flex-row border-l border-white/20 ml-1 h-4"
+                    )}>
+                        <NumericInput
+                            label="W"
+                            value={block.colSpan || 12}
+                            min={1}
+                            max={12}
+                            step={1}
+                            onChange={(val) => onUpdate?.({ colSpan: val as ColSpanRange })}
+                            isVertical={isVertical}
+                        />
+                    </div>
 
                     <div className={twMerge(
                         "flex items-center gap-2 px-2 shrink-0",
                         isVertical ? "flex-col border-t border-white/20 pt-2 h-auto" : "flex-row border-l border-white/20 h-4"
                     )}>
-                        <NumericInput 
+                        <NumericInput
                             label="P"
                             value={block.padding ?? 24}
                             onChange={(val) => onUpdate?.({ padding: val })}

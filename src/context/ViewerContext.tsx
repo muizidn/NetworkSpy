@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
+export type ColSpanRange = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
 export interface ViewerBlock {
   id: string;
   type: 'text' | 'json' | 'headers' | 'table' | 'html';
   title: string;
   code: string;
-  colSpan: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  colSpan: ColSpanRange;
   html?: string;
   css?: string;
   padding?: number;
@@ -118,7 +119,7 @@ export const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     await invoke("move_viewer_to_folder", { id, folderId });
     await loadData();
   };
-  
+
   const duplicateViewer = async (id: string) => {
     const viewer = viewers.find(v => v.id === id);
     if (!viewer) return;
