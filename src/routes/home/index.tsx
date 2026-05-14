@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAtom, useAtomValue } from "jotai";
-import { activeTabIdAtom } from "@src/utils/trafficAtoms";
+import { activeTabIdAtom, workspaceTabsAtom, WorkspaceTab } from "@src/utils/trafficAtoms";
+
 import SplitPane, { Pane, SashContent } from "split-pane-react";
 
 import { TauriEnvProvider, useAppProvider } from "@src/packages/app-env";
@@ -46,7 +47,10 @@ const Content = () => {
   const { isReviewMode } = useSessionContext();
   const { getLimit } = useLicense();
   const { openUpgradeDialog } = useUpgradeDialog();
+  
   const [activeTabId, setActiveTabId] = useAtom(activeTabIdAtom);
+  const [tabsList, setTabsList] = useAtom(workspaceTabsAtom);
+
 
   const [showWelcomeCert, setShowWelcomeCert] = useState(false);
 
@@ -72,30 +76,21 @@ const Content = () => {
     if (featureId === "welcome_certificate") setShowWelcomeCert(false);
   };
 
-  const [tabs, setTabs] = useState<any[]>(() => {
-    const saved = localStorage.getItem("ns_workspace_tabs");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.map((t: any) => ({
-            ...t,
-            content: <CenterPane tabId={t.id} />,
-          }));
-        }
-      } catch (e) {
-        console.error("Failed to parse saved tabs", e);
-      }
+  useEffect(() => {
+    if (tabsList.length === 0) {
+      const initialId = `tab-live-${Date.now()}`;
+      setTabsList([{ id: initialId, title: "Live Traffic" }]);
+      setActiveTabId(initialId);
     }
-    const initialId = `tab-live-${Date.now()}`;
-    return [
-      {
-        id: initialId,
-        title: "Live Traffic",
-        content: <CenterPane tabId={initialId} />,
-      },
-    ];
-  });
+  }, []);
+
+  const tabs = useMemo(() => {
+    return tabsList.map(t => ({
+      ...t,
+      content: <CenterPane tabId={t.id} />
+    }));
+  }, [tabsList]);
+
 
   useEffect(() => {
     const toSave = tabs.map(({ id, title }) => ({ id, title }));
@@ -132,42 +127,43 @@ const Content = () => {
 
   const handleAddTab = async () => {
     const limit = await getLimit('max_tabs');
-    if (tabs.length >= limit) {
+    if (tabsList.length >= limit) {
       openUpgradeDialog();
       return;
     }
     
     const newId = `tab-${Date.now()}`;
-    const newTab = {
+    const newTab: WorkspaceTab = {
       id: newId,
-      title: `New Session ${tabs.length + 1}`,
-      content: <CenterPane tabId={newId} />,
+      title: `Session ${tabsList.length + 1}`,
     };
-    setTabs((prev) => [...prev, newTab]);
+    setTabsList((prev) => [...prev, newTab]);
+    setActiveTabId(newId);
   };
 
   const handleCloseTab = (id: string) => {
-    setTabs((prev) => {
+    setTabsList((prev) => {
       const remaining = prev.filter((t) => t.id !== id);
       if (remaining.length === 0) {
         const fallbackId = `tab-live-${Date.now()}`;
-        return [
-          {
-            id: fallbackId,
-            title: "Live Traffic",
-            content: <CenterPane tabId={fallbackId} />,
-          },
-        ];
+        setActiveTabId(fallbackId);
+        return [{ id: fallbackId, title: "Live Traffic" }];
+      }
+      if (id === activeTabId) {
+        const index = prev.findIndex(t => t.id === id);
+        const nextTab = prev[index + 1] || prev[index - 1];
+        if (nextTab) setActiveTabId(nextTab.id);
       }
       return remaining;
     });
   };
 
   const handleRenameTab = (id: string, newTitle: string) => {
-    setTabs((prev) =>
+    setTabsList((prev) =>
       prev.map((t) => (t.id === id ? { ...t, title: newTitle } : t))
     );
   };
+
 
   useEffect(() => {
     if (isReviewMode) return;
@@ -277,15 +273,11 @@ const Content = () => {
                 onRename={handleRenameTab}
                 onTabChange={setActiveTabId}
                 initialTab={activeTabId}
-                integratedTitlebar={false}
-                extraLeftContent={<HeaderLeft />}
-                extraRightContent={
-                  <HeaderRight
-                    toggleBottomPane={toggleBottomPane}
-                    toggleRightPane={toggleRightPane}
-                  />
-                }
+                integratedTitlebar={true}
+                hideTabs={true}
               />
+
+
             </div>
           </Pane>
           <Pane

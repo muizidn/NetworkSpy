@@ -16,9 +16,9 @@
         "width": 1200,
         "height": 800,
         "resizable": true,
-        "theme": "Dark",
-        "titleBarStyle": "Transparent",
-        "hiddenTitle": true
+        "decorations": false,
+        "transparent": true
+
       }
     ],
     "security": {

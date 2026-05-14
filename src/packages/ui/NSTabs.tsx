@@ -45,7 +45,9 @@ interface NSTabsProps {
   extraRightContent?: ReactNode;
   extraLeftContent?: ReactNode;
   integratedTitlebar?: boolean;
+  hideTabs?: boolean;
 }
+
 
 import { FiPlus } from "react-icons/fi";
 
@@ -62,7 +64,9 @@ export const NSTabs: React.FC<NSTabsProps> = ({
   extraRightContent,
   extraLeftContent,
   integratedTitlebar = false,
+  hideTabs = false,
 }) => {
+
   const [currentTab, setCurrentTabInternal] = useState(initialTab || tabs[0]?.id || "");
 
   useEffect(() => {
@@ -123,70 +127,73 @@ export const NSTabs: React.FC<NSTabsProps> = ({
       id={`tabs-for-${title}`}
       className="flex flex-col h-full bg-[#23262a] text-white w-full relative overflow-hidden"
     >
-      <div
-        data-tauri-drag-region={integratedTitlebar ? "" : undefined}
-        className={twMerge(
-          "flex flex-nowrap z-10 shrink-0 relative items-end overflow-y-hidden h-10",
-          designStyle === "chrome" && "bg-[#0a0a0a] pt-1.5 px-2",
-          designStyle === "opera" && "bg-[#181a1f] pt-1 px-1 border-b border-black",
-          designStyle === "basic" && "bg-transparent border-b border-zinc-800/80 px-1 h-7",
-          integratedTitlebar && "pl-20"
-        )}
-      >
-        {designStyle === "chrome" && <div className="absolute bottom-0 left-0 right-0 h-px bg-[#333] z-0" />}
-
-        {/* Fixed Left Section */}
-        <div className="flex items-center shrink-0 z-20 h-full">
-          {extraLeftContent && (
-            <div className="flex items-center">
-              {extraLeftContent}
-            </div>
+      {!hideTabs && (
+        <div
+          data-tauri-drag-region={integratedTitlebar ? "" : undefined}
+          className={twMerge(
+            "flex flex-nowrap z-10 shrink-0 relative items-end overflow-y-hidden h-10",
+            designStyle === "chrome" && "bg-[#0a0a0a] pt-1.5 px-2",
+            designStyle === "opera" && "bg-[#181a1f] pt-1 px-1 border-b border-black",
+            designStyle === "basic" && "bg-transparent border-b border-zinc-800/80 px-1 h-7",
+            integratedTitlebar && "pl-20"
           )}
-          {title && (
-            <div className="px-3 text-xs flex items-center uppercase tracking-wider text-zinc-500 font-bold">
-              {title}
-            </div>
-          )}
-        </div>
+        >
+          {designStyle === "chrome" && <div className="absolute bottom-0 left-0 right-0 h-px bg-[#333] z-0" />}
 
-        {/* Scrollable Tabs Section */}
-        <div className="flex-1 flex flex-nowrap overflow-x-auto no-scrollbar items-end h-full relative">
-          {memoizedTabs.map((tab, index) => (
-            <Tab
-              key={tab.id}
-              id={tab.id}
-              index={index}
-              title={tab.title}
-              currentTab={currentTab}
-              setCurrentTab={setCurrentTab}
-              onClose={handleTabClose}
-              allowClose={designStyle !== "basic"}
-              onRename={onRename}
-              moveTab={(dragIndex, hoverIndex) => onReorder?.(dragIndex, hoverIndex)}
-              designStyle={designStyle}
-            />
-          ))}
-          {onAdd && (
-            <div className="flex justify-end sticky right-0 z-20 shrink-0">
-              <button
-                onClick={onAdd}
-                className="flex items-center justify-center h-[28px] w-8 mb-[2px] bg-[#23262a] hover:bg-white/10 transition-colors text-zinc-400 hover:text-white rounded-md mx-1"
-                title="Open new tab"
-              >
-                <FiPlus size={14} />
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Fixed Right Section */}
-        {extraRightContent && (
-          <div className="flex items-center shrink-0 z-20 h-full pb-1.5 px-2">
-            {extraRightContent}
+          {/* Fixed Left Section */}
+          <div className="flex items-center shrink-0 z-20 h-full">
+            {extraLeftContent && (
+              <div className="flex items-center">
+                {extraLeftContent}
+              </div>
+            )}
+            {title && (
+              <div className="px-3 text-xs flex items-center uppercase tracking-wider text-zinc-500 font-bold">
+                {title}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+
+          {/* Scrollable Tabs Section */}
+          <div className="flex-1 flex flex-nowrap overflow-x-auto no-scrollbar items-end h-full relative">
+            {memoizedTabs.map((tab, index) => (
+              <Tab
+                key={tab.id}
+                id={tab.id}
+                index={index}
+                title={tab.title}
+                currentTab={currentTab}
+                setCurrentTab={setCurrentTab}
+                onClose={handleTabClose}
+                allowClose={designStyle !== "basic"}
+                onRename={onRename}
+                moveTab={(dragIndex, hoverIndex) => onReorder?.(dragIndex, hoverIndex)}
+                designStyle={designStyle}
+              />
+            ))}
+            {onAdd && (
+              <div className="flex justify-end sticky right-0 z-20 shrink-0">
+                <button
+                  onClick={onAdd}
+                  className="flex items-center justify-center h-[28px] w-8 mb-[2px] bg-[#23262a] hover:bg-white/10 transition-colors text-zinc-400 hover:text-white rounded-md mx-1"
+                  title="Open new tab"
+                >
+                  <FiPlus size={14} />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Fixed Right Section */}
+          {extraRightContent && (
+            <div className="flex items-center shrink-0 z-20 h-full pb-1.5 px-2">
+              {extraRightContent}
+            </div>
+          )}
+        </div>
+      )}
       <div className="relative w-full h-full bg-[#23262a] z-0">
+
         {memoizedTabs.map((tab) => (
           <TabPanel key={tab.id} current={currentTab} tag={tab.id}>
             {tab.content}

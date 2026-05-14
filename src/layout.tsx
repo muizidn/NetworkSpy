@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { LeftSidebar } from "./packages/sidebar/LeftSidebar";
 import { ProStatusDialog } from "./packages/sidebar/ProStatusDialog";
 import { StatusInfoDialog } from "./packages/ui/StatusInfoDialog";
+import { TitleBar } from "./packages/ui/TitleBar";
+
 
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { twMerge } from "tailwind-merge";
@@ -28,13 +30,17 @@ export default function Layout() {
 
   return (
     <div className={twMerge(
-      "flex flex-row w-screen h-screen overflow-hidden",
-      isMainWindow ? "bg-[#0a0a0a]" : "bg-[#111111]"
+      "flex flex-col w-screen h-screen overflow-hidden",
+      isMainWindow ? "bg-black/60 backdrop-blur-3xl" : "bg-black/80 backdrop-blur-2xl"
     )}>
-      {isMainWindow && <LeftSidebar />}
+      <TitleBar />
+      
+      <div className="flex flex-row flex-grow overflow-hidden">
+        {isMainWindow && <LeftSidebar />}
 
-      <div className="flex-grow h-screen overflow-hidden relative">
-        <Outlet />
+        <div className="flex-grow h-full overflow-hidden relative">
+          <Outlet />
+        </div>
       </div>
 
       <ProStatusDialog
@@ -44,6 +50,7 @@ export default function Layout() {
       />
       <StatusInfoDialog />
     </div>
+
 
   );
 }

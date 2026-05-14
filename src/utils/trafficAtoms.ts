@@ -4,7 +4,14 @@ import { atomFamily } from 'jotai-family';
 import { FilterNode } from "@src/models/Filter";
 
 // Current Active Tab
+export interface WorkspaceTab {
+  id: string;
+  title: string;
+}
+
 export const activeTabIdAtom = atomWithStorage<string>("ns_active_tab_id", "");
+export const workspaceTabsAtom = atomWithStorage<WorkspaceTab[]>("ns_workspace_tabs_v2", []);
+
 
 // Main Traffic List Filters (Per Tab)
 export const mainTrafficListFiltersAtom = atomFamily((tabId: string) => atom<FilterNode[]>([]));
