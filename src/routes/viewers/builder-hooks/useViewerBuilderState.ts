@@ -18,7 +18,9 @@ import {
     viewerBuilderViewModeAtom,
     viewerBuilderAiAssistantVisibleAtom,
     viewerBuilderToolboxVisibleAtom,
-    viewerBuilderMaximizedBlockIdAtom
+    viewerBuilderMaximizedBlockIdAtom,
+    viewerBuilderCanvasPaddingAtom,
+    viewerBuilderGridGapAtom
 } from "@src/utils/viewerBuilderAtoms";
 
 export const useViewerBuilderState = (initialViewer: Viewer) => {
@@ -55,6 +57,9 @@ export const useViewerBuilderState = (initialViewer: Viewer) => {
     const [isSourceDialogOpen, setIsSourceDialogOpen] = useState(false);
     const [viewMode, setViewMode] = useAtom(viewerBuilderViewModeAtom(initialViewer.id));
     const [isAiAssistantVisible, setIsAiAssistantVisible] = useAtom(viewerBuilderAiAssistantVisibleAtom(initialViewer.id));
+    
+    const [canvasPadding, setCanvasPadding] = useAtom(viewerBuilderCanvasPaddingAtom(initialViewer.id));
+    const [gridGap, setGridGap] = useAtom(viewerBuilderGridGapAtom(initialViewer.id));
 
     useEffect(() => {
         if (testSource === 'session' && selectedSessionId) {
@@ -185,6 +190,9 @@ export const useViewerBuilderState = (initialViewer: Viewer) => {
         if (viewMode === null) setViewMode('preview');
         if (isAiAssistantVisible === null) setIsAiAssistantVisible(false);
         if (isToolboxVisible === null) setIsToolboxVisible(true);
+
+        if (canvasPadding === null) setCanvasPadding(parsedContent.layoutConfig?.canvasPadding ?? 48);
+        if (gridGap === null) setGridGap(parsedContent.layoutConfig?.gridGap ?? 48);
     }, [initialViewer.id, parsedContent]);
 
     const handleSave = async () => {
@@ -196,6 +204,10 @@ export const useViewerBuilderState = (initialViewer: Viewer) => {
                 selectedSessionId: selectedSessionId || "",
                 filter: filter || "",
                 selectedTrafficId: selectedTrafficId || ""
+            },
+            layoutConfig: {
+                canvasPadding: canvasPadding ?? 48,
+                gridGap: gridGap ?? 48
             }
         };
         await saveViewer(viewerName || initialViewer.name, JSON.stringify(content), initialViewer.id, initialViewer.folderId);
@@ -274,6 +286,10 @@ export const useViewerBuilderState = (initialViewer: Viewer) => {
         goPrev,
         sessions,
         isAiAssistantVisible: isAiAssistantVisible ?? false,
-        setIsAiAssistantVisible
+        setIsAiAssistantVisible,
+        canvasPadding: canvasPadding ?? 48,
+        setCanvasPadding,
+        gridGap: gridGap ?? 48,
+        setGridGap
     };
 };

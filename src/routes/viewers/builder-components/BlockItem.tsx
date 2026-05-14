@@ -13,9 +13,11 @@ interface BlockItemProps {
     onDelete?: () => void;
     onUpdate?: (updates: Partial<ViewerBlock>) => void;
     onDebugWithAi?: (blockId: string, error: string) => void;
+    index?: number;
+    total?: number;
 }
 
-export const BlockItem = ({ block, result, onDelete, onUpdate, isViewerMode = false, onDebugWithAi }: BlockItemProps) => {
+export const BlockItem = ({ block, result, onDelete, onUpdate, isViewerMode = false, onDebugWithAi, index = 0, total = 0 }: BlockItemProps) => {
     const [isEditingCode, setIsEditingCode] = useState(false);
     const [activeTab, setActiveTab] = useState<'js' | 'html' | 'css' | 'output'>('js');
     const [isMaximized, setIsMaximized] = useState(false);
@@ -26,9 +28,11 @@ export const BlockItem = ({ block, result, onDelete, onUpdate, isViewerMode = fa
 
     const isSideBySide = isEditingCode && (block.colSpan >= 8 || isMaximized);
 
+    const placement = index === 0 ? 'bottom' : 'top';
+
     const component = (
         <div className={twMerge(
-            `relative group bg-zinc-900/40 overflow-hidden transition-all shadow-xl ${["col-span-1", "col-span-2", "col-span-3", "col-span-4", "col-span-5", "col-span-6", "col-span-7", "col-span-8", "col-span-9", "col-span-10", "col-span-11", "col-span-12"][(block.colSpan || 12) - 1]}`,
+            `relative group bg-zinc-900/40 transition-all shadow-xl ${["col-span-1", "col-span-2", "col-span-3", "col-span-4", "col-span-5", "col-span-6", "col-span-7", "col-span-8", "col-span-9", "col-span-10", "col-span-11", "col-span-12"][(block.colSpan || 12) - 1]}`,
             isViewerMode ? "" : `border border-zinc-800 hover:border-blue-500`
         )}>
             {/* CONTROL BAR */}
@@ -42,10 +46,15 @@ export const BlockItem = ({ block, result, onDelete, onUpdate, isViewerMode = fa
                     setIsEditingCode={setIsEditingCode}
                     onUpdate={onUpdate}
                     onDelete={onDelete}
+                    placement={placement}
+                    outside={true}
                 />
             )}
 
-            <div className={twMerge("p-0 transition-all", isSideBySide ? "grid grid-cols-2" : "flex flex-col")}>
+            <div className={twMerge(
+                "p-0 transition-all overflow-hidden rounded-lg", 
+                isSideBySide ? "grid grid-cols-2" : "flex flex-col"
+            )}>
                 <BlockPreview
                     block={block}
                     result={result}

@@ -13,6 +13,8 @@ interface CanvasProps {
     updateBlock?: (id: string, updates: Partial<ViewerBlock>) => void;
     deleteBlock?: (id: string) => void;
     onDebugWithAi?: (blockId: string, error: string) => void;
+    canvasPadding?: number;
+    gridGap?: number;
 }
 
 export const Canvas: React.FC<CanvasProps> = ({
@@ -23,7 +25,9 @@ export const Canvas: React.FC<CanvasProps> = ({
     updateBlock,
     deleteBlock,
     isViewerMode,
-    onDebugWithAi
+    onDebugWithAi,
+    canvasPadding = 48,
+    gridGap = 48
 }) => {
     // If a block is maximized, show only that block in full view
     if (maximizedBlockId && setMaximizedBlockId && updateBlock) {
@@ -43,8 +47,16 @@ export const Canvas: React.FC<CanvasProps> = ({
     }
 
     return (
-        <div className="h-full w-full overflow-y-auto custom-scrollbar bg-[#080808]">
-            <div id="viewerbuilder-canvas" className="grid grid-cols-12 w-full items-start">
+        <div 
+            id="canvas-container" 
+            className="h-full w-full overflow-y-auto custom-scrollbar bg-[#080808]"
+            style={{ padding: `${canvasPadding}px` }}
+        >
+            <div 
+                id="viewerbuilder-canvas" 
+                className="grid grid-cols-12 w-full items-start"
+                style={{ rowGap: `${gridGap}px` }}
+            >
                 {blocks.length === 0 ? (
                     <div className="col-span-12 flex justify-center items-center p-20">
                         <div className="border-2 border-dashed border-zinc-800 rounded-2xl p-20 flex flex-col items-center justify-center text-zinc-600">
@@ -54,10 +66,12 @@ export const Canvas: React.FC<CanvasProps> = ({
                         </div>
                     </div>
                 ) : (
-                    blocks.map((block) => (
+                    blocks.map((block, index) => (
                         <BlockItem
                             key={block.id}
                             block={block}
+                            index={index}
+                            total={blocks.length}
                             isViewerMode={isViewerMode}
                             result={testResults && testResults[block.id]}
                             onDelete={deleteBlock ? (() => deleteBlock(block.id)) : undefined}

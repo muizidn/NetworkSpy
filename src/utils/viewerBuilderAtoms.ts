@@ -17,3 +17,5 @@ export const viewerBuilderViewModeAtom = atomFamily((viewerId: string) => atom<'
 export const viewerBuilderAiAssistantVisibleAtom = atomFamily((viewerId: string) => atom<boolean | null>(null));
 export const viewerBuilderToolboxVisibleAtom = atomFamily((viewerId: string) => atom<boolean | null>(null));
 export const viewerBuilderMaximizedBlockIdAtom = atomFamily((viewerId: string) => atom<string | null>(null));
+export const viewerBuilderCanvasPaddingAtom = atomFamily((viewerId: string) => atom<number | null>(null));
+export const viewerBuilderGridGapAtom = atomFamily((viewerId: string) => atom<number | null>(null));

@@ -22,6 +22,10 @@ export interface ViewerContent {
     selectedTrafficId?: string;
   };
   matchers?: ViewerMatcher[];
+  layoutConfig?: {
+    canvasPadding?: number;
+    gridGap?: number;
+  };
 }
 
 export interface ViewerMatcher {

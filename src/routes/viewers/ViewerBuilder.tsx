@@ -50,6 +50,10 @@ const ViewerBuilder: React.FC<ViewerBuilderProps> = ({ viewer: initialViewer, on
         sessions,
         isAiAssistantVisible,
         setIsAiAssistantVisible,
+        canvasPadding,
+        setCanvasPadding,
+        gridGap,
+        setGridGap,
         isSessionLoading
     } = useViewerBuilderState(initialViewer);
 
@@ -94,6 +98,8 @@ const ViewerBuilder: React.FC<ViewerBuilderProps> = ({ viewer: initialViewer, on
                         updateBlock={updateBlock}
                         deleteBlock={deleteBlock}
                         onDebugWithAi={handleDebugWithAi}
+                        canvasPadding={canvasPadding}
+                        gridGap={gridGap}
                     />
                 );
             case 'json':
@@ -173,6 +179,10 @@ const ViewerBuilder: React.FC<ViewerBuilderProps> = ({ viewer: initialViewer, on
                     addBlock={addBlock}
                     matchers={matchers}
                     setMatchers={setMatchers}
+                    canvasPadding={canvasPadding}
+                    setCanvasPadding={setCanvasPadding}
+                    gridGap={gridGap}
+                    setGridGap={setGridGap}
                 />
 
                 <AiBuilderSidebar

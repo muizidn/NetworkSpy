@@ -10,6 +10,10 @@ interface ToolboxProps {
     addBlock: (type: ViewerBlock['type']) => void;
     matchers: ViewerMatcher[];
     setMatchers: (matchers: ViewerMatcher[]) => void;
+    canvasPadding: number;
+    setCanvasPadding: (val: number) => void;
+    gridGap: number;
+    setGridGap: (val: number) => void;
 }
 
 const EditorInfo: React.FC = () => {
@@ -54,7 +58,8 @@ const EditorInfo: React.FC = () => {
 };
 
 export const Toolbox: React.FC<ToolboxProps> = ({
-    isVisible, maximizedBlockId, addBlock, matchers, setMatchers
+    isVisible, maximizedBlockId, addBlock, matchers, setMatchers,
+    canvasPadding, setCanvasPadding, gridGap, setGridGap
 }) => {
     if (!isVisible || maximizedBlockId) return null;
 
@@ -79,6 +84,41 @@ export const Toolbox: React.FC<ToolboxProps> = ({
                 <div>
                     <h3 className="text-[10px] font-black tracking-tight text-zinc-500 mb-4 flex items-center gap-2">
                         <FiSettings className="text-yellow-500" />
+                        Canvas Settings
+                    </h3>
+                    <div className="space-y-4 bg-zinc-900/30 p-3 rounded-lg border border-zinc-800/50">
+                        <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                                <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Padding</label>
+                                <span className="text-[10px] font-mono text-blue-500">{canvasPadding}px</span>
+                            </div>
+                            <input 
+                                type="range" 
+                                min="0" max="100" step="4"
+                                value={canvasPadding}
+                                onChange={(e) => setCanvasPadding(parseInt(e.target.value))}
+                                className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                                <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Grid Gap</label>
+                                <span className="text-[10px] font-mono text-yellow-500">{gridGap}px</span>
+                            </div>
+                            <input 
+                                type="range" 
+                                min="0" max="100" step="4"
+                                value={gridGap}
+                                onChange={(e) => setGridGap(parseInt(e.target.value))}
+                                className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-yellow-500"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 className="text-[10px] font-black tracking-tight text-zinc-500 mb-4 flex items-center gap-2">
+                        <FiLayers className="text-purple-500" />
                         Auto-Matchers ({matchers.length})
                     </h3>
                     
