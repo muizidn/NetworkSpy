@@ -1,26 +1,22 @@
-import { useEffect, useState, useMemo } from "react";
-import { useAtom, useAtomValue } from "jotai";
-import { activeTabIdAtom, workspaceTabsAtom, WorkspaceTab } from "@src/utils/trafficAtoms";
+import { activeTabIdAtom, WorkspaceTab, workspaceTabsAtom } from "@src/utils/trafficAtoms";
+import { useAtom } from "jotai";
+import { useEffect, useMemo, useState } from "react";
 
 import SplitPane, { Pane, SashContent } from "split-pane-react";
 
-import { TauriEnvProvider, useAppProvider } from "@src/packages/app-env";
-import { Traffic } from "../../models/Traffic";
-import { PaneProvider, usePaneContext } from "../../context/PaneProvider";
-import { useSessionContext } from "../../context/SessionContext";
-import { HeaderLeft, HeaderRight } from "@src/packages/header/Header";
+import { useUpgradeDialog } from "@src/context/UpgradeContext";
+import { useLicense } from "@src/hooks/useLicense";
+import { useAppProvider } from "@src/packages/app-env";
 import {
-  TrafficListProvider,
-  useTrafficListContext,
+  useTrafficListContext
 } from "@src/packages/main-content/context/TrafficList";
 import { TrafficItemMap } from "@src/packages/main-content/model/TrafficItemMap";
-import { LeftSidebar } from "@src/packages/sidebar/LeftSidebar";
 import { RightSidebar } from "@src/packages/sidebar/RightSidebar";
 import { NSTabs } from "@src/packages/ui/NSTabs";
 import { WelcomeDialog } from "@src/packages/ui/WelcomeDialog";
+import { usePaneContext } from "../../context/PaneProvider";
+import { useSessionContext } from "../../context/SessionContext";
 import { CenterPane } from "./CenterPane";
-import { useLicense } from "@src/hooks/useLicense";
-import { useUpgradeDialog } from "@src/context/UpgradeContext";
 
 const Content = () => {
   const paneSizeConfig = {
@@ -47,7 +43,7 @@ const Content = () => {
   const { isReviewMode } = useSessionContext();
   const { getLimit } = useLicense();
   const { openUpgradeDialog } = useUpgradeDialog();
-  
+
   const [activeTabId, setActiveTabId] = useAtom(activeTabIdAtom);
   const [tabsList, setTabsList] = useAtom(workspaceTabsAtom);
 
@@ -131,7 +127,7 @@ const Content = () => {
       openUpgradeDialog();
       return;
     }
-    
+
     const newId = `tab-${Date.now()}`;
     const newTab: WorkspaceTab = {
       id: newId,

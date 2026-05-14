@@ -32,7 +32,10 @@ interface SettingsContextInterface {
   setOpenRouterModel: (model: string) => void;
   verifyLicense: (key: string | null) => Promise<any>;
   revokeLicense: () => Promise<void>;
+  startProxyOnLaunch: boolean;
+  setStartProxyOnLaunch: (enabled: boolean) => void;
 }
+
 
 export const SettingsContext = createContext<SettingsContextInterface>({
   theme: "dark",
@@ -58,8 +61,11 @@ export const SettingsContext = createContext<SettingsContextInterface>({
   openRouterModel: "google/gemini-2.0-flash-001",
   setOpenRouterModel: () => { },
   verifyLicense: async () => { },
-  revokeLicense: async () => { }
+  revokeLicense: async () => { },
+  startProxyOnLaunch: true,
+  setStartProxyOnLaunch: () => { }
 });
+
 
 export const useSettingsContext = () => useContext(SettingsContext);
 
@@ -85,6 +91,10 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     return saved ? JSON.parse(saved) : null;
   });
   const [isSyncing, setIsSyncing] = useState(false);
+  const [startProxyOnLaunch, setStartProxyOnLaunch] = useState(() => {
+    return localStorage.getItem("ns_start_proxy_on_launch") !== "false";
+  });
+
 
   const verifyLicense = async (key: string | null = null) => {
     setIsSyncing(true);
@@ -185,6 +195,11 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   }, [openRouterModel]);
 
   useEffect(() => {
+    localStorage.setItem("ns_start_proxy_on_launch", String(startProxyOnLaunch));
+  }, [startProxyOnLaunch]);
+
+  useEffect(() => {
+
     if (!isLoaded) return;
 
     invoke("update_proxy_settings", {
@@ -224,7 +239,10 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         isSyncing,
         verifyLicense,
         revokeLicense,
+        startProxyOnLaunch,
+        setStartProxyOnLaunch,
       }}>
+
       {children}
     </SettingsContext.Provider>
   );

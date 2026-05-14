@@ -62,7 +62,12 @@ export const TauriEnvProvider: React.FC<TauriEnvProviderProps> = ({
   provider,
 }) => {
   const activeProvider = useMemo(() => provider || getAppProvider(), [provider]);
-  const [isRun, setIsRun] = useState(true);
+  const [isRun, setIsRun] = useState(() => {
+    // We check localStorage directly here because SettingsContext might not be fully initialized 
+    // at the exact moment this state is created, and we want to avoid a "true" flash if the user set it to "false".
+    return localStorage.getItem("ns_start_proxy_on_launch") !== "false";
+  });
+
   const [currentPort, setCurrentPort] = useState<number | null>(null);
   const [pausedBreakpoints, setPausedBreakpoints] = useState<BreakpointHit[]>([]);
   const { setTrafficList, setTrafficSet, setSelections } = useTrafficListContext();

@@ -25,7 +25,10 @@ export default function Settings() {
         setOpenRouterKey,
         openRouterModel,
         setOpenRouterModel,
+        startProxyOnLaunch,
+        setStartProxyOnLaunch,
     } = useSettingsContext();
+
 
     const [appVersion, setAppVersion] = useState<string>('0.0.0');
     const [testStatus, setTestStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
@@ -203,6 +206,30 @@ export default function Settings() {
                             <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300 ${smartViewerMatch ? 'left-7' : 'left-1'}`} />
                         </button>
                     </div>
+
+                    <div
+                        className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 flex items-center justify-between group hover:border-zinc-700 transition-all duration-300 cursor-pointer"
+                        onClick={() => setStartProxyOnLaunch(!startProxyOnLaunch)}
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+                                <FiPlay size={20} />
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-white mb-0.5">Start Proxy on Launch</h3>
+                                <p className="text-xs text-zinc-500 max-w-md leading-relaxed">
+                                    Automatically start the proxy server when the application is launched. Disable this if you prefer to start capture manually.
+                                </p>
+                            </div>
+                        </div>
+
+                        <button
+                            className={`w-12 h-6 rounded-full relative transition-all duration-300 ${startProxyOnLaunch ? 'bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.4)]' : 'bg-zinc-800'}`}
+                        >
+                            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300 ${startProxyOnLaunch ? 'left-7' : 'left-1'}`} />
+                        </button>
+                    </div>
+
 
 
                     <div
