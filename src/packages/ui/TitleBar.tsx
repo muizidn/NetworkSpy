@@ -175,15 +175,19 @@ export const TitleBar: React.FC = () => {
                 onClick={clearData} 
               />
               <div className="w-px h-3 bg-white/10 mx-1" />
-              {currentPort && (
-                <button 
-                  onClick={() => setIsPortDialogOpen(true)}
-                  className="px-2 h-6 flex items-center gap-1.5 hover:bg-white/5 rounded transition-colors text-[10px] font-mono font-bold text-blue-400"
-                >
-                  <span className="w-1 h-1 rounded-full bg-blue-500" />
-                  :{currentPort}
-                </button>
-              )}
+              <button 
+                onClick={() => setIsPortDialogOpen(true)}
+                className={twMerge(
+                  "px-2 h-6 flex items-center gap-1.5 hover:bg-white/5 rounded transition-all text-[10px] font-bold uppercase tracking-tight",
+                  isRun ? "text-blue-400 font-mono" : "text-zinc-500"
+                )}
+              >
+                <span className={twMerge(
+                  "w-1 h-1 rounded-full transition-all duration-500",
+                  isRun ? "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)] animate-pulse" : "bg-zinc-600"
+                )} />
+                {isRun ? `:${currentPort}` : "Proxy Paused"}
+              </button>
               <div className="w-px h-3 bg-white/10 mx-1" />
               <ActionButton 
                 icon={FiSave} 
