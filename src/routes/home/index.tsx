@@ -253,7 +253,7 @@ const Content = () => {
   };
 
   return (
-    <div className='select-none flex flex-col h-screen overflow-hidden'>
+    <div className='select-none flex flex-col h-full overflow-hidden'>
       <div className='flex flex-grow overflow-hidden w-full h-full'>
         <SplitPane
           split='vertical'
