@@ -1,5 +1,5 @@
-import React from "react";
-import { FiMinimize, FiMaximize, FiCode, FiTrash2, FiAlertCircle } from "react-icons/fi";
+import React, { useState, useRef, useEffect } from "react";
+import { FiMinimize, FiMaximize, FiCode, FiTrash2, FiAlertCircle, FiChevronDown, FiPlus, FiMinus } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import { ViewerBlock } from "@src/context/ViewerContext";
 
@@ -16,6 +16,95 @@ interface BlockIndicatorProps {
     outside?: boolean;
 }
 
+const CustomDropdown = ({ value, options, onChange, label, isVertical }: { 
+    value: any, 
+    options: number[], 
+    onChange: (val: any) => void, 
+    label: string,
+    isVertical?: boolean
+}) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    return (
+        <div className="relative" ref={containerRef}>
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center gap-1 bg-white/10 border border-white/20 rounded px-1.5 py-0.5 text-[9px] font-black text-white hover:bg-white/20 transition-colors focus:outline-none focus:border-white/40"
+            >
+                {!isVertical && <span className="text-white/60 mr-1">{label}</span>}
+                {value}
+                <FiChevronDown size={10} className={twMerge("transition-transform", isOpen ? "rotate-180" : "")} />
+            </button>
+
+            {isOpen && (
+                <div className={twMerge(
+                    "absolute z-[100] bg-zinc-900 border border-zinc-800 rounded-lg shadow-2xl py-1 overflow-hidden min-w-[60px]",
+                    isVertical ? "left-full top-0 ml-2" : "top-full left-0 mt-1"
+                )}>
+                    <div className="max-h-[200px] overflow-y-auto custom-scrollbar">
+                        {options.map((opt) => (
+                            <button
+                                key={opt}
+                                onClick={() => {
+                                    onChange(opt);
+                                    setIsOpen(false);
+                                }}
+                                className={twMerge(
+                                    "w-full text-left px-3 py-1.5 text-[10px] font-bold transition-colors",
+                                    value === opt ? "bg-blue-600 text-white" : "text-zinc-400 hover:bg-zinc-800 hover:text-white"
+                                )}
+                            >
+                                {opt}{!isVertical && label === 'W' ? '/12' : ''}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+const NumericInput = ({ value, onChange, label, isVertical }: { 
+    value: number, 
+    onChange: (val: number) => void, 
+    label: string,
+    isVertical?: boolean
+}) => {
+    return (
+        <div className="flex items-center gap-1">
+            {!isVertical && <span className="text-[9px] font-black text-white/60 uppercase tracking-widest leading-none mr-1">{label}</span>}
+            <div className="flex items-center bg-white/10 border border-white/20 rounded overflow-hidden">
+                <button 
+                    onClick={() => onChange(Math.max(0, value - 4))}
+                    className="p-1 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+                >
+                    <FiMinus size={10} />
+                </button>
+                <div className="px-1 text-[9px] font-black text-white min-w-[20px] text-center border-x border-white/10">
+                    {value}
+                </div>
+                <button 
+                    onClick={() => onChange(value + 4)}
+                    className="p-1 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+                >
+                    <FiPlus size={10} />
+                </button>
+            </div>
+        </div>
+    );
+};
+
 export const BlockIndicator = ({
     block,
     isEditingCode,
@@ -31,20 +120,20 @@ export const BlockIndicator = ({
     const isVertical = placement === 'left' || placement === 'right';
 
     const getPlacementClasses = () => {
-        if (isMaximized) return "relative flex w-full";
+        if (isMaximized) return "relative flex w-full bg-blue-600";
         
-        let classes = "absolute hidden group-hover:flex z-[60] bg-blue-600 shadow-xl transition-all ";
+        let classes = "absolute hidden group-hover:flex z-[60] transition-all ";
         
         if (outside) {
-            if (placement === 'top') classes += "bottom-full left-0 right-0 mb-1 h-8 rounded-t-lg";
-            if (placement === 'bottom') classes += "top-full left-0 right-0 mt-1 h-8 rounded-b-lg";
-            if (placement === 'left') classes += "right-full top-0 bottom-0 mr-1 w-8 rounded-l-lg flex-col";
-            if (placement === 'right') classes += "left-full top-0 bottom-0 ml-1 w-8 rounded-r-lg flex-col";
+            if (placement === 'top') classes += "bottom-full left-0 right-0 pb-1 h-9 items-start";
+            if (placement === 'bottom') classes += "top-full left-0 right-0 pt-1 h-9 items-end";
+            if (placement === 'left') classes += "right-full top-0 bottom-0 pr-1 w-9 flex-col items-start";
+            if (placement === 'right') classes += "left-full top-0 bottom-0 pl-1 w-9 flex-col items-end";
         } else {
-            if (placement === 'top') classes += "top-0 left-0 right-0 h-8";
-            if (placement === 'bottom') classes += "bottom-0 left-0 right-0 h-8";
-            if (placement === 'left') classes += "left-0 top-0 bottom-0 w-8 flex-col";
-            if (placement === 'right') classes += "right-0 top-0 bottom-0 w-8 flex-col";
+            if (placement === 'top') classes += "top-0 left-0 right-0 h-8 bg-blue-600";
+            if (placement === 'bottom') classes += "bottom-0 left-0 right-0 h-8 bg-blue-600";
+            if (placement === 'left') classes += "left-0 top-0 bottom-0 w-8 flex-col bg-blue-600";
+            if (placement === 'right') classes += "right-0 top-0 bottom-0 w-8 flex-col bg-blue-600";
         }
         
         return classes;
@@ -53,8 +142,12 @@ export const BlockIndicator = ({
     return (
         <div className={twMerge(getPlacementClasses())}>
             <div className={twMerge(
-                "flex items-center gap-1.5 h-full px-1",
-                isVertical ? "flex-col py-1.5" : "flex-row px-1"
+                "flex items-center gap-1.5 h-8 px-1 bg-blue-600 shadow-xl",
+                isVertical ? "flex-col py-1.5 w-8 h-full" : "flex-row px-1 w-full",
+                outside && placement === 'top' ? "rounded-t-lg" : "",
+                outside && placement === 'bottom' ? "rounded-b-lg" : "",
+                outside && placement === 'left' ? "rounded-l-lg" : "",
+                outside && placement === 'right' ? "rounded-r-lg" : ""
             )}>
                 <button
                     onClick={() => setIsMaximized(!isMaximized)}
@@ -86,30 +179,24 @@ export const BlockIndicator = ({
                             "flex items-center gap-2 px-2",
                             isVertical ? "flex-col border-t border-white/20 pt-2 h-auto" : "flex-row border-l border-white/20 ml-1 h-4"
                         )}>
-                            {!isVertical && <span className="text-[9px] font-black text-white/60 uppercase tracking-widest leading-none">W</span>}
-                            <select
+                            <CustomDropdown 
+                                label="W"
                                 value={block.colSpan || 12}
-                                onChange={(e) => onUpdate?.({ colSpan: parseInt(e.target.value) as any })}
-                                className="bg-white/10 border border-white/20 rounded px-1 py-0.5 text-[9px] font-black text-white focus:outline-none focus:border-white/40 cursor-pointer appearance-none hover:bg-white/20"
-                            >
-                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => (
-                                    <option key={n} value={n} className="bg-zinc-900 text-white">
-                                        {n}
-                                    </option>
-                                ))}
-                            </select>
+                                options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+                                onChange={(val) => onUpdate?.({ colSpan: val })}
+                                isVertical={isVertical}
+                            />
                         </div>
 
                         <div className={twMerge(
                             "flex items-center gap-2 px-2",
                             isVertical ? "flex-col border-t border-white/20 pt-2 h-auto" : "flex-row border-l border-white/20 h-4"
                         )}>
-                            {!isVertical && <span className="text-[9px] font-black text-white/60 uppercase tracking-widest leading-none">P</span>}
-                            <input
-                                type="number"
+                            <NumericInput 
+                                label="P"
                                 value={block.padding ?? 24}
-                                onChange={(e) => onUpdate?.({ padding: parseInt(e.target.value) })}
-                                className="w-6 bg-white/10 border border-white/20 rounded px-1 py-0.5 text-[9px] font-black text-white focus:outline-none focus:border-white/40"
+                                onChange={(val) => onUpdate?.({ padding: val })}
+                                isVertical={isVertical}
                             />
                         </div>
 

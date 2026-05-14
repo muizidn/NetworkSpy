@@ -33,7 +33,8 @@ export const BlockItem = ({ block, result, onDelete, onUpdate, isViewerMode = fa
     const component = (
         <div className={twMerge(
             `relative group bg-zinc-900/40 transition-all shadow-xl ${["col-span-1", "col-span-2", "col-span-3", "col-span-4", "col-span-5", "col-span-6", "col-span-7", "col-span-8", "col-span-9", "col-span-10", "col-span-11", "col-span-12"][(block.colSpan || 12) - 1]}`,
-            isViewerMode ? "" : `border border-zinc-800 hover:border-blue-500`
+            isViewerMode ? "" : `border border-zinc-800 hover:border-blue-500`,
+            isMaximized ? "h-full w-full" : ""
         )}>
             {/* CONTROL BAR */}
             {!isViewerMode && (
@@ -53,7 +54,8 @@ export const BlockItem = ({ block, result, onDelete, onUpdate, isViewerMode = fa
 
             <div className={twMerge(
                 "p-0 transition-all overflow-hidden rounded-lg", 
-                isSideBySide ? "grid grid-cols-2" : "flex flex-col"
+                isSideBySide ? "grid grid-cols-2" : "flex flex-col",
+                isMaximized ? "h-full" : ""
             )}>
                 <BlockPreview
                     block={block}
@@ -79,10 +81,12 @@ export const BlockItem = ({ block, result, onDelete, onUpdate, isViewerMode = fa
 
     if (isMaximized) {
         return createPortal(
-            <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                <div className="bg-[#111111] border border-zinc-800 rounded-xl shadow-2xl w-full max-w-[90%] overflow-hidden animate-in fade-in zoom-in duration-200 p-4"
+            <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-10">
+                <div className="bg-[#111111] border border-zinc-800 rounded-xl shadow-2xl w-[90vw] h-[90vh] overflow-visible animate-in fade-in zoom-in duration-200 flex flex-col"
                     onClick={(e) => e.stopPropagation()}>
-                    {component}
+                    <div className="flex-1 overflow-hidden relative">
+                        {component}
+                    </div>
                 </div>
             </div>,
             document.body

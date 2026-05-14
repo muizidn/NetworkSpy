@@ -55,7 +55,7 @@ export const Canvas: React.FC<CanvasProps> = ({
             <div 
                 id="viewerbuilder-canvas" 
                 className="grid grid-cols-12 w-full items-start"
-                style={{ rowGap: `${gridGap}px` }}
+                style={{ gap: `${gridGap}px` }}
             >
                 {blocks.length === 0 ? (
                     <div className="col-span-12 flex justify-center items-center p-20">
