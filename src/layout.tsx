@@ -50,15 +50,15 @@ export default function Layout() {
         /* Ghost TitleBar for Mac to prevent overlapping native buttons */
         isMac && (
           <div className="h-8 shrink-0 flex items-center pointer-events-none" data-tauri-drag-region>
-             <div className="w-20 shrink-0 h-full" data-tauri-drag-region />
+            <div className="w-20 shrink-0 h-full" data-tauri-drag-region />
           </div>
         )
       )}
-      
-      <div className="flex flex-row flex-grow overflow-hidden">
+
+      <div id="main-layout" className="flex flex-row flex-grow h-0 min-h-0 overflow-hidden">
         {isMainWindow && <LeftSidebar />}
 
-        <div className="flex-grow h-full overflow-hidden relative">
+        <div id="main-content-route" className="flex-grow min-h-0 overflow-hidden relative">
           <Outlet />
         </div>
       </div>
