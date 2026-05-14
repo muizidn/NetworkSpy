@@ -18,6 +18,7 @@ pub mod license;
 pub mod handler;
 pub mod map_local;
 pub mod map_remote;
+pub mod mac_window;
 use crate::map_local::MapLocalManager;
 use crate::map_remote::MapRemoteManager;
 
@@ -59,8 +60,19 @@ use crate::traffic::db::{is_text_content_type, body_to_string};
 
 
 use commands::*;
+use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
+#[cfg(target_os = "macos")]
+use objc::msg_send;
+#[cfg(target_os = "macos")]
+use objc::sel;
+#[cfg(target_os = "macos")]
+use objc::sel_impl;
 
+
+
+#[allow(unexpected_cfgs)]
 fn main() {
+
     // Use compile-time environment variables (baked into the binary via build.rs)
     // This ensures no .env file is needed at runtime.
     let app_name = env!("APP_NAME");
@@ -123,7 +135,18 @@ fn main() {
         .setup(move |app| {
             
 
+            // 0. Native Window Customization (macOS)
+            #[cfg(target_os = "macos")]
+            #[allow(deprecated)]
+            if let Some(window) = app.get_webview_window("main") {
+                // Setup the native title bar positioning and styling (Yaak-style)
+                mac_window::setup_mac_window(&window);
+            }
+
+
             // 1. Global Application Menu Setup (macOS)
+
+
             // Tauri menu bindings take explicit ownership over items. 
             // Because macOS uses a global bar and Windows/Linux uses per-window bars,
             // we configure two physically separate menu structures to guarantee

@@ -123,14 +123,11 @@ export const TitleBar: React.FC = () => {
       data-tauri-drag-region 
       className="flex items-center h-8 bg-black/40 backdrop-blur-xl border-b border-white/5 select-none shrink-0 z-[1000] px-2 gap-2"
     >
-      {/* Platform Controls (Left for Mac) */}
+      {/* Platform Controls Spacer (Left for Mac) */}
       {isMac && (
-        <div className="flex items-center gap-2 w-20 shrink-0">
-          <button className="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]" onClick={() => appWindow.close()} />
-          <button className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#d8a127]" onClick={() => appWindow.minimize()} />
-          <button className="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]" onClick={() => appWindow.toggleMaximize()} />
-        </div>
+        <div className="w-20 shrink-0 h-full" data-tauri-drag-region />
       )}
+
 
       {/* Main Actions Area */}
       <div className="flex items-center gap-2 shrink-0 h-full" data-tauri-drag-region>

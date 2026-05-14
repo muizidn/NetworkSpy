@@ -13,7 +13,7 @@ edition = "2021"
 tauri-build = { version = "2.0", features = [] }
 
 [dependencies]
-tauri = { version = "2.0", features = ["tray-icon", "image-png", "image-ico"] }
+tauri = { version = "2.0", features = ["macos-private-api", "tray-icon", "image-png", "image-ico"] }
 tauri-plugin-shell = "2.0"
 tauri-plugin-os = "2.0"
 tauri-plugin-dialog = "2.0"
@@ -55,6 +55,14 @@ josekit = "0.10"
 mac_address = "1.1.7"
 sha2 = "0.10.8"
 arboard = "3.4"
+window-vibrancy = "0.6.0"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+cocoa = "0.26"
+objc = "0.2.7"
+
+
+
 
 [target.'cfg(target_os = "windows")'.dependencies]
 windows = { version = "0.62.2", features = ["Win32_Networking_WinInet", "Win32_Foundation"] }

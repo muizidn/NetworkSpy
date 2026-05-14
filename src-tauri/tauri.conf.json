@@ -9,18 +9,24 @@
     "devUrl": "http://localhost:1420"
   },
   "app": {
+    "macOSPrivateApi": true,
     "withGlobalTauri": true,
+
     "windows": [
       {
         "title": "Network Spy",
         "width": 1200,
         "height": 800,
         "resizable": true,
-        "decorations": false,
-        "transparent": true
+        "decorations": true,
+        "transparent": true,
 
+        "titleBarStyle": "Transparent"
       }
+
+
     ],
+
     "security": {
       "csp": null
     }
@@ -37,6 +43,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
