@@ -83,12 +83,12 @@ The fastest way to install or update Network Spy is via the terminal (Stable Rel
 
 ###  macOS / 🐧 Linux
 ```bash
-curl -fsSL https://raw.githubusercontent.com/muizidn/NetworkSpy/develop/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/muizidn/NetworkSpy/main/install.sh | sh
 ```
 
 ### 🪟 Windows (PowerShell)
 ```powershell
-iwr -useb https://raw.githubusercontent.com/muizidn/NetworkSpy/develop/install.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/muizidn/NetworkSpy/main/install.ps1 | iex
 ```
 
 ### 🧪 Bleeding Edge (Develop Builds)
