@@ -30,7 +30,7 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = ({ isOpen, onClose })
   return createPortal(
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-xl animate-in fade-in duration-300">
       <div 
-        className="w-[540px] bg-[#080808] border border-zinc-800/80 rounded-[32px] shadow-2xl p-0 flex flex-col overflow-hidden animate-in zoom-in-95 duration-300 relative"
+        className="w-[540px] max-h-[90vh] bg-[#080808] border border-zinc-800/80 rounded-[32px] shadow-2xl p-0 flex flex-col overflow-y-auto custom-scrollbar animate-in zoom-in-95 duration-300 relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Glow Effect */}
