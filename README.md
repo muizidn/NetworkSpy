@@ -1,20 +1,31 @@
-<p align center>
-  <img src="./github/readme/banner.png" width="100%" alt="Banner" />
+<p align="center">
+  <img src="public/network-spy-logo.png" alt="Network Spy logo" width="132" />
 </p>
 
-<h1 align center>📡 Network Spy</h1>
+<h1 align="center">Network Spy</h1>
 
-<p align center>
-  <strong>The premium, high-performance HTTP/HTTPS proxy and traffic analyzer built for the modern web.</strong>
+<p align="center"><strong>Premium HTTP/HTTPS Traffic Debugger & Analyzer</strong></p>
+
+<p align="center">
+  Local-first high-performance proxy for desktop interception, SSL decryption, and specialized AI/GraphQL viewers.
 </p>
 
-<p align center>
-  <a href="https://github.com/muizidn/NetworkSpy/releases">
-    <img src="https://img.shields.io/github/v/release/muizidn/NetworkSpy?include_prereleases&style=for-the-badge&color=pink" alt="Release" />
-  </a>
-  <a href="https://github.com/muizidn/NetworkSpy/releases">
-    <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blueviolet?style=for-the-badge" alt="Platform" />
-  </a>
+<p align="center">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+  <a href="https://github.com/muizidn/NetworkSpy/actions"><img alt="CI" src="https://github.com/muizidn/NetworkSpy/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <img alt="Status: Beta" src="https://img.shields.io/badge/status-beta-blue.svg">
+  <img alt="Rust" src="https://img.shields.io/badge/rust-1.75%2B-orange?logo=rust&logoColor=white">
+  <img alt="TypeScript" src="https://img.shields.io/badge/typescript-5.x-blue?logo=typescript&logoColor=white">
+  <img alt="Tauri" src="https://img.shields.io/badge/tauri-2.x-24C8D8?logo=tauri&logoColor=white">
+  <img alt="Local first" src="https://img.shields.io/badge/local--first-yes-brightgreen.svg">
+  <img alt="Platform" src="https://img.shields.io/badge/platform-Linux%20%C2%B7%20macOS%20%C2%B7%20Windows-6f42c1?logo=desktop&logoColor=white">
+  <a href="https://github.com/muizidn/NetworkSpy/discussions"><img alt="Discussions" src="https://img.shields.io/github/discussions/muizidn/NetworkSpy?logo=github&label=discussions"></a>
+  <a href="https://github.com/muizidn/NetworkSpy/issues"><img alt="Issues" src="https://img.shields.io/github/issues/muizidn/NetworkSpy?logo=github"></a>
+  <a href="https://github.com/muizidn/NetworkSpy/pulls"><img alt="PRs" src="https://img.shields.io/github/issues-pr/muizidn/NetworkSpy?logo=github&label=PRs"></a>
+</p>
+
+<p align="center">
+  <img src="./github/readme/banner.png" width="100%" alt="Network Spy Dashboard" />
 </p>
 
 ---
