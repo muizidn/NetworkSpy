@@ -11,6 +11,10 @@
 </p>
 
 <p align="center">
+  🌐 <strong>Official Website</strong>: <a href="https://networkspy.app" style="text-decoration: none;">networkspy.app</a> — <strong>Get your PRO license here!</strong>
+</p>
+
+<p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
   <a href="https://github.com/muizidn/NetworkSpy/actions"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/muizidn/NetworkSpy/release.yml?branch=main&label=CI&logo=github"></a>
   <img alt="Status: Beta" src="https://img.shields.io/badge/status-beta-blue.svg">
