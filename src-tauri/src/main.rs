@@ -137,12 +137,19 @@ fn main() {
         .setup(move |app| {
             
 
-            // 0. Native Window Customization (macOS)
-            #[cfg(target_os = "macos")]
-            #[allow(deprecated)]
+            // 0. Native Window Customization
             if let Some(window) = app.get_webview_window("main") {
-                // Setup the native title bar positioning and styling (Yaak-style)
-                mac_window::setup_mac_window(&window);
+                #[cfg(target_os = "macos")]
+                {
+                    // Setup the native title bar positioning and styling (Yaak-style)
+                    mac_window::setup_mac_window(&window);
+                }
+
+                #[cfg(not(target_os = "macos"))]
+                {
+                    // Hide native title bar on Windows/Linux to use custom one
+                    let _ = window.set_decorations(false);
+                }
             }
 
 

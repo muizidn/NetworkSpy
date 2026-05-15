@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { platform } from '@tauri-apps/plugin-os';
-import { FiX, FiMinus, FiSquare, FiCopy, FiPlay, FiPause, FiTrash2, FiSave, FiMonitor, FiLayout, FiSidebar, FiColumns, FiPlus } from 'react-icons/fi';
+import { FiX, FiMinus, FiSquare, FiCopy, FiPlay, FiPause, FiTrash2, FiSave, FiMonitor, FiLayout, FiSidebar, FiColumns, FiPlus, FiMenu, FiChevronRight } from 'react-icons/fi';
 import { useAppProvider } from '../app-env';
 import { useSessionContext } from '@src/context/SessionContext';
 import { usePaneContext } from '@src/context/PaneProvider';
@@ -13,6 +13,7 @@ import { workspaceTabsAtom, activeTabIdAtom, WorkspaceTab, titleBarContentAtom }
 import { useSettingsContext } from '@src/context/SettingsProvider';
 import { UpgradeDialog } from '../header/components/UpgradeDialog';
 import { invoke } from '@tauri-apps/api/core';
+import { WinAppMenu } from './TitleBarMenu';
 
 const appWindow = getCurrentWindow();
 
@@ -66,6 +67,7 @@ export const TitleBar: React.FC = () => {
   };
 
 
+  const [isMenuExpanded, setIsMenuExpanded] = useState(false);
   const isMac = os === 'macos';
 
   const ActionButton = ({
@@ -187,81 +189,109 @@ export const TitleBar: React.FC = () => {
         <div className="w-20 shrink-0 h-full" data-tauri-drag-region />
       )}
 
-
-      {/* Workspace Indicator */}
-      <div className="flex items-center gap-1.5 shrink-0 h-full" data-tauri-drag-region>
-        <button
-          onClick={handleSelectWorkspace}
-          className={twMerge(
-            "flex items-center gap-2 px-2 h-6 rounded-md border transition-all",
-            currentWorkspace
-              ? "bg-blue-500/10 border-blue-500/20 text-blue-400 hover:bg-blue-500/20"
-              : "bg-white/5 border-white/5 text-zinc-500 hover:bg-white/10"
-          )}
-          title={currentWorkspace || "Default Workspace (~/.network-spy)"}
+      {/* Windows/Linux Collapsible Menu */}
+      {!isMac && (
+        <div 
+          className="flex items-center h-full group"
+          onMouseEnter={() => setIsMenuExpanded(true)}
+          onMouseLeave={() => setIsMenuExpanded(false)}
         >
-          <FiMonitor size={12} className={currentWorkspace ? "text-blue-400" : "text-zinc-600"} />
-          <span className="text-[10px] font-bold uppercase tracking-tight truncate max-w-[150px]">
-            {currentWorkspace ? getWorkspaceName(currentWorkspace) : "Default Workspace"}
-          </span>
-          {currentWorkspace && (
-            <span className="w-1 h-1 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
-          )}
-        </button>
-      </div>
+          <button 
+            className={twMerge(
+              "w-8 h-8 flex items-center justify-center transition-colors rounded-md",
+              isMenuExpanded ? "bg-white/10 text-white" : "text-zinc-500 hover:bg-white/5 hover:text-zinc-200"
+            )}
+            onClick={() => setIsMenuExpanded(!isMenuExpanded)}
+          >
+            <FiMenu size={16} />
+          </button>
 
-      <div className="w-px h-4 bg-white/10 mx-1" />
-
-      {/* Main Actions Area */}
-      <div className="flex items-center gap-2 shrink-0 h-full" data-tauri-drag-region>
-        <div className="flex items-center gap-0.5 bg-white/5 p-0.5 rounded-md border border-white/5 shadow-inner">
-          {!isReviewMode ? (
-            <>
-              <ActionButton
-                icon={isRun ? FiPause : FiPlay}
-                active={isRun}
-                variant="success"
-                label={isRun ? "Stop Capturing" : "Start Capturing"}
-                onClick={() => setIsRun(!isRun)}
-              />
-              <ActionButton
-                icon={FiTrash2}
-                variant="danger"
-                label="Clear All Traffic"
-                onClick={clearData}
-              />
-              <div className="w-px h-3 bg-white/10 mx-1" />
-              <button
-                onClick={() => setIsPortDialogOpen(true)}
-                className={twMerge(
-                  "px-2 h-6 flex items-center gap-1.5 hover:bg-white/5 rounded transition-all text-[10px] font-bold uppercase tracking-tight",
-                  isRun ? "text-blue-400 font-mono" : "text-zinc-500"
-                )}
-              >
-                <span className={twMerge(
-                  "w-1 h-1 rounded-full transition-all duration-500",
-                  isRun ? "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)] animate-pulse" : "bg-zinc-600"
-                )} />
-                {isRun ? `:${currentPort}` : "Proxy Paused"}
-              </button>
-              <div className="w-px h-3 bg-white/10 mx-1" />
-              <ActionButton
-                icon={FiSave}
-                label="Save Current Session"
-                onClick={() => setIsSaveDialogOpen(true)}
-              />
-            </>
-
-          ) : (
-            <div className="flex items-center gap-2 px-2 h-6 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20">
-              <span className="text-[9px] font-black uppercase tracking-wider truncate max-w-[120px]">{reviewedSession?.name}</span>
-              <button onClick={() => viewSession(null)} className="hover:text-white transition-colors">
-                <FiX size={12} />
-              </button>
-            </div>
+          {isMenuExpanded && (
+            <WinAppMenu />
           )}
         </div>
-      </div>
+      )}
+
+
+      {/* Workspace Indicator & Main Actions (Hidden when menu is expanded on Win/Linux) */}
+      {(!isMenuExpanded || isMac) && (
+        <div className="flex items-center gap-2 h-full animate-in fade-in duration-300">
+          {/* Workspace Indicator */}
+          <div className="flex items-center gap-1.5 shrink-0 h-full" data-tauri-drag-region>
+            <button
+              onClick={handleSelectWorkspace}
+              className={twMerge(
+                "flex items-center gap-2 px-2 h-6 rounded-md border transition-all",
+                currentWorkspace
+                  ? "bg-blue-500/10 border-blue-500/20 text-blue-400 hover:bg-blue-500/20"
+                  : "bg-white/5 border-white/5 text-zinc-500 hover:bg-white/10"
+              )}
+              title={currentWorkspace || "Default Workspace (~/.network-spy)"}
+            >
+              <FiMonitor size={12} className={currentWorkspace ? "text-blue-400" : "text-zinc-600"} />
+              <span className="text-[10px] font-bold uppercase tracking-tight truncate max-w-[150px]">
+                {currentWorkspace ? getWorkspaceName(currentWorkspace) : "Default Workspace"}
+              </span>
+              {currentWorkspace && (
+                <span className="w-1 h-1 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
+              )}
+            </button>
+          </div>
+
+          <div className="w-px h-4 bg-white/10 mx-1" />
+
+          {/* Main Actions Area */}
+          <div className="flex items-center gap-2 shrink-0 h-full" data-tauri-drag-region>
+            <div className="flex items-center gap-0.5 bg-white/5 p-0.5 rounded-md border border-white/5 shadow-inner">
+              {!isReviewMode ? (
+                <>
+                  <ActionButton
+                    icon={isRun ? FiPause : FiPlay}
+                    active={isRun}
+                    variant="success"
+                    label={isRun ? "Stop Capturing" : "Start Capturing"}
+                    onClick={() => setIsRun(!isRun)}
+                  />
+                  <ActionButton
+                    icon={FiTrash2}
+                    variant="danger"
+                    label="Clear All Traffic"
+                    onClick={clearData}
+                  />
+                  <div className="w-px h-3 bg-white/10 mx-1" />
+                  <button
+                    onClick={() => setIsPortDialogOpen(true)}
+                    className={twMerge(
+                      "px-2 h-6 flex items-center gap-1.5 hover:bg-white/5 rounded transition-all text-[10px] font-bold uppercase tracking-tight",
+                      isRun ? "text-blue-400 font-mono" : "text-zinc-500"
+                    )}
+                  >
+                    <span className={twMerge(
+                      "w-1 h-1 rounded-full transition-all duration-500",
+                      isRun ? "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)] animate-pulse" : "bg-zinc-600"
+                    )} />
+                    {isRun ? `:${currentPort}` : "Proxy Paused"}
+                  </button>
+                  <div className="w-px h-3 bg-white/10 mx-1" />
+                  <ActionButton
+                    icon={FiSave}
+                    label="Save Current Session"
+                    onClick={() => setIsSaveDialogOpen(true)}
+                  />
+                </>
+
+              ) : (
+                <div className="flex items-center gap-2 px-2 h-6 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                  <span className="text-[9px] font-black uppercase tracking-wider truncate max-w-[120px]">{reviewedSession?.name}</span>
+                  <button onClick={() => viewSession(null)} className="hover:text-white transition-colors">
+                    <FiX size={12} />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tabs Area */}
       <div className="flex-grow flex items-center gap-1 overflow-x-auto no-scrollbar h-full px-2" data-tauri-drag-region>
