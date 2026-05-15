@@ -1,6 +1,7 @@
 @import './styles-platform/macos.css';
 @import './styles-platform/windows.css';
 @import './styles-platform/ubuntu.css';
+@import './scrollbar.css';
 
 @tailwind base;
 @tailwind components;
@@ -16,40 +17,6 @@ html, body, #root {
 }
 
 
-
-@layer utilities {
-  @variants responsive {
-    /* Chrome, Safari and Opera */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .no-scrollbar {
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
-    }
-  }
-}
-
-@layer utilities {
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-}
 
 @layer utilities {
   .animate-button-pulse {

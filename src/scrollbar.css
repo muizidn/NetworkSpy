@@ -1,0 +1,49 @@
+/* Global Scrollbar Styling - Hidden when not scrolling (approximated by hover) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 10px;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 100, 0.2);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 100, 100, 0.5);
+}
+
+/* Dark mode overrides (assuming the root or a parent has .dark class) */
+.dark *::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.dark *:hover::-webkit-scrollbar-thumb {
+  background: rgba(200, 200, 200, 0.2);
+}
+
+.dark *::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 200, 200, 0.5);
+}
+
+/* Firefox Support for hover */
+*:hover {
+  scrollbar-color: rgba(100, 100, 100, 0.2) transparent;
+}
+
+.dark *:hover {
+  scrollbar-color: rgba(200, 200, 200, 0.2) transparent;
+}
