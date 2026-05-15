@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-  <a href="https://github.com/muizidn/NetworkSpy/actions"><img alt="CI" src="https://github.com/muizidn/NetworkSpy/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <a href="https://github.com/muizidn/NetworkSpy/actions"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/muizidn/NetworkSpy/release.yml?branch=main&label=CI&logo=github"></a>
   <img alt="Status: Beta" src="https://img.shields.io/badge/status-beta-blue.svg">
   <img alt="Rust" src="https://img.shields.io/badge/rust-1.75%2B-orange?logo=rust&logoColor=white">
   <img alt="TypeScript" src="https://img.shields.io/badge/typescript-5.x-blue?logo=typescript&logoColor=white">
