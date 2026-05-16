@@ -88,7 +88,7 @@ export const TitleBar: React.FC = () => {
       title={label}
       className={twMerge(
         "flex items-center justify-center w-7 h-6 rounded transition-all active:scale-95",
-        active ? "bg-white/10 text-white" : "text-zinc-500 hover:bg-white/5 hover:text-zinc-300",
+        active ? "bg-[var(--bg-surface-elevated)] text-[var(--text-primary)]" : "text-[var(--text-muted)] hover:bg-[var(--bg-surface-inset)]/5 hover:text-[var(--text-secondary)]",
         variant === 'danger' && "hover:text-red-400 hover:bg-red-500/10",
         variant === 'success' && active && "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20",
         variant === 'warning' && "text-amber-500 bg-amber-500/10 border border-amber-500/20"
@@ -129,7 +129,7 @@ export const TitleBar: React.FC = () => {
     return (
       <div
         data-tauri-drag-region
-        className="flex items-center h-8 bg-black/40 backdrop-blur-xl border-b border-white/5 select-none shrink-0 z-[1000] px-2 gap-2"
+        className="flex items-center h-8 bg-[var(--bg-app)]/40 backdrop-blur-xl border-b border-[var(--border-primary)]/5 select-none shrink-0 z-[1000] px-2 gap-2"
       >
         {isMac && (
           <div className="w-20 shrink-0 h-full" data-tauri-drag-region />
@@ -141,9 +141,9 @@ export const TitleBar: React.FC = () => {
         {/* Platform Controls (Right for Win/Linux) */}
         {!isMac && (
           <div className="flex items-center h-full ml-2">
-            <button className="h-8 w-10 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors" onClick={() => appWindow.minimize()}><FiMinus size={14} /></button>
-            <button className="h-8 w-10 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors" onClick={() => appWindow.toggleMaximize()}><FiSquare size={14} /></button>
-            <button className="h-8 w-10 flex items-center justify-center hover:bg-red-500 hover:text-white text-zinc-500 transition-colors" onClick={() => appWindow.close()}><FiX size={14} /></button>
+            <button className="h-8 w-10 flex items-center justify-center hover:bg-[var(--bg-surface-elevated)]/5 text-[var(--text-muted)] transition-colors" onClick={() => appWindow.minimize()}><FiMinus size={14} /></button>
+            <button className="h-8 w-10 flex items-center justify-center hover:bg-[var(--bg-surface-elevated)]/5 text-[var(--text-muted)] transition-colors" onClick={() => appWindow.toggleMaximize()}><FiSquare size={14} /></button>
+            <button className="h-8 w-10 flex items-center justify-center hover:bg-red-500 hover:text-white text-[var(--text-muted)] transition-colors" onClick={() => appWindow.close()}><FiX size={14} /></button>
           </div>
         )}
       </div>
@@ -182,7 +182,7 @@ export const TitleBar: React.FC = () => {
   return (
     <div
       data-tauri-drag-region
-      className="flex items-center h-8 bg-black/40 backdrop-blur-xl border-b border-white/5 select-none shrink-0 z-[1000] px-2 gap-2"
+      className="flex items-center h-8 bg-[var(--bg-app)] border-b border-[var(--border-primary)] select-none shrink-0 z-[1000] px-2 gap-2"
     >
       {/* Platform Controls Spacer (Left for Mac) */}
       {isMac && (
@@ -199,7 +199,7 @@ export const TitleBar: React.FC = () => {
           <button 
             className={twMerge(
               "w-8 h-8 flex items-center justify-center transition-colors rounded-md",
-              isMenuExpanded ? "bg-white/10 text-white" : "text-zinc-500 hover:bg-white/5 hover:text-zinc-200"
+              isMenuExpanded ? "bg-[var(--bg-surface-elevated)] text-[var(--text-primary)]" : "text-[var(--text-muted)] hover:bg-[var(--bg-surface-inset)]/5 hover:text-[var(--text-secondary)]"
             )}
             onClick={() => setIsMenuExpanded(!isMenuExpanded)}
           >
@@ -224,11 +224,11 @@ export const TitleBar: React.FC = () => {
                 "flex items-center gap-2 px-2 h-6 rounded-md border transition-all",
                 currentWorkspace
                   ? "bg-blue-500/10 border-blue-500/20 text-blue-400 hover:bg-blue-500/20"
-                  : "bg-white/5 border-white/5 text-zinc-500 hover:bg-white/10"
+                  : "bg-[var(--bg-surface-inset)]/5 border-[var(--border-primary)]/5 text-[var(--text-muted)] hover:bg-[var(--bg-surface-elevated)]/10"
               )}
               title={currentWorkspace || "Default Workspace (~/.network-spy)"}
             >
-              <FiMonitor size={12} className={currentWorkspace ? "text-blue-400" : "text-zinc-600"} />
+              <FiMonitor size={12} className={currentWorkspace ? "text-blue-400" : "text-[var(--text-muted)]"} />
               <span className="text-[10px] font-bold uppercase tracking-tight truncate max-w-[150px]">
                 {currentWorkspace ? getWorkspaceName(currentWorkspace) : "Default Workspace"}
               </span>
@@ -238,11 +238,11 @@ export const TitleBar: React.FC = () => {
             </button>
           </div>
 
-          <div className="w-px h-4 bg-white/10 mx-1" />
+          <div className="w-px h-4 bg-[var(--border-primary)]/10 mx-1" />
 
           {/* Main Actions Area */}
           <div className="flex items-center gap-2 shrink-0 h-full" data-tauri-drag-region>
-            <div className="flex items-center gap-0.5 bg-white/5 p-0.5 rounded-md border border-white/5 shadow-inner">
+            <div className="flex items-center gap-0.5 bg-[var(--bg-surface-inset)]/5 p-0.5 rounded-md border border-[var(--border-primary)]/5 shadow-inner">
               {!isReviewMode ? (
                 <>
                   <ActionButton
@@ -258,21 +258,21 @@ export const TitleBar: React.FC = () => {
                     label="Clear All Traffic"
                     onClick={clearData}
                   />
-                  <div className="w-px h-3 bg-white/10 mx-1" />
+                  <div className="w-px h-3 bg-[var(--border-primary)]/10 mx-1" />
                   <button
                     onClick={() => setIsPortDialogOpen(true)}
                     className={twMerge(
-                      "px-2 h-6 flex items-center gap-1.5 hover:bg-white/5 rounded transition-all text-[10px] font-bold uppercase tracking-tight",
-                      isRun ? "text-blue-400 font-mono" : "text-zinc-500"
+                      "px-2 h-6 flex items-center gap-1.5 hover:bg-[var(--bg-surface-elevated)]/5 rounded transition-all text-[10px] font-bold uppercase tracking-tight",
+                      isRun ? "text-blue-400 font-mono" : "text-[var(--text-muted)]"
                     )}
                   >
                     <span className={twMerge(
                       "w-1 h-1 rounded-full transition-all duration-500",
-                      isRun ? "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)] animate-pulse" : "bg-zinc-600"
+                      isRun ? "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)] animate-pulse" : "bg-[var(--text-muted)]"
                     )} />
                     {isRun ? `:${currentPort}` : "Proxy Paused"}
                   </button>
-                  <div className="w-px h-3 bg-white/10 mx-1" />
+                  <div className="w-px h-3 bg-[var(--border-primary)]/10 mx-1" />
                   <ActionButton
                     icon={FiSave}
                     label="Save Current Session"
@@ -303,13 +303,13 @@ export const TitleBar: React.FC = () => {
             className={twMerge(
               "group flex items-center gap-2 px-3 h-6 rounded-md border transition-all cursor-pointer min-w-[80px] max-w-[180px] shrink-0",
               activeTabId === tab.id
-                ? "bg-white/10 border-white/10 text-white shadow-sm"
-                : "bg-transparent border-transparent text-zinc-500 hover:bg-white/5 hover:text-zinc-300"
+                ? "bg-[var(--bg-surface-elevated)] border-[var(--border-primary)]/10 text-[var(--text-primary)] shadow-sm"
+                : "bg-transparent border-transparent text-[var(--text-muted)] hover:bg-[var(--bg-surface-inset)]/5 hover:text-[var(--text-secondary)]"
             )}
           >
             <span className={twMerge(
               "w-1 h-1 rounded-full shrink-0",
-              activeTabId === tab.id ? "bg-blue-400" : "bg-zinc-700"
+              activeTabId === tab.id ? "bg-blue-400" : "bg-[var(--border-primary)]"
             )} />
 
             {editingTabId === tab.id ? (
@@ -319,7 +319,7 @@ export const TitleBar: React.FC = () => {
                 onChange={(e) => setEditingTitle(e.target.value)}
                 onBlur={saveTitle}
                 onKeyDown={(e) => e.key === 'Enter' && saveTitle()}
-                className="bg-transparent border-none outline-none text-[10px] font-bold w-full text-white"
+                className="bg-transparent border-none outline-none text-[10px] font-bold w-full text-[var(--text-primary)]"
                 onClick={(e) => e.stopPropagation()}
               />
             ) : (
@@ -335,7 +335,7 @@ export const TitleBar: React.FC = () => {
         ))}
         <button
           onClick={handleAddTab}
-          className="w-6 h-6 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-white/5 rounded-md transition-all shrink-0"
+          className="w-6 h-6 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-inset)]/5 rounded-md transition-all shrink-0"
         >
           <FiPlus size={14} />
         </button>
@@ -343,7 +343,7 @@ export const TitleBar: React.FC = () => {
 
       {/* Right Side Tools */}
       <div className="flex items-center gap-2 shrink-0 h-full" data-tauri-drag-region>
-        <div className="flex items-center gap-0.5 bg-white/5 p-0.5 rounded-md border border-white/5 shadow-inner">
+        <div className="flex items-center gap-0.5 bg-[var(--bg-surface-inset)]/5 p-0.5 rounded-md border border-[var(--border-primary)]/5 shadow-inner">
           <ActionButton
             icon={FiColumns}
             active={isDisplayPane.centerLayout === "horizontal"}
@@ -356,7 +356,7 @@ export const TitleBar: React.FC = () => {
             label="Horizontal Split"
             onClick={() => setIsDisplayPane(prev => ({ ...prev, centerLayout: "vertical" }))}
           />
-          <div className="w-px h-3 bg-white/10 mx-1" />
+          <div className="w-px h-3 bg-[var(--border-primary)]/10 mx-1" />
           <ActionButton
             icon={FiMonitor}
             active={isDisplayPane.bottom}
@@ -374,9 +374,9 @@ export const TitleBar: React.FC = () => {
         {/* Platform Controls (Right for Win/Linux) */}
         {!isMac && (
           <div className="flex items-center h-full ml-2">
-            <button className="h-8 w-10 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors" onClick={() => appWindow.minimize()}><FiMinus size={14} /></button>
-            <button className="h-8 w-10 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors" onClick={() => appWindow.toggleMaximize()}><FiSquare size={14} /></button>
-            <button className="h-8 w-10 flex items-center justify-center hover:bg-red-500 hover:text-white text-zinc-500 transition-colors" onClick={() => appWindow.close()}><FiX size={14} /></button>
+            <button className="h-8 w-10 flex items-center justify-center hover:bg-[var(--bg-surface-elevated)]/5 text-[var(--text-muted)] transition-colors" onClick={() => appWindow.minimize()}><FiMinus size={14} /></button>
+            <button className="h-8 w-10 flex items-center justify-center hover:bg-[var(--bg-surface-elevated)]/5 text-[var(--text-muted)] transition-colors" onClick={() => appWindow.toggleMaximize()}><FiSquare size={14} /></button>
+            <button className="h-8 w-10 flex items-center justify-center hover:bg-red-500 hover:text-white text-[var(--text-muted)] transition-colors" onClick={() => appWindow.close()}><FiX size={14} /></button>
           </div>
         )}
       </div>

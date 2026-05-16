@@ -16,14 +16,14 @@ const SnippetCard = ({ label, content, lang, isRunning }: { label: string, conte
         <div className="flex items-center justify-between px-1">
             <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                <span className="text-[10px] font-black text-zinc-400 tracking-widest">{label}</span>
+                <span className="text-[10px] font-black text-[var(--text-tertiary)] tracking-widest">{label}</span>
             </div>
-            <div className="bg-black/50 backdrop-blur-md border border-white/5 rounded-lg px-3 py-1 text-[8px] font-black text-zinc-500 tracking-widest flex items-center gap-2">
+            <div className="bg-[var(--bg-surface-inset)]/50 backdrop-blur-md border border-[var(--border-primary)]/5 rounded-lg px-3 py-1 text-[8px] font-black text-[var(--text-muted)] tracking-widest flex items-center gap-2">
                 {isRunning ? <FiCpu className="animate-spin" /> : <FiTerminal />}
                 {lang.toUpperCase()} TEMPLATE
             </div>
         </div>
-        <div className="flex-grow rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl relative">
+        <div className="flex-grow rounded-2xl overflow-hidden border border-[var(--border-primary)] shadow-2xl relative">
             <MonacoEditor
                 height="100%"
                 language={lang}
@@ -73,8 +73,8 @@ const CustomDropdown = ({
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={twMerge(
-                    "w-full flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-[10px] font-black tracking-widest text-zinc-400 hover:text-emerald-500 hover:border-emerald-500/30 transition-all shadow-xl group",
-                    isOpen && "border-emerald-500 text-emerald-500 bg-black shadow-emerald-500/10"
+                    "w-full flex items-center justify-between bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-xl px-4 py-2.5 text-[10px] font-black tracking-widest text-[var(--text-tertiary)] hover:text-emerald-500 hover:border-emerald-500/30 transition-all shadow-xl group",
+                    isOpen && "border-emerald-500 text-emerald-500 bg-[var(--bg-surface-inset)] shadow-emerald-500/10"
                 )}
             >
                 <div className="flex items-center gap-3">
@@ -87,19 +87,19 @@ const CustomDropdown = ({
             </button>
 
             {isOpen && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-black/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl z-[100] overflow-hidden py-2 animate-in fade-in zoom-in-95 duration-200">
-                    <div className="px-3 py-1 text-[8px] font-black text-zinc-600 tracking-widest mb-1 select-none">Built-in Templates</div>
+                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--bg-surface)]/95 backdrop-blur-2xl border border-[var(--border-primary)]/10 rounded-2xl shadow-2xl z-[100] overflow-hidden py-2 animate-in fade-in zoom-in-95 duration-200">
+                    <div className="px-3 py-1 text-[8px] font-black text-[var(--text-muted)] tracking-widest mb-1 select-none">Built-in Templates</div>
                     {options.filter(o => !o.isCustom).map(o => (
                         <button
                             key={o.id}
                             onClick={() => { onSelect(o.id); setIsOpen(false); }}
                             className={twMerge(
-                                "w-full flex items-center justify-between px-4 py-2.5 text-[10px] font-black tracking-widest text-zinc-500 hover:bg-emerald-600/10 hover:text-emerald-500 transition-all",
+                                "w-full flex items-center justify-between px-4 py-2.5 text-[10px] font-black tracking-widest text-[var(--text-muted)] hover:bg-emerald-600/10 hover:text-emerald-500 transition-all",
                                 selectedId === o.id && "text-emerald-500 bg-emerald-600/5"
                             )}
                         >
                             <div className="flex items-center gap-3">
-                                <span className={twMerge(selectedId === o.id ? "text-emerald-500" : "text-zinc-600")}>{o.icon}</span>
+                                <span className={twMerge(selectedId === o.id ? "text-emerald-500" : "text-[var(--text-muted)]")}>{o.icon}</span>
                                 {o.label}
                             </div>
                             {selectedId === o.id && <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.8)]" />}
@@ -108,19 +108,19 @@ const CustomDropdown = ({
 
                     {options.some(o => o.isCustom) && (
                         <>
-                            <div className="h-px bg-white/5 my-2 mx-2" />
-                            <div className="px-3 py-1 text-[8px] font-black text-zinc-600 tracking-widest mb-1 select-none">Custom Generator Results</div>
+                            <div className="h-px bg-[var(--border-primary)]/5 my-2 mx-2" />
+                            <div className="px-3 py-1 text-[8px] font-black text-[var(--text-muted)] tracking-widest mb-1 select-none">Custom Generator Results</div>
                             {options.filter(o => o.isCustom).map(o => (
                                 <button
                                     key={o.id}
                                     onClick={() => { onSelect(o.id); setIsOpen(false); }}
                                     className={twMerge(
-                                        "w-full flex items-center justify-between px-4 py-2.5 text-[10px] font-black tracking-widest text-zinc-500 hover:bg-emerald-600/10 hover:text-emerald-500 transition-all",
+                                        "w-full flex items-center justify-between px-4 py-2.5 text-[10px] font-black tracking-widest text-[var(--text-muted)] hover:bg-emerald-600/10 hover:text-emerald-500 transition-all",
                                         selectedId === o.id && "text-emerald-500 bg-emerald-600/5"
                                     )}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <span className={twMerge(selectedId === o.id ? "text-emerald-500" : "text-zinc-600")}><FiCpu /></span>
+                                        <span className={twMerge(selectedId === o.id ? "text-emerald-500" : "text-[var(--text-muted)]")}><FiCpu /></span>
                                         {o.label}
                                     </div>
                                     {selectedId === o.id && <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.8)]" />}
@@ -219,16 +219,16 @@ print(response.json())`;
     if (loading) return <Placeholder text="Generating..." />;
 
     return (
-        <div className="h-full bg-[#0a0a0a] flex flex-col overflow-hidden font-sans">
-            <div className="px-6 pt-4 border-b border-zinc-900 bg-[#0a0a0a] flex flex-col shadow-lg shrink-0">
+        <div className="h-full bg-[var(--bg-app)] flex flex-col overflow-hidden font-sans">
+            <div className="px-6 pt-4 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] flex flex-col shadow-lg shrink-0">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-500">
                             <FiTerminal size={18} />
                         </div>
                         <div>
-                            <h2 className="text-sm font-black text-white tracking-tighter">Code Snippet Engine</h2>
-                            <div className="text-[9px] text-zinc-500 font-bold tracking-widest italic leading-none whitespace-nowrap italic">
+                            <h2 className="text-sm font-black text-[var(--text-primary)] tracking-tighter">Code Snippet Engine</h2>
+                            <div className="text-[9px] text-[var(--text-muted)] font-bold tracking-widest italic leading-none whitespace-nowrap italic">
                                 {activeTab === "Snippets" && viewMode === "stacked" ? "Stacked: Review Mode" : "Perspective Switcher"}
                             </div>
                         </div>
@@ -236,12 +236,12 @@ print(response.json())`;
 
                     <div className="flex items-center gap-4">
                         {activeTab === "Snippets" && (
-                            <div className="flex items-center bg-zinc-900/50 rounded-xl p-1 border border-zinc-800">
+                            <div className="flex items-center bg-[var(--bg-surface)]/50 rounded-xl p-1 border border-[var(--border-primary)]">
                                 <button
                                     onClick={() => setViewMode("dropdown")}
                                     className={twMerge(
                                         "p-2 rounded-lg transition-all",
-                                        viewMode === "dropdown" ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20" : "text-zinc-500 hover:text-white"
+                                        viewMode === "dropdown" ? "bg-emerald-600 text-[var(--text-primary)] shadow-lg shadow-emerald-500/20" : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                                     )}
                                     title="Focused Selector"
                                 >
@@ -251,7 +251,7 @@ print(response.json())`;
                                     onClick={() => setViewMode("stacked")}
                                     className={twMerge(
                                         "p-2 rounded-lg transition-all",
-                                        viewMode === "stacked" ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20" : "text-zinc-500 hover:text-white"
+                                        viewMode === "stacked" ? "bg-emerald-600 text-[var(--text-primary)] shadow-lg shadow-emerald-500/20" : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                                     )}
                                     title="Stacked View (All)"
                                 >
@@ -285,7 +285,7 @@ print(response.json())`;
                             onClick={() => setActiveTab(tab)}
                             className={twMerge(
                                 "pb-3 text-[11px] font-black tracking-widest transition-all relative",
-                                activeTab === tab ? tab === "Custom Scripts" ? "text-orange-500" : "text-emerald-500" : "text-zinc-600 hover:text-zinc-400"
+                                activeTab === tab ? tab === "Custom Scripts" ? "text-orange-500" : "text-emerald-500" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
                             )}
                         >
                             {tab}
@@ -309,7 +309,7 @@ print(response.json())`;
                     <div className="h-full p-4 @sm:p-8">
                         {viewMode === "dropdown" ? (
                             <div className="h-full flex flex-col">
-                                <div className="flex-grow rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl relative">
+                                <div className="flex-grow rounded-2xl overflow-hidden border border-[var(--border-primary)] shadow-2xl relative">
                                     <MonacoEditor
                                         height="100%"
                                         language={activeSnippet.lang}
@@ -325,7 +325,7 @@ print(response.json())`;
                                             padding: { top: 20, bottom: 20 }
                                         }}
                                     />
-                                    <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md border border-white/10 rounded-lg px-3 py-1.5 text-[9px] font-black text-zinc-400 tracking-widest flex items-center gap-2">
+                                    <div className="absolute top-4 right-4 bg-[var(--bg-surface-inset)]/50 backdrop-blur-md border border-[var(--border-primary)]/10 rounded-lg px-3 py-1.5 text-[9px] font-black text-[var(--text-tertiary)] tracking-widest flex items-center gap-2">
                                         {isRunning ? <FiCpu className="animate-spin" /> : <FiTerminal />}
                                         {activeSnippet.label}
                                     </div>
@@ -352,12 +352,12 @@ print(response.json())`;
 };
 
 const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex flex-col items-center justify-center bg-[#050505] p-6 @sm:p-10 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-700 mb-6 rotate-12">
+    <div className="h-full flex flex-col items-center justify-center bg-[var(--bg-app)] p-6 @sm:p-10 text-center">
+        <div className="w-16 h-16 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-primary)] flex items-center justify-center text-[var(--text-muted)] mb-6 rotate-12">
             <FiCode size={32} />
         </div>
-        <h3 className="text-zinc-400 font-bold mb-1 italic">Snippet Engine Ready</h3>
-        <p className="text-[11px] text-zinc-600 leading-relaxed max-w-[180px]">{text}</p>
+        <h3 className="text-[var(--text-tertiary)] font-bold mb-1 italic">Snippet Engine Ready</h3>
+        <p className="text-[11px] text-[var(--text-muted)] leading-relaxed max-w-[180px]">{text}</p>
     </div>
 );
 

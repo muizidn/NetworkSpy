@@ -79,8 +79,8 @@ export const ProtobufViewerMode = () => {
     if (loading) return <ProtobufPlaceholder text="Analyzing Stream..." subtext="Inspecting binary payload for protocol buffer structures..." />;
 
     return (
-        <div className="bg-[#0a0a0a] flex flex-col min-h-full h-full font-sans">
-            <div className="px-4 @sm:px-6 py-4 bg-[#111] border-b border-blue-500/10 flex items-center justify-between">
+        <div className="bg-[var(--bg-app)] flex flex-col min-h-full h-full font-sans">
+            <div className="px-4 @sm:px-6 py-4 bg-[var(--bg-surface)] border-b border-[var(--border-primary)]/10 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <div className="relative group">
                         <div className="absolute inset-0 bg-blue-500/10 blur-xl rounded-full scale-0 group-hover:scale-110 transition-transform"></div>
@@ -89,10 +89,10 @@ export const ProtobufViewerMode = () => {
                         </div>
                     </div>
                     <div>
-                        <h2 className="text-sm font-black text-white tracking-tight italic">Protocol Buffers Inspector</h2>
+                        <h2 className="text-sm font-black text-[var(--text-primary)] tracking-tight italic">Protocol Buffers Inspector</h2>
                         <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[9px] font-bold text-zinc-500 tracking-widest">Protocol: </span>
-                            <span className="text-[9px] font-mono text-zinc-400 font-bold">Proto3 / Binary</span>
+                            <span className="text-[9px] font-bold text-[var(--text-muted)] tracking-widest">Protocol: </span>
+                            <span className="text-[9px] font-mono text-[var(--text-secondary)] font-bold">Proto3 / Binary</span>
                         </div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@ export const ProtobufViewerMode = () => {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={handleCopy}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-800/50 border border-white/5 text-[10px] font-bold text-zinc-400 hover:text-white transition-all duration-300"
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-surface-elevated)]/50 border border-[var(--border-primary)]/5 text-[10px] font-bold text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-all duration-300"
                     >
                         {copied ? <FiCheck className="text-emerald-500" size={12} /> : <FiCopy size={12} />}
                         {copied ? 'COPIED' : 'COPY DECODED'}
@@ -114,17 +114,17 @@ export const ProtobufViewerMode = () => {
             </div>
 
             <div className="flex-grow flex flex-col @lg:flex-row h-full overflow-hidden">
-                <div className="w-full @lg:w-80 bg-[#0d0d0d] border-r border-white/5 flex flex-col">
-                    <div className="p-4 border-b border-white/5 bg-black/20 flex items-center justify-between">
+                <div className="w-full @lg:w-80 bg-[var(--bg-surface-inset)] border-r border-[var(--border-primary)]/5 flex flex-col">
+                    <div className="p-4 border-b border-[var(--border-primary)]/5 bg-[var(--bg-surface-inset)]/20 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <div className="w-1 h-3 bg-blue-500 rounded-full"></div>
-                            <span className="text-[9px] font-black text-zinc-400 tracking-widest">Active Definition</span>
+                            <span className="text-[9px] font-black text-[var(--text-secondary)] tracking-widest">Active Definition</span>
                         </div>
                         {protoFile && <span className="text-[8px] px-1.5 py-0.5 bg-emerald-500/10 text-emerald-500 rounded border border-emerald-500/20">VALID</span>}
                     </div>
-                    <div className="flex-grow overflow-auto p-4 font-mono text-[10px] text-zinc-500 italic">
+                    <div className="flex-grow overflow-auto p-4 font-mono text-[10px] text-[var(--text-muted)] italic">
                         {protoFile ? (
-                            <pre className="text-zinc-400 not-italic whitespace-pre-wrap">{protoFile}</pre>
+                            <pre className="text-[var(--text-secondary)] not-italic whitespace-pre-wrap">{protoFile}</pre>
                         ) : (
                             <div className="flex flex-col items-center justify-center h-full text-center space-y-3 opacity-30">
                                 <FiFileText size={32} />
@@ -134,11 +134,11 @@ export const ProtobufViewerMode = () => {
                     </div>
                 </div>
 
-                <div className="flex-grow relative bg-[#050505] flex flex-col">
+                <div className="flex-grow relative bg-[var(--bg-app)] flex flex-col">
                     {isDecoding && (
                         <div className="absolute inset-0 z-30 bg-black/60 backdrop-blur-sm flex items-center justify-center">
                             <div className="flex flex-col items-center gap-4">
-                                <div className="w-12 h-1 bg-zinc-800 rounded-full overflow-hidden relative">
+                                <div className="w-12 h-1 bg-[var(--bg-surface-elevated)] rounded-full overflow-hidden relative">
                                     <div className="absolute inset-0 bg-blue-500/20 animate-pulse"></div>
                                     <div className="w-1/2 h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)] animate-[loading-bar_1.5s_infinite]"></div>
                                 </div>
@@ -156,7 +156,7 @@ export const ProtobufViewerMode = () => {
 
                     <div className="flex-grow relative h-full">
                         <div className="absolute top-4 left-4 z-10">
-                            <span className="text-[9px] font-black text-zinc-600 bg-black/40 px-2 py-1 rounded border border-white/5 tracking-[0.2em]">Decoded Payload</span>
+                            <span className="text-[9px] font-black text-[var(--text-muted)] bg-[var(--bg-surface-inset)]/40 px-2 py-1 rounded border border-[var(--border-primary)]/5 tracking-[0.2em]">Decoded Payload</span>
                         </div>
                         <CodeView data={decodedResult} language="json" />
                     </div>

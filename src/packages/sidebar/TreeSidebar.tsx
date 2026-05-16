@@ -123,12 +123,12 @@ export const TreeSidebar = () => {
   const allTrees = [app, domain];
 
   return (
-    <div className="bg-[#23262a] border-r border-black h-full w-full flex flex-col space-y-2">
-      <div className="flex items-center space-x-2 w-full px-2 h-8 border-b border-black bg-black/20 shrink-0">
-        <GoSearch className="text-zinc-500 shrink-0" size={12} />
+    <div className="bg-[var(--bg-surface)] border-r border-[var(--border-primary)] h-full w-full flex flex-col space-y-2">
+      <div className="flex items-center space-x-2 w-full px-2 h-8 border-b border-[var(--border-primary)] bg-[var(--bg-surface-inset)]/20 shrink-0">
+        <GoSearch className="text-[var(--text-muted)] shrink-0" size={12} />
         <input
           type="text"
-          className="bg-transparent text-[11px] text-white focus:outline-none w-full placeholder:text-zinc-600"
+          className="bg-transparent text-[11px] text-[var(--text-primary)] focus:outline-none w-full placeholder:text-[var(--text-muted)]"
           placeholder="Search endpoints..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -142,8 +142,8 @@ export const TreeSidebar = () => {
       >
         <div className="flex flex-col space-y-2 items-start w-full">
           <div className="flex items-center space-x-1.5 px-1 shrink-0">
-            <FiLayers className="text-zinc-500" size={12} />
-            <h2 className="font-bold text-[10px] uppercase tracking-widest text-zinc-400">All Nodes</h2>
+            <FiLayers className="text-[var(--text-muted)]" size={12} />
+            <h2 className="font-bold text-[10px] uppercase tracking-widest text-[var(--text-secondary)]">All Nodes</h2>
           </div>
           <div className="w-full space-y-1">
             {allTrees.map((e) => (
@@ -164,21 +164,21 @@ export const TreeSidebar = () => {
           query === "" && "hidden"
         )}
       >
-        <div className="flex flex-col w-full p-2 border-b border-black bg-black/10 shrink-0">
+        <div className="flex flex-col w-full p-2 border-b border-[var(--border-primary)] bg-[var(--bg-surface-inset)]/10 shrink-0">
           <div className="flex justify-between items-center mb-2">
             <div className="flex flex-col">
-              <h2 className="text-[9px] uppercase tracking-wider font-bold text-zinc-500">
+              <h2 className="text-[9px] uppercase tracking-wider font-bold text-[var(--text-muted)]">
                 Search Results
               </h2>
               <span className="text-blue-400 text-[10px] font-mono">{filteredNodesCount} matches</span>
             </div>
 
-            <div className="flex bg-black/40 p-0.5 rounded-lg border border-zinc-800">
+            <div className="flex bg-[var(--bg-surface-inset)]/40 p-0.5 rounded-lg border border-[var(--border-primary)]">
               <button
                 onClick={() => setFilterDisplayMode("tree")}
                 className={twMerge(
                   "p-1 rounded-md transition-all flex items-center space-x-1",
-                  filterDisplayMode === "tree" ? "bg-zinc-700 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-300"
+                  filterDisplayMode === "tree" ? "bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] shadow-sm" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
                 )}
                 title="Tree View"
               >
@@ -189,7 +189,7 @@ export const TreeSidebar = () => {
                 onClick={() => setFilterDisplayMode("flat")}
                 className={twMerge(
                   "p-1 rounded-md transition-all flex items-center space-x-1",
-                  filterDisplayMode === "flat" ? "bg-zinc-700 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-300"
+                  filterDisplayMode === "flat" ? "bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] shadow-sm" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
                 )}
                 title="Flat View"
               >

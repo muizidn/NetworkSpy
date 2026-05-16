@@ -1,0 +1,21 @@
+:root {
+  /* Backgrounds */
+  --bg-app: #0a0a0a;
+  --bg-surface: #18181b; /* maps to bg-zinc-900 */
+  --bg-surface-elevated: #27272a; /* maps to bg-zinc-800 */
+  --bg-surface-inset: #09090b; /* maps to bg-zinc-950 */
+  
+  /* Text */
+  --text-primary: #ffffff; /* maps to text-white */
+  --text-secondary: #d4d4d8; /* maps to text-zinc-300 */
+  --text-tertiary: #a1a1aa; /* maps to text-zinc-400 */
+  --text-muted: #71717a; /* maps to text-zinc-500 */
+  
+  /* Borders */
+  --border-primary: #27272a; /* maps to border-zinc-800 */
+  --border-secondary: #3f3f46; /* maps to border-zinc-700 */
+  
+  /* Specific Components */
+  --bg-sidebar: #161616;
+  --border-sidebar: #000000;
+}

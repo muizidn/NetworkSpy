@@ -284,7 +284,7 @@ export default function ExtensionsPage() {
                     <div 
                         key={ext.id} 
                         onClick={() => setSelectedExtension(ext)}
-                        className="bg-[#161616] border border-zinc-800 rounded-2xl p-6 hover:border-zinc-600 transition-all flex flex-col group relative overflow-hidden cursor-pointer active:scale-95 duration-200"
+                        className="bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-2xl p-6 hover:border-zinc-600 transition-all flex flex-col group relative overflow-hidden cursor-pointer active:scale-95 duration-200"
                     >
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
                         
@@ -364,7 +364,7 @@ const ExtensionDetailModal = ({ extension, onClose, onInstall }: { extension: Ex
                 </div>
 
                 {/* Right: Info */}
-                <div className="w-full lg:w-1/3 flex flex-col border-l border-zinc-800 bg-[#161616]">
+                <div className="w-full lg:w-1/3 flex flex-col border-l border-[var(--border-primary)] bg-[var(--bg-sidebar)]">
                     <div className="p-8 pb-4 flex justify-between items-start">
                         <div className="w-16 h-16 rounded-3xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-blue-500 shadow-2xl">
                             {extension.icon}
@@ -410,7 +410,7 @@ const ExtensionDetailModal = ({ extension, onClose, onInstall }: { extension: Ex
                                 <div className="flex items-center gap-4">
                                     <div className="flex -space-x-2">
                                         {[1,2,3].map(i => (
-                                            <div key={i} className={`w-8 h-8 rounded-full border-2 border-[#161616] bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-500 shadow-md`}>
+                                            <div key={i} className={`w-8 h-8 rounded-full border-2 border-[var(--bg-sidebar)] bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-500 shadow-md`}>
                                                 {String.fromCharCode(64 + i)}
                                             </div>
                                         ))}

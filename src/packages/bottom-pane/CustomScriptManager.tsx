@@ -69,15 +69,15 @@ export const CustomScriptManager = ({ category, onUpdate }: CustomScriptManagerP
 
     if (isAdding || editChecker) {
         return (
-            <form onSubmit={handleSaveChecker} className="bg-zinc-900/40 border border-zinc-800 rounded-3xl p-8 space-y-6 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300">
-                <div className="flex items-center justify-between border-b border-zinc-800 pb-4 mb-4">
+            <form onSubmit={handleSaveChecker} className="bg-[var(--bg-surface)]/40 border border-[var(--border-primary)] rounded-3xl p-8 space-y-6 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300">
+                <div className="flex items-center justify-between border-b border-[var(--border-primary)] pb-4 mb-4">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-orange-600/20 text-orange-500 rounded-lg flex items-center justify-center">
                             <FiCode size={18} />
                         </div>
-                        <h3 className="text-sm font-black text-white uppercase italic tracking-tighter">{editChecker?.id ? 'Edit Custom Script' : 'Create New Script'}</h3>
+                        <h3 className="text-sm font-black text-[var(--text-primary)] uppercase italic tracking-tighter">{editChecker?.id ? 'Edit Custom Script' : 'Create New Script'}</h3>
                     </div>
-                    <button type="button" onClick={() => { setIsAdding(false); setEditChecker(null); }} className="text-zinc-500 hover:text-white transition-colors">
+                    <button type="button" onClick={() => { setIsAdding(false); setEditChecker(null); }} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
                         <FiX size={20} />
                     </button>
                 </div>
@@ -90,7 +90,7 @@ export const CustomScriptManager = ({ category, onUpdate }: CustomScriptManagerP
                             value={editChecker?.name || ''}
                             onChange={e => setEditChecker(prev => ({ ...prev, name: e.target.value }))}
                             placeholder="e.g. My Custom Scanner"
-                            className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-orange-600 transition-colors"
+                            className="w-full bg-[var(--bg-surface-inset)] border border-[var(--border-primary)] rounded-xl px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-orange-600 transition-colors"
                             required
                         />
                     </div>
@@ -101,12 +101,12 @@ export const CustomScriptManager = ({ category, onUpdate }: CustomScriptManagerP
                             value={editChecker?.description || ''}
                             onChange={e => setEditChecker(prev => ({ ...prev, description: e.target.value }))}
                             placeholder="Briefly describe what this script detects..."
-                            className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-orange-600 transition-colors"
+                            className="w-full bg-[var(--bg-surface-inset)] border border-[var(--border-primary)] rounded-xl px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-orange-600 transition-colors"
                         />
                     </div>
                     <div>
                         <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest ml-1 mb-1 block">JavaScript Logic</label>
-                        <div className="relative rounded-2xl overflow-hidden border border-zinc-800 bg-black h-72">
+                        <div className="relative rounded-2xl overflow-hidden border border-[var(--border-primary)] bg-[var(--bg-surface-inset)] h-72">
                             <MonacoEditor
                                 height="100%"
                                 defaultLanguage="javascript"
@@ -137,7 +137,7 @@ export const CustomScriptManager = ({ category, onUpdate }: CustomScriptManagerP
                     <button
                         type="submit"
                         disabled={isSaving}
-                        className="flex-grow bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-[10px] font-black px-6 py-3 rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest shadow-lg shadow-emerald-900/20 transition-all"
+                        className="flex-grow bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--text-primary)] text-[10px] font-black px-6 py-3 rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest shadow-lg shadow-emerald-900/20 transition-all"
                     >
                         {isSaving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <FiSave />}
                         {isSaving ? "Saving..." : "Save Script"}
@@ -166,7 +166,7 @@ export const CustomScriptManager = ({ category, onUpdate }: CustomScriptManagerP
                         setIsAdding(true);
                         setEditChecker({ script: template.script });
                     }}
-                    className="bg-orange-600 hover:bg-orange-500 text-white text-[10px] font-black px-4 py-2 rounded-lg flex items-center gap-2 uppercase tracking-widest transition-all shadow-lg shadow-orange-950/20"
+                    className="bg-orange-600 hover:bg-orange-500 text-[var(--text-primary)] text-[10px] font-black px-4 py-2 rounded-lg flex items-center gap-2 uppercase tracking-widest transition-all shadow-lg shadow-orange-950/20"
                 >
                     <FiPlus /> New Script
                 </button>
@@ -187,7 +187,7 @@ export const CustomScriptManager = ({ category, onUpdate }: CustomScriptManagerP
                             <div className="flex items-start justify-between gap-4">
                                 <div className="flex-grow">
                                     <div className="flex items-center gap-3">
-                                        <h3 className="text-sm font-black text-white uppercase italic tracking-tighter">{checker.name}</h3>
+                                        <h3 className="text-sm font-black text-[var(--text-primary)] uppercase italic tracking-tighter">{checker.name}</h3>
                                         <button
                                             onClick={async () => {
                                                 const updated = await provider.saveCustomChecker({ ...checker, enabled: !checker.enabled });
@@ -209,13 +209,13 @@ export const CustomScriptManager = ({ category, onUpdate }: CustomScriptManagerP
                                 <div className="flex flex-col gap-2">
                                     <button
                                         onClick={() => setEditChecker(checker)}
-                                        className="w-8 h-8 rounded-lg bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white flex items-center justify-center transition-all"
+                                        className="w-8 h-8 rounded-lg bg-[var(--bg-surface-elevated)] text-[var(--text-tertiary)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] flex items-center justify-center transition-all"
                                     >
                                         <FiEdit2 size={14} />
                                     </button>
                                     <button
                                         onClick={() => handleDeleteChecker(checker.id)}
-                                        className="w-8 h-8 rounded-lg bg-red-900/10 text-red-900 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all"
+                                        className="w-8 h-8 rounded-lg bg-red-900/10 text-red-900 hover:bg-red-600 hover:text-[var(--text-primary)] flex items-center justify-center transition-all"
                                     >
                                         <FiTrash2 size={14} />
                                     </button>

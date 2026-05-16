@@ -65,7 +65,7 @@ export const ViewerPlaceholder: React.FC<ViewerPlaceholderProps> = ({
                     </div>
                 </div>
 
-                <h3 className="text-xl font-black text-white mb-3 tracking-tighter uppercase italic tracking-widest">
+                <h3 className="text-xl font-black text-[var(--text-primary)] mb-3 tracking-tighter uppercase italic tracking-widest">
                     {title}
                 </h3>
                 <p className="text-zinc-500 text-xs leading-relaxed font-medium mb-10 px-4">
@@ -75,7 +75,7 @@ export const ViewerPlaceholder: React.FC<ViewerPlaceholderProps> = ({
                 <div className="flex flex-col gap-3 items-center">
                     <button
                         onClick={handleCreateCustomViewer}
-                        className={`flex items-center gap-3 px-8 py-4 text-white rounded-2xl font-black text-xs transition-all active:scale-95 shadow-2xl min-w-[280px] ${getButtonColor()}`}
+                        className={`flex items-center gap-3 px-8 py-4 text-[var(--text-primary)] rounded-2xl font-black text-xs transition-all active:scale-95 shadow-2xl min-w-[280px] ${getButtonColor()}`}
                     >
                         <FiLayers size={18} />
                         <span>Create Custom Viewer</span>

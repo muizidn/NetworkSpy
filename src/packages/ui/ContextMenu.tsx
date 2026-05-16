@@ -57,7 +57,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ items, x, y, onClose }
   return (
     <div
       ref={menuRef}
-      className="fixed z-[9999] min-w-[220px] bg-[#0c0c0c]/90 backdrop-blur-xl border border-zinc-800/50 rounded-xl py-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-150"
+      className="fixed z-[9999] min-w-[220px] bg-[var(--bg-surface)]/90 backdrop-blur-xl border border-[var(--border-primary)]/50 rounded-xl py-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-150"
       style={{ left: adjustedPos.x, top: adjustedPos.y }}
     >
       <MenuList items={items} onClose={onClose} />
@@ -70,7 +70,7 @@ const MenuList: React.FC<{ items: ContextMenuItem[]; onClose: () => void }> = ({
     <div className="flex flex-col">
       {items.map((item, index) => {
         if (item.item === "Separator") {
-          return <div key={`sep-${index}`} className="h-px bg-zinc-800/50 my-1 mx-2" />;
+          return <div key={`sep-${index}`} className="h-px bg-[var(--border-primary)]/50 my-1 mx-2" />;
         }
 
         return <MenuItem key={item.id || index} item={item} onClose={onClose} />;
@@ -114,8 +114,8 @@ const MenuItem: React.FC<{ item: ContextMenuItem; onClose: () => void }> = ({ it
       ref={itemRef}
       className={twMerge(
         "relative px-3 py-1.5 flex items-center justify-between text-[11px] transition-all duration-150 mx-1 rounded-lg cursor-default group",
-        isEnabled ? "text-zinc-300 hover:bg-blue-600 hover:text-white" : "text-zinc-600 opacity-50",
-        showSubmenu && isEnabled && "bg-zinc-800/50"
+        isEnabled ? "text-[var(--text-secondary)] hover:bg-blue-600 hover:text-white" : "text-[var(--text-muted)] opacity-50",
+        showSubmenu && isEnabled && "bg-[var(--bg-surface-elevated)]/50"
       )}
       onMouseEnter={isEnabled ? handleMouseEnter : undefined}
       onMouseLeave={isEnabled ? handleMouseLeave : undefined}
@@ -134,7 +134,7 @@ const MenuItem: React.FC<{ item: ContextMenuItem; onClose: () => void }> = ({ it
 
       {showSubmenu && hasSubmenu && isEnabled && (
         <div 
-          className="absolute left-full top-0 ml-1 min-w-[200px] bg-[#0c0c0c]/95 backdrop-blur-xl border border-zinc-800/50 rounded-xl py-1.5 shadow-2xl animate-in fade-in slide-in-from-left-1 duration-150"
+          className="absolute left-full top-0 ml-1 min-w-[200px] bg-[var(--bg-surface)]/95 backdrop-blur-xl border border-[var(--border-primary)]/50 rounded-xl py-1.5 shadow-2xl animate-in fade-in slide-in-from-left-1 duration-150"
           style={{ top: -6 }}
         >
           <MenuList items={item.items!} onClose={onClose} />

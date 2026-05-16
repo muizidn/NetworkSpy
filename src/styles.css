@@ -2,6 +2,8 @@
 @import './styles-platform/windows.css';
 @import './styles-platform/ubuntu.css';
 @import './scrollbar.css';
+@import './dark.css';
+@import './light.css';
 
 @tailwind base;
 @tailwind components;

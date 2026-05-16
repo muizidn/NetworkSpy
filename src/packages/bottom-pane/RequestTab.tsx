@@ -177,8 +177,8 @@ export const RequestTab = (props: {
             <button
               onClick={() => setIsBeautified(!isBeautified)}
               className={`absolute top-4 right-10 z-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-md border transition-all duration-300 shadow-xl opacity-50 hover:opacity-100 ${isBeautified
-                ? "bg-blue-600 border-blue-400 text-white shadow-blue-900/40 opacity-100"
-                : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700"
+                ? "bg-blue-600 border-blue-400 text-[var(--text-primary)] shadow-blue-900/40 opacity-100"
+                : "bg-[var(--bg-surface)] border border-[var(--border-primary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--border-secondary)]"
                 }`}
             >
               {isBeautified ? "Original" : "Beautify"}

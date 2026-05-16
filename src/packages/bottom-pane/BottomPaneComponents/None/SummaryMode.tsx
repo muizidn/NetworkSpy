@@ -92,18 +92,18 @@ export const SummaryMode = () => {
     const showHosts = stats.hosts.length > 2;
 
     return (
-        <div className="h-full bg-[#050505] text-white p-2 @sm:p-3 overflow-auto custom-scrollbar font-sans @container selection:bg-blue-500/30">
+        <div className="h-full bg-[var(--bg-app)] text-[var(--text-primary)] p-2 @sm:p-3 overflow-auto custom-scrollbar font-sans @container selection:bg-blue-500/30">
             <div className="max-w-6xl mx-auto space-y-4 pb-10">
                 {/* Header */}
                 <header className="flex flex-col gap-3 pt-4">
                     <div className="flex items-center justify-between">
-                        <h1 className="text-2xl @sm:text-4xl font-black tracking-tighter leading-none italic text-zinc-100">Intelligence Dashboard</h1>
-                        <div className="hidden @md:flex items-center gap-2 px-4 py-1.5 bg-white/5 rounded-full border border-white/10">
+                        <h1 className="text-2xl @sm:text-4xl font-black tracking-tighter leading-none italic text-[var(--text-primary)]">Intelligence Dashboard</h1>
+                        <div className="hidden @md:flex items-center gap-2 px-4 py-1.5 bg-[var(--bg-surface-elevated)]/5 rounded-full border border-[var(--border-primary)]/10">
                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-[10px] font-black tracking-widest text-zinc-400">System Ready</span>
+                            <span className="text-[10px] font-black tracking-widest text-[var(--text-secondary)]">System Ready</span>
                         </div>
                     </div>
-                    <p className="text-xs @sm:text-sm text-zinc-500 font-bold tracking-[0.2em] italic pl-1">Real-time Cross-Request Analysis</p>
+                    <p className="text-xs @sm:text-sm text-[var(--text-muted)] font-bold tracking-[0.2em] italic pl-1">Real-time Cross-Request Analysis</p>
                 </header>
 
                 {/* Hero Stats */}
@@ -151,12 +151,12 @@ export const SummaryMode = () => {
 
                         <Section title="System Telemetry" icon={<FiCpu className="text-emerald-400" />} className="hidden @sm:flex">
                             <div className="grid grid-cols-2 gap-4 pt-2">
-                                <div className="flex flex-col items-center justify-center py-3 px-3 bg-white/5 rounded-2xl border border-white/5">
-                                    <div className="text-[10px] font-black text-zinc-500 tracking-widest mb-1 px-1 text-center">Encrypted</div>
+                                <div className="flex flex-col items-center justify-center py-3 px-3 bg-[var(--bg-surface-elevated)]/5 rounded-2xl border border-[var(--border-primary)]/5">
+                                    <div className="text-[10px] font-black text-[var(--text-muted)] tracking-widest mb-1 px-1 text-center">Encrypted</div>
                                     <div className="text-lg font-black text-emerald-400 italic tracking-tighter">{stats.secureCount}</div>
                                 </div>
-                                <div className="flex flex-col items-center justify-center py-3 px-3 bg-white/5 rounded-2xl border border-white/5">
-                                    <div className="text-[10px] font-black text-zinc-500 tracking-widest mb-1 px-1 text-center">Success</div>
+                                <div className="flex flex-col items-center justify-center py-3 px-3 bg-[var(--bg-surface-elevated)]/5 rounded-2xl border border-[var(--border-primary)]/5">
+                                    <div className="text-[10px] font-black text-[var(--text-muted)] tracking-widest mb-1 px-1 text-center">Success</div>
                                     <div className="text-lg font-black text-blue-400 italic tracking-tighter">{stats.successRate}%</div>
                                 </div>
                             </div>
@@ -171,12 +171,12 @@ export const SummaryMode = () => {
                     >
                         <div className="space-y-3 pt-2 flex-grow">
                             {(showHosts ? stats.hosts.slice(0, 5) : stats.endpoints).map(([item, count], i) => (
-                                <div key={item} className="flex items-center justify-between bg-white/[0.04] p-3 rounded-xl border border-white/5 group hover:bg-white/[0.08] transition-all duration-300">
+                                <div key={item} className="flex items-center justify-between bg-[var(--bg-surface-inset)]/4 p-3 rounded-xl border border-[var(--border-primary)]/5 group hover:bg-[var(--bg-surface-inset)]/8 transition-all duration-300">
                                     <div className="flex items-center gap-4 overflow-hidden">
                                         <span className="text-[12px] font-black text-zinc-800 w-5 font-mono">{i + 1}</span>
-                                        <span className="text-sm font-semibold text-zinc-200 truncate tracking-tight">{item}</span>
+                                        <span className="text-sm font-semibold text-[var(--text-secondary)] truncate tracking-tight">{item}</span>
                                     </div>
-                                    <span className="text-[11px] font-black bg-zinc-800 text-zinc-300 px-3 py-1 rounded-xl border border-white/5 shadow-inner">
+                                    <span className="text-[11px] font-black bg-[var(--bg-surface-elevated)] text-[var(--text-secondary)] px-3 py-1 rounded-xl border border-[var(--border-primary)]/5 shadow-inner">
                                         {count}
                                     </span>
                                 </div>
@@ -218,22 +218,22 @@ export const SummaryMode = () => {
 };
 
 const StatCard = ({ title, value, subValue, icon, themeColor }: { title: string; value: string | number; subValue?: string; icon: React.ReactNode; themeColor: string }) => (
-    <div className="bg-zinc-950 p-3 @sm:p-4 rounded-2xl border border-white/10 shadow-2xl group transition-all duration-500 hover:border-white/20 relative overflow-hidden">
+    <div className="bg-[var(--bg-surface)] p-3 @sm:p-4 rounded-2xl border border-[var(--border-primary)]/10 shadow-2xl group transition-all duration-500 hover:border-[var(--border-primary)]/20 relative overflow-hidden">
         <div className="flex items-start justify-between mb-2 @sm:mb-3">
-            <div className="text-zinc-500 text-xs font-black tracking-[0.1em]">{title}</div>
-            <div className={twMerge("p-2.5 bg-white/5 rounded-2xl transition-colors duration-500 group-hover:bg-white/10", themeColor)}>{icon}</div>
+            <div className="text-[var(--text-muted)] text-xs font-black tracking-[0.1em]">{title}</div>
+            <div className={twMerge("p-2.5 bg-[var(--bg-surface-elevated)]/5 rounded-2xl transition-colors duration-500 group-hover:bg-[var(--bg-surface-elevated)]/10", themeColor)}>{icon}</div>
         </div>
         <div className="flex flex-col">
-            <div className="text-2xl @sm:text-3xl font-black italic tracking-tighter leading-none text-zinc-100">{value}</div>
-            <div className="text-[10px] text-zinc-400 font-bold tracking-[0.12em] mt-2 opacity-80 truncate">{subValue}</div>
+            <div className="text-2xl @sm:text-3xl font-black italic tracking-tighter leading-none text-[var(--text-primary)]">{value}</div>
+            <div className="text-[10px] text-[var(--text-secondary)] font-bold tracking-[0.12em] mt-2 opacity-80 truncate">{subValue}</div>
         </div>
         <div className={twMerge("absolute top-0 right-0 w-32 h-[1px] opacity-30", themeColor.replace('text', 'bg'))} />
     </div>
 );
 
 const Section = ({ title, icon, children, className = "" }: { title: string; icon?: React.ReactNode; children: React.ReactNode; className?: string }) => (
-    <div className={twMerge("bg-zinc-950 p-4 @sm:p-5 rounded-3xl border border-white/5 shadow-[inset_0_0_80px_rgba(255,255,255,0.02)] flex flex-col", className)}>
-        <h3 className="text-[10px] font-black text-zinc-400 tracking-[0.2em] mb-3 flex items-center gap-2 italic px-1">
+    <div className={twMerge("bg-[var(--bg-surface)] p-4 @sm:p-5 rounded-3xl border border-[var(--border-primary)]/5 shadow-[inset_0_0_80px_rgba(255,255,255,0.02)] flex flex-col", className)}>
+        <h3 className="text-[10px] font-black text-[var(--text-secondary)] tracking-[0.2em] mb-3 flex items-center gap-2 italic px-1">
             {icon} {title}
         </h3>
         {children}
@@ -245,10 +245,10 @@ const BucketRow = ({ label, count, total, color }: { label: string; count: numbe
     return (
         <div className="space-y-2.5 group/row px-1">
             <div className="flex justify-between items-center text-[11px] font-black tracking-wider">
-                <span className="text-zinc-400 group-hover/row:text-zinc-200 transition-colors">{label}</span>
-                <span className="text-zinc-300 font-mono tracking-tighter">{count} <span className="text-zinc-500 ml-1">({percentage.toFixed(0)}%)</span></span>
+                <span className="text-[var(--text-secondary)] group-hover/row:text-[var(--text-primary)] transition-colors">{label}</span>
+                <span className="text-[var(--text-secondary)] font-mono tracking-tighter">{count} <span className="text-[var(--text-muted)] ml-1">({percentage.toFixed(0)}%)</span></span>
             </div>
-            <div className="w-full bg-white/[0.04] rounded-full h-1.5 border border-white/5 overflow-hidden">
+            <div className="w-full bg-[var(--bg-surface-inset)]/4 rounded-full h-1.5 border border-[var(--border-primary)]/5 overflow-hidden">
                 <div className={twMerge("h-full rounded-full transition-all duration-1000 ease-out", color)} style={{ width: `${percentage}%` }}></div>
             </div>
         </div>
@@ -256,12 +256,12 @@ const BucketRow = ({ label, count, total, color }: { label: string; count: numbe
 };
 
 const EmptyState = () => (
-    <div className="h-full flex flex-col items-center justify-center bg-[#050505] p-10 text-center font-sans">
-        <div className="w-24 h-24 rounded-[2.5rem] bg-zinc-950 border border-white/10 flex items-center justify-center text-zinc-800 mb-10 shadow-2xl relative group">
+    <div className="h-full flex flex-col items-center justify-center bg-[var(--bg-app)] p-10 text-center font-sans">
+        <div className="w-24 h-24 rounded-[2.5rem] bg-[var(--bg-surface)] border border-[var(--border-primary)]/10 flex items-center justify-center text-[var(--text-muted)] mb-10 shadow-2xl relative group">
             <FiActivity size={40} className="group-hover:text-blue-400/50 transition-colors duration-1000" />
             <div className="absolute inset-0 bg-blue-500/5 opacity-0 rounded-[2.5rem] group-hover:opacity-100 transition-opacity duration-1000" />
         </div>
-        <h3 className="text-zinc-200 font-black mb-3 italic tracking-tighter text-xl">Sensor Network Standby</h3>
-        <p className="text-xs text-zinc-500 max-w-[250px] font-bold tracking-[0.2em] leading-relaxed opacity-60">Aggregate real-time telemetry from connected agents</p>
+        <h3 className="text-[var(--text-secondary)] font-black mb-3 italic tracking-tighter text-xl">Sensor Network Standby</h3>
+        <p className="text-xs text-[var(--text-muted)] max-w-[250px] font-bold tracking-[0.2em] leading-relaxed opacity-60">Aggregate real-time telemetry from connected agents</p>
     </div>
 );

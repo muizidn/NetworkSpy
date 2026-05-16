@@ -73,22 +73,22 @@ export const SSEViewerMode = () => {
 
   if (!selected) return null;
 
-  return (
-    <div className="flex flex-col h-full bg-[#15181a] text-zinc-300 overflow-hidden select-none">
+    return (
+    <div className="flex flex-col h-full bg-[var(--bg-app)] text-[var(--text-secondary)] overflow-hidden select-none">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-zinc-800 bg-[#1e1e1e] shrink-0">
+      <div className="flex items-center justify-between px-6 py-3 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] shrink-0">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-500/10 rounded-lg">
             <FiZap className={isLive ? "text-amber-500 animate-pulse" : "text-blue-500"} size={18} />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white tracking-wider">SSE Event Stream</h2>
+            <h2 className="text-sm font-bold text-[var(--text-primary)] tracking-wider">SSE Event Stream</h2>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-zinc-500 flex items-center gap-1">
+              <span className="text-[10px] text-[var(--text-muted)] flex items-center gap-1">
                 <FiActivity size={10} />
                 {isLive ? "LIVE STREAM ACTIVE" : "STREAM CLOSED"}
               </span>
-              <span className="text-[10px] text-zinc-700">•</span>
+              <span className="text-[10px] text-[var(--text-muted)]">•</span>
               <span className="text-[10px] text-blue-400 font-bold">{selected.method}</span>
             </div>
           </div>
@@ -96,12 +96,12 @@ export const SSEViewerMode = () => {
 
         <div className="flex items-center gap-4">
           <div className="flex gap-1.5">
-            <div className="px-2 py-1 bg-black/20 rounded border border-zinc-800/50 flex flex-col items-center min-w-[50px]">
-              <span className="text-[8px] text-zinc-600 font-bold">Events</span>
-              <span className="text-xs font-mono font-bold text-white">{events.length}</span>
+            <div className="px-2 py-1 bg-[var(--bg-surface-inset)]/20 rounded border border-[var(--border-primary)]/50 flex flex-col items-center min-w-[50px]">
+              <span className="text-[8px] text-[var(--text-muted)] font-bold">Events</span>
+              <span className="text-xs font-mono font-bold text-[var(--text-primary)]">{events.length}</span>
             </div>
           </div>
-          <button className="p-2 hover:bg-zinc-800 rounded transition-colors text-zinc-500 hover:text-white">
+          <button className="p-2 hover:bg-[var(--bg-surface-elevated)] rounded transition-colors text-[var(--text-muted)] hover:text-[var(--text-primary)]">
             <FiSettings size={16} />
           </button>
         </div>
@@ -109,19 +109,19 @@ export const SSEViewerMode = () => {
 
       <div className="flex-1 flex overflow-hidden">
         {/* Left: Event List Table */}
-        <div className="w-1/2 flex flex-col border-r border-zinc-900 bg-black/5">
-          <div className="flex items-center gap-1 px-4 py-2 border-b border-zinc-800 bg-zinc-900/40 sticky top-0 z-10">
-            <FiTerminal size={12} className="text-zinc-500" />
-            <span className="text-[10px] tracking-widest font-bold text-zinc-500">Live Events</span>
+        <div className="w-1/2 flex flex-col border-r border-[var(--border-primary)] bg-[var(--bg-surface-inset)]/5">
+          <div className="flex items-center gap-1 px-4 py-2 border-b border-[var(--border-primary)] bg-[var(--bg-surface)]/40 sticky top-0 z-10">
+            <FiTerminal size={12} className="text-[var(--text-muted)]" />
+            <span className="text-[10px] tracking-widest font-bold text-[var(--text-muted)]">Live Events</span>
           </div>
 
           <div ref={scrollRef} className="flex-1 overflow-y-auto scroll-smooth custom-scrollbar">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-[#1e1e1e]/50 sticky top-0 z-10 shadow-sm">
-                <tr className="border-b border-zinc-800">
-                  <th className="px-4 py-2 text-[10px] font-bold text-zinc-500 tracking-tighter w-24">Time</th>
-                  <th className="px-1 py-2 text-[10px] font-bold text-zinc-500 tracking-tighter">Event Type</th>
-                  <th className="px-4 py-2 text-[10px] font-bold text-zinc-500 tracking-tighter text-right">Delay</th>
+              <thead className="bg-[var(--bg-sidebar)]/50 sticky top-0 z-10 shadow-sm">
+                <tr className="border-b border-[var(--border-primary)]">
+                  <th className="px-4 py-2 text-[10px] font-bold text-[var(--text-muted)] tracking-tighter w-24">Time</th>
+                  <th className="px-1 py-2 text-[10px] font-bold text-[var(--text-muted)] tracking-tighter">Event Type</th>
+                  <th className="px-4 py-2 text-[10px] font-bold text-[var(--text-muted)] tracking-tighter text-right">Delay</th>
                 </tr>
               </thead>
               <tbody>
@@ -130,11 +130,11 @@ export const SSEViewerMode = () => {
                     key={event.id}
                     onClick={() => setSelectedEventId(event.id)}
                     className={twMerge(
-                      "group border-b border-zinc-800/30 cursor-pointer transition-colors animate-in fade-in slide-in-from-top-1 duration-300",
-                      selectedEventId === event.id ? "bg-blue-600/10" : "hover:bg-zinc-800/40"
+                      "group border-b border-[var(--border-primary)]/30 cursor-pointer transition-colors animate-in fade-in slide-in-from-top-1 duration-300",
+                      selectedEventId === event.id ? "bg-blue-600/10" : "hover:bg-[var(--bg-surface-elevated)]/40"
                     )}
                   >
-                    <td className="px-4 py-2.5 text-[10px] font-mono text-zinc-500">{event.timestamp.split(' ')[0]}</td>
+                    <td className="px-4 py-2.5 text-[10px] font-mono text-[var(--text-muted)]">{event.timestamp.split(' ')[0]}</td>
                     <td className="px-1 py-2.5">
                       <div className="flex items-center gap-2">
                         {renderEventTypeIcon(event.type)}
@@ -146,7 +146,7 @@ export const SSEViewerMode = () => {
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-2.5 text-[10px] font-mono text-right text-zinc-600">+{event.delayMs}ms</td>
+                    <td className="px-4 py-2.5 text-[10px] font-mono text-right text-[var(--text-muted)]">+{event.delayMs}ms</td>
                   </tr>
                 ))}
               </tbody>
@@ -161,10 +161,10 @@ export const SSEViewerMode = () => {
         </div>
 
         {/* Right: Event Inspector */}
-        <div className="w-1/2 flex flex-col bg-[#111314]">
-          <div className="flex items-center gap-1 px-4 py-2 border-b border-zinc-800 bg-zinc-900/40 shrink-0">
-            <FiDatabase size={12} className="text-zinc-500" />
-            <span className="text-[10px] tracking-widest font-bold text-zinc-500">Event Inspector</span>
+        <div className="w-1/2 flex flex-col bg-[var(--bg-surface-inset)]">
+          <div className="flex items-center gap-1 px-4 py-2 border-b border-[var(--border-primary)] bg-[var(--bg-surface)]/40 shrink-0">
+            <FiDatabase size={12} className="text-[var(--text-muted)]" />
+            <span className="text-[10px] tracking-widest font-bold text-[var(--text-muted)]">Event Inspector</span>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 @sm:p-6 custom-scrollbar">
@@ -172,21 +172,21 @@ export const SSEViewerMode = () => {
               <div className="animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex flex-col gap-1">
-                    <span className="text-[10px] font-bold text-zinc-500 tracking-wider">Internal ID</span>
+                    <span className="text-[10px] font-bold text-[var(--text-muted)] tracking-wider">Internal ID</span>
                     <span className="text-xs font-mono text-blue-400 font-bold">{selectedEvent.id}</span>
                   </div>
                   <div className="flex flex-col items-end gap-1">
-                    <span className="text-[10px] font-bold text-zinc-500 tracking-wider">Exact Arrival</span>
-                    <span className="text-xs font-mono text-zinc-400">{selectedEvent.timestamp}</span>
+                    <span className="text-[10px] font-bold text-[var(--text-muted)] tracking-wider">Exact Arrival</span>
+                    <span className="text-xs font-mono text-[var(--text-tertiary)]">{selectedEvent.timestamp}</span>
                   </div>
                 </div>
 
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-[10px] font-bold text-zinc-500 mb-3 tracking-widest flex items-center gap-2">
+                    <h3 className="text-[10px] font-bold text-[var(--text-muted)] mb-3 tracking-widest flex items-center gap-2">
                       <FiLayers size={12} /> Data Payload
                     </h3>
-                    <div className="bg-black/40 rounded-xl border border-zinc-800 p-4 font-mono text-xs text-zinc-300 relative overflow-hidden">
+                    <div className="bg-[var(--bg-surface-inset)]/40 rounded-xl border border-[var(--border-primary)] p-4 font-mono text-xs text-[var(--text-secondary)] relative overflow-hidden">
                       <pre>{JSON.stringify(selectedEvent.data, null, 2)}</pre>
                       <div className="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
                         <FiDatabase size={40} />
@@ -195,19 +195,19 @@ export const SSEViewerMode = () => {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="p-3 bg-zinc-900/40 rounded-lg border border-zinc-800/50">
-                      <span className="text-[9px] font-bold text-zinc-600 block mb-1">Raw Payload Size</span>
-                      <span className="text-xs font-mono text-zinc-300">{JSON.stringify(selectedEvent.data).length} bytes</span>
+                    <div className="p-3 bg-[var(--bg-surface)]/40 rounded-lg border border-[var(--border-primary)]/50">
+                      <span className="text-[9px] font-bold text-[var(--text-muted)] block mb-1">Raw Payload Size</span>
+                      <span className="text-xs font-mono text-[var(--text-secondary)]">{JSON.stringify(selectedEvent.data).length} bytes</span>
                     </div>
-                    <div className="p-3 bg-zinc-900/40 rounded-lg border border-zinc-800/50">
-                      <span className="text-[9px] font-bold text-zinc-600 block mb-1">Protocol Header</span>
-                      <span className="text-xs font-mono text-zinc-300">data: ...\n\n</span>
+                    <div className="p-3 bg-[var(--bg-surface)]/40 rounded-lg border border-[var(--border-primary)]/50">
+                      <span className="text-[9px] font-bold text-[var(--text-muted)] block mb-1">Protocol Header</span>
+                      <span className="text-xs font-mono text-[var(--text-secondary)]">data: ...\n\n</span>
                     </div>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-zinc-600 text-center px-10">
+              <div className="h-full flex flex-col items-center justify-center text-[var(--text-muted)] text-center px-10">
                 <FiInfo size={32} className="mb-4 opacity-30" />
                 <p className="text-xs font-bold tracking-widest mb-1">Property Inspector</p>
                 <p className="text-[11px] leading-relaxed italic">Select an event from the list on the left to see detailed data payload and metadata.</p>
@@ -235,7 +235,7 @@ const getTypeColor = (type: string) => {
     case "stock_update": return "bg-emerald-500/20 text-emerald-500 border border-emerald-500/20";
     case "notification": return "bg-amber-500/20 text-amber-500 border border-amber-500/20";
     case "system_alert": return "bg-blue-500/20 text-blue-500 border border-blue-500/20";
-    case "heartbeat": return "bg-purple-500/20 text-zinc-500 border border-purple-500/20";
-    default: return "bg-zinc-800 text-zinc-400";
+    case "heartbeat": return "bg-purple-500/20 text-[var(--text-muted)] border border-purple-500/20";
+    default: return "bg-[var(--bg-surface-elevated)] text-[var(--text-tertiary)]";
   }
 };

@@ -10,15 +10,15 @@ interface ConfigTabProps {
 
 export const ConfigTab: React.FC<ConfigTabProps> = ({ llmData }) => {
   return (
-    <div className="flex-grow overflow-y-auto p-8 custom-scrollbar bg-black/20">
+    <div className="flex-grow overflow-y-auto p-8 custom-scrollbar bg-[var(--bg-surface-inset)]/20">
       <div className="max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-300">
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl bg-amber-600/20 border border-amber-500/30 flex items-center justify-center text-amber-500 shadow-xl shadow-amber-900/20">
             <FiInfo size={22} />
           </div>
           <div>
-            <h2 className="text-xl font-black text-white tracking-tight uppercase italic">Model Parameters</h2>
-            <p className="text-[10px] text-zinc-500 font-mono tracking-widest uppercase">Global configuration for this request</p>
+            <h2 className="text-xl font-black text-[var(--text-primary)] tracking-tight uppercase italic">Model Parameters</h2>
+            <p className="text-[10px] text-[var(--text-muted)] font-mono tracking-widest uppercase">Global configuration for this request</p>
           </div>
         </div>
 
@@ -47,10 +47,10 @@ export const ConfigTab: React.FC<ConfigTabProps> = ({ llmData }) => {
           {/* Raw Config Dump */}
           <div className="col-span-full mt-6 group">
             <div className="flex items-center justify-between mb-3">
-              <div className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em]">Raw JSON Request Configuration</div>
+              <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">Raw JSON Request Configuration</div>
               <CopyButton text={JSON.stringify(llmData.raw_config, null, 2)} />
             </div>
-            <div className="bg-black/40 border border-zinc-800 rounded-2xl p-6 font-mono text-xs text-zinc-400 overflow-x-auto shadow-inner">
+            <div className="bg-[var(--bg-surface-inset)]/40 border border-[var(--border-primary)] rounded-2xl p-6 font-mono text-xs text-[var(--text-tertiary)] overflow-x-auto shadow-inner">
               {JSON.stringify(llmData.raw_config, null, 2)}
             </div>
           </div>
@@ -62,12 +62,12 @@ export const ConfigTab: React.FC<ConfigTabProps> = ({ llmData }) => {
 
 const ConfigCard = ({ label, value, icon = null, color = "zinc" }: { label: string, value: any, icon?: any, color?: string }) => {
   const colorClasses = {
-    zinc: "text-zinc-400 bg-zinc-800/20 border-zinc-800/50",
+    zinc: "text-[var(--text-tertiary)] bg-[var(--bg-surface-elevated)]/20 border border-[var(--border-primary)]/50",
     amber: "text-amber-400 bg-amber-500/10 border-amber-900/30",
     blue: "text-blue-400 bg-blue-500/10 border-blue-900/30",
     emerald: "text-emerald-400 bg-emerald-500/10 border-emerald-900/30",
     purple: "text-purple-400 bg-purple-500/10 border-purple-900/30"
-  }[color] || "text-zinc-400 bg-zinc-800/20 border-zinc-800/50";
+  }[color] || "text-[var(--text-tertiary)] bg-[var(--bg-surface-elevated)]/20 border border-[var(--border-primary)]/50";
 
   return (
     <div className={twMerge("rounded-2xl border p-4 flex flex-col gap-3 transition-all hover:scale-[1.02] active:scale-[0.98]", colorClasses)}>
@@ -75,7 +75,7 @@ const ConfigCard = ({ label, value, icon = null, color = "zinc" }: { label: stri
         <span className="text-[10px] font-black uppercase tracking-widest opacity-60">{label}</span>
         {icon && <div className="opacity-80">{icon}</div>}
       </div>
-      <div className="text-lg font-black text-zinc-100 tracking-tight truncate">{String(value)}</div>
+      <div className="text-lg font-black text-[var(--text-primary)] tracking-tight truncate">{String(value)}</div>
     </div>
   );
 };

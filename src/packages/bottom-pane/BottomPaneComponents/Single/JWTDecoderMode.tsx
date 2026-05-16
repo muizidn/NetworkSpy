@@ -107,20 +107,20 @@ export const JWTDecoderMode = () => {
     if (loading) return <Placeholder text="Scanning for tokens..." />;
 
     return (
-        <div className="h-full bg-[#0a0a0a] overflow-hidden flex flex-col">
-            <div className="px-4 @sm:px-6 py-4 border-b border-zinc-800 flex justify-between items-end bg-[#0c0c0c]">
+        <div className="h-full bg-[var(--bg-app)] overflow-hidden flex flex-col">
+            <div className="px-4 @sm:px-6 py-4 border-b border-[var(--border-primary)] flex justify-between items-end bg-[var(--bg-sidebar)]">
                 <div>
-                    <h2 className="text-xl font-black text-white italic tracking-tighter">JWT Decoder</h2>
-                    <div className="text-[10px] text-zinc-500 font-bold tracking-widest mt-0.5">Deep Packet Inspection • Auth Tokens</div>
+                    <h2 className="text-xl font-black text-[var(--text-primary)] italic tracking-tighter">JWT Decoder</h2>
+                    <div className="text-[10px] text-[var(--text-muted)] font-bold tracking-widest mt-0.5">Deep Packet Inspection • Auth Tokens</div>
                 </div>
                 <div className="flex gap-2">
                     {detectedTokens.length > 1 && (
-                        <div className="flex bg-zinc-900 rounded-lg p-1 border border-zinc-800">
+                        <div className="flex bg-[var(--bg-surface)] rounded-lg p-1 border border-[var(--border-primary)]">
                             {detectedTokens.map((_, i) => (
                                 <button
                                     key={i}
                                     onClick={() => setSelectedTokenIndex(i)}
-                                    className={`px-3 py-1 rounded-md text-[10px] font-bold transition-all ${selectedTokenIndex === i ? 'bg-zinc-700 text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+                                    className={`px-3 py-1 rounded-md text-[10px] font-bold transition-all ${selectedTokenIndex === i ? 'bg-[var(--bg-surface-elevated)] text-[var(--text-primary)]' : 'text-[var(--text-muted)] hover:text-[var(--text-tertiary)]'}`}
                                 >
                                     Token {i + 1}
                                 </button>
@@ -133,19 +133,19 @@ export const JWTDecoderMode = () => {
             <div className="flex-1 overflow-auto p-4 @sm:p-6">
                 <div className="max-w-4xl mx-auto space-y-6">
                     {detectedTokens.length === 0 ? (
-                        <div className="py-20 text-center bg-zinc-900/20 rounded-3xl border border-dashed border-zinc-800/50">
-                            <div className="text-zinc-600 text-sm mb-2 font-medium">No JSON Web Tokens detected in this exchange.</div>
-                            <div className="text-[10px] text-zinc-700 tracking-widest">Scanned: Headers, Query, Cookies, Body</div>
+                        <div className="py-20 text-center bg-[var(--bg-surface)]/20 rounded-3xl border border-dashed border-[var(--border-primary)]/50">
+                            <div className="text-[var(--text-muted)] text-sm mb-2 font-medium">No JSON Web Tokens detected in this exchange.</div>
+                            <div className="text-[10px] text-[var(--text-muted)] tracking-widest">Scanned: Headers, Query, Cookies, Body</div>
                         </div>
                     ) : (
                         <>
                             {/* Token Preview */}
-                            <div className="bg-zinc-900/50 rounded-2xl border border-zinc-800 p-4">
-                                <div className="text-[10px] font-black text-zinc-500 mb-2 tracking-widest flex justify-between items-center">
+                            <div className="bg-[var(--bg-surface)]/50 rounded-2xl border border-[var(--border-primary)] p-4">
+                                <div className="text-[10px] font-black text-[var(--text-muted)] mb-2 tracking-widest flex justify-between items-center">
                                     <span>Raw Token ({detectedTokens[selectedTokenIndex]?.source})</span>
                                     <span className="text-blue-500/50">MATCHED ENTROPY</span>
                                 </div>
-                                <div className="font-mono text-[10px] break-all text-zinc-400 leading-relaxed bg-black/30 p-3 rounded-xl border border-zinc-800/50">
+                                <div className="font-mono text-[10px] break-all text-[var(--text-tertiary)] leading-relaxed bg-[var(--bg-surface-inset)]/30 p-3 rounded-xl border border-[var(--border-primary)]/50">
                                     {currentToken?.split('.').map((part, i) => (
                                         <span key={i} className={i === 0 ? 'text-pink-400' : i === 1 ? 'text-purple-400' : 'text-cyan-400'}>
                                             {part}{i < 2 ? '.' : ''}
@@ -159,9 +159,9 @@ export const JWTDecoderMode = () => {
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2 px-1">
                                         <div className="w-1.5 h-1.5 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.5)]"></div>
-                                        <h3 className="text-[10px] font-black text-zinc-400 tracking-widest">Header</h3>
+                                        <h3 className="text-[10px] font-black text-[var(--text-tertiary)] tracking-widest">Header</h3>
                                     </div>
-                                    <div className="bg-[#111] rounded-2xl border border-zinc-800 overflow-hidden shadow-xl">
+                                    <div className="bg-[var(--bg-sidebar)] rounded-2xl border border-[var(--border-primary)] overflow-hidden shadow-xl">
                                         <div className="p-4 overflow-auto">
                                             <pre className="text-xs text-pink-300/80 font-mono leading-relaxed">
                                                 {decoded ? JSON.stringify(decoded.header, null, 2) : "Invalid Header"}
@@ -174,9 +174,9 @@ export const JWTDecoderMode = () => {
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2 px-1">
                                         <div className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]"></div>
-                                        <h3 className="text-[10px] font-black text-zinc-400 tracking-widest">Payload</h3>
+                                        <h3 className="text-[10px] font-black text-[var(--text-tertiary)] tracking-widest">Payload</h3>
                                     </div>
-                                    <div className="bg-[#111] rounded-2xl border border-zinc-800 overflow-hidden shadow-xl">
+                                    <div className="bg-[var(--bg-sidebar)] rounded-2xl border border-[var(--border-primary)] overflow-hidden shadow-xl">
                                         <div className="p-4 overflow-auto">
                                             <pre className="text-xs text-purple-300/80 font-mono leading-relaxed">
                                                 {decoded ? JSON.stringify(decoded.payload, null, 2) : "Invalid Payload"}
@@ -188,33 +188,33 @@ export const JWTDecoderMode = () => {
 
                             {/* Token Metadata/Info */}
                             <div className="grid grid-cols-1 @sm:grid-cols-3 gap-4">
-                                <div className="bg-zinc-900/30 border border-zinc-800/50 p-4 rounded-2xl">
-                                    <div className="text-[9px] font-bold text-zinc-500 mb-1">Algorithm</div>
-                                    <div className="text-sm font-black text-white">{decoded?.header?.alg || 'Unknown'}</div>
+                                <div className="bg-[var(--bg-surface)]/30 border border-[var(--border-primary)]/50 p-4 rounded-2xl">
+                                    <div className="text-[9px] font-bold text-[var(--text-muted)] mb-1">Algorithm</div>
+                                    <div className="text-sm font-black text-[var(--text-primary)]">{decoded?.header?.alg || 'Unknown'}</div>
                                 </div>
-                                <div className="bg-zinc-900/30 border border-zinc-800/50 p-4 rounded-2xl">
-                                    <div className="text-[9px] font-bold text-zinc-500 mb-1">Issued At</div>
+                                <div className="bg-[var(--bg-surface)]/30 border border-[var(--border-primary)]/50 p-4 rounded-2xl">
+                                    <div className="text-[9px] font-bold text-[var(--text-muted)] mb-1">Issued At</div>
                                     <div className="space-y-1">
-                                        <div className="text-xs font-black text-white">
+                                        <div className="text-xs font-black text-[var(--text-primary)]">
                                             {decoded?.payload?.iat ? new Date(decoded.payload.iat * 1000).toUTCString() : 'N/A'}
                                             <span className="ml-2 text-[8px] text-blue-500/50 font-bold tracking-tighter">UTC</span>
                                         </div>
-                                        <div className="text-[10px] text-zinc-400 font-mono">
+                                        <div className="text-[10px] text-[var(--text-tertiary)] font-mono">
                                             {decoded?.payload?.iat ? new Date(decoded.payload.iat * 1000).toLocaleString() : 'N/A'}
-                                            <span className="ml-2 text-[8px] text-zinc-600 font-bold tracking-tighter">Local</span>
+                                            <span className="ml-2 text-[8px] text-[var(--text-muted)] font-bold tracking-tighter">Local</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="bg-zinc-900/30 border border-zinc-800/50 p-4 rounded-2xl">
-                                    <div className="text-[9px] font-bold text-zinc-500 mb-1">Expires</div>
+                                <div className="bg-[var(--bg-surface)]/30 border border-[var(--border-primary)]/50 p-4 rounded-2xl">
+                                    <div className="text-[9px] font-bold text-[var(--text-muted)] mb-1">Expires</div>
                                     <div className="space-y-1">
-                                        <div className="text-xs font-black text-white">
+                                        <div className="text-xs font-black text-[var(--text-primary)]">
                                             {decoded?.payload?.exp ? new Date(decoded.payload.exp * 1000).toUTCString() : 'N/A'}
                                             <span className="ml-2 text-[8px] text-blue-500/50 font-bold tracking-tighter">UTC</span>
                                         </div>
-                                        <div className="text-[10px] text-zinc-400 font-mono">
+                                        <div className="text-[10px] text-[var(--text-tertiary)] font-mono">
                                             {decoded?.payload?.exp ? new Date(decoded.payload.exp * 1000).toLocaleString() : 'N/A'}
-                                            <span className="ml-2 text-[8px] text-zinc-600 font-bold tracking-tighter">Local</span>
+                                            <span className="ml-2 text-[8px] text-[var(--text-muted)] font-bold tracking-tighter">Local</span>
                                         </div>
                                     </div>
                                 </div>
@@ -228,7 +228,7 @@ export const JWTDecoderMode = () => {
 };
 
 const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0a0a0a]">
+    <div className="h-full flex items-center justify-center text-zinc-500 bg-[var(--bg-app)]">
         <div className="text-center">
             <div className="text-4xl font-black opacity-10 mb-2">JWT</div>
             <div className="text-sm">{text}</div>

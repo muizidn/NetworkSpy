@@ -184,16 +184,16 @@ export const LLMStreamingMode = () => {
   if (!isSSE && chunks.length === 0) {
     return (
       <Placeholder 
-        icon={<FiZap size={48} className="text-zinc-800" />}
+        icon={<FiZap size={48} className="text-[var(--text-muted)]" />}
         text="No Server-Sent Events (SSE) detected in this request. This tab is designed for live LLM streaming data."
       />
     );
   }
 
   return (
-    <div className="flex flex-col h-full bg-[#15181a] text-zinc-300 font-sans overflow-hidden">
+    <div className="flex flex-col h-full bg-[var(--bg-app)] text-[var(--text-secondary)] font-sans overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 @sm:px-6 py-4 border-b border-zinc-800 bg-[#1e1e1e]">
+      <div className="flex items-center justify-between px-4 @sm:px-6 py-4 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)]">
         <div className="flex items-center gap-3">
           <div className={twMerge(
             "p-2 rounded-lg",
@@ -202,9 +202,9 @@ export const LLMStreamingMode = () => {
             <FiZap className={isStreaming ? "text-amber-500 animate-pulse" : "text-emerald-500"} size={18} />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white tracking-wider">LLM Stream Viewer</h2>
+            <h2 className="text-sm font-bold text-[var(--text-primary)] tracking-wider">LLM Stream Viewer</h2>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-zinc-500 flex items-center gap-1">
+              <span className="text-[10px] text-[var(--text-muted)] flex items-center gap-1">
                 <FiActivity size={10} />
                 {isStreaming ? "STREAMING..." : "COMPLETED"}
               </span>
@@ -216,7 +216,7 @@ export const LLMStreamingMode = () => {
 
         <div className="flex gap-2">
           {choiceCount > 1 && (
-            <div className="flex bg-black/40 rounded-lg p-1 border border-zinc-800 mr-2">
+            <div className="flex bg-[var(--bg-surface-inset)]/40 rounded-lg p-1 border border-[var(--border-primary)] mr-2">
               {Array.from({ length: choiceCount }).map((_, idx) => (
                 <button
                   key={idx}
@@ -225,7 +225,7 @@ export const LLMStreamingMode = () => {
                   }}
                   className={twMerge(
                     "px-4 py-2 rounded text-[11px] font-bold transition-all",
-                    targetChoiceIndex === idx ? "bg-amber-600 text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
+                    targetChoiceIndex === idx ? "bg-amber-600 text-[var(--text-primary)] shadow-lg" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
                   )}
                 >
                   Choice {idx + 1}
@@ -233,11 +233,11 @@ export const LLMStreamingMode = () => {
               ))}
             </div>
           )}
-          <div className="flex flex-col items-end px-3 py-1 bg-black/20 rounded-md border border-zinc-800/50">
-            <span className="text-[8px] font-bold text-zinc-600 tracking-tighter">Event Count</span>
+          <div className="flex flex-col items-end px-3 py-1 bg-[var(--bg-surface-inset)]/20 rounded-md border border-[var(--border-primary)]/50">
+            <span className="text-[8px] font-bold text-[var(--text-muted)] tracking-tighter">Event Count</span>
             <span className="text-xs font-mono text-blue-400 font-bold">{chunks.length}</span>
           </div>
-          <button className="p-2 hover:bg-zinc-800 rounded-md text-zinc-500 hover:text-white transition-colors">
+          <button className="p-2 hover:bg-[var(--bg-surface-elevated)] rounded-md text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
             <FiSettings size={16} />
           </button>
         </div>

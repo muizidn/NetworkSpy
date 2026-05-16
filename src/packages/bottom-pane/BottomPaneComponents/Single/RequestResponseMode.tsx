@@ -62,9 +62,9 @@ export const RequestResponseMode = ({
   const server = getHeader(resHeaders, "server");
 
   return (
-    <div className="h-full flex flex-col bg-[#0d0d0d]">
+    <div className="h-full flex flex-col bg-[var(--bg-app)]">
       {/* Header Controls */}
-      <div className="flex flex-col border-b border-zinc-900 bg-[#0a0a0a] shrink-0">
+      <div className="flex flex-col border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] shrink-0">
         <div className="flex items-center justify-between px-3 py-1.5">
           <div className="flex items-center gap-4 overflow-hidden flex-1 mr-4">
             {traffic ? (
@@ -72,36 +72,36 @@ export const RequestResponseMode = ({
                 <div className="flex items-center gap-4 text-[10px] overflow-hidden">
                   {/* Request Metadata */}
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className="text-[9px] text-zinc-600 font-black tracking-tighter">REQ</span>
-                    <span className="text-zinc-400 font-mono">{reqLen || '0'} B</span>
-                    <span className="text-zinc-500 opacity-70 italic truncate max-w-[100px]">{reqType}</span>
+                    <span className="text-[9px] text-[var(--text-muted)] font-black tracking-tighter">REQ</span>
+                    <span className="text-[var(--text-tertiary)] font-mono">{reqLen || '0'} B</span>
+                    <span className="text-[var(--text-muted)] opacity-70 italic truncate max-w-[100px]">{reqType}</span>
                     {origin && <span className="text-blue-500/50 font-mono truncate max-w-[150px]" title={origin}>({origin})</span>}
                   </div>
 
                   {/* Response Metadata */}
                   {traffic.response && (
-                    <div className="flex items-center gap-1.5 shrink-0 border-l border-zinc-800/50 pl-4">
-                      <span className="text-[9px] text-zinc-600 font-black tracking-tighter">RES</span>
-                      <span className="text-zinc-400 font-mono">{resLen || '0'} B</span>
-                      <span className="text-zinc-500 opacity-70 italic truncate max-w-[100px]">{resType}</span>
+                    <div className="flex items-center gap-1.5 shrink-0 border-l border-[var(--border-primary)]/50 pl-4">
+                      <span className="text-[9px] text-[var(--text-muted)] font-black tracking-tighter">RES</span>
+                      <span className="text-[var(--text-tertiary)] font-mono">{resLen || '0'} B</span>
+                      <span className="text-[var(--text-muted)] opacity-70 italic truncate max-w-[100px]">{resType}</span>
                       {server && <span className="text-purple-500/50 font-mono truncate max-w-[150px]" title={server}>({server})</span>}
                     </div>
                   )}
                 </div>
               </>
             ) : (
-              <span className="text-[10px] text-zinc-600 font-black tracking-widest">Inspection</span>
+              <span className="text-[10px] text-[var(--text-muted)] font-black tracking-widest">Inspection</span>
             )}
           </div>
 
-          <div className="flex items-center gap-0.5 bg-black/40 rounded-md p-0.5 border border-zinc-800/50">
+          <div className="flex items-center gap-0.5 bg-[var(--bg-surface-inset)]/40 rounded-md p-0.5 border border-[var(--border-primary)]/50">
             <button
               onClick={() => setViewMode("request")}
               className={twMerge(
                 "px-2 py-1 rounded text-[9px] font-black tracking-tighter transition-all duration-300",
                 viewMode === "request"
-                  ? "bg-blue-600 text-white shadow-[0_0_10px_rgba(37,99,235,0.2)]"
-                  : "text-zinc-600 hover:text-zinc-400"
+                  ? "bg-blue-600 text-[var(--text-primary)] shadow-[0_0_10px_rgba(37,99,235,0.2)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
               )}
             >
               Req
@@ -111,8 +111,8 @@ export const RequestResponseMode = ({
               className={twMerge(
                 "px-2 py-1 rounded text-[9px] font-black tracking-tighter transition-all duration-300",
                 viewMode === "both"
-                  ? "bg-zinc-700 text-white"
-                  : "text-zinc-600 hover:text-zinc-400"
+                  ? "bg-[var(--bg-surface-elevated)] text-[var(--text-primary)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
               )}
             >
               Split
@@ -122,8 +122,8 @@ export const RequestResponseMode = ({
               className={twMerge(
                 "px-2 py-1 rounded text-[9px] font-black tracking-tighter transition-all duration-300",
                 viewMode === "response"
-                  ? "bg-green-600 text-white shadow-[0_0_10px_rgba(22,163,74,0.2)]"
-                  : "text-zinc-600 hover:text-zinc-400"
+                  ? "bg-green-600 text-[var(--text-primary)] shadow-[0_0_10px_rgba(22,163,74,0.2)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
               )}
             >
               Res
@@ -148,7 +148,7 @@ export const RequestResponseMode = ({
               {renderRequest()}
             </Pane>
 
-            <div className="h-full overflow-hidden border-l border-zinc-900 border-t @sm:border-t-0 @sm:border-l">
+            <div className="h-full overflow-hidden border-l border-[var(--border-primary)] border-t @sm:border-t-0 @sm:border-l">
               {renderResponse()}
             </div>
           </SplitPane>

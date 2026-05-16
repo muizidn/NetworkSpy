@@ -46,39 +46,39 @@ AI Insights:
     if (!trafficId) return <Placeholder text="Select a request to start AI Debug" />;
 
     return (
-        <div className="h-full bg-zinc-950 p-4 @sm:p-6 overflow-auto">
+        <div className="h-full bg-[var(--bg-app)] p-4 @sm:p-6 overflow-auto">
             <div className="max-w-2xl mx-auto">
                 <div className="flex items-center gap-5 mb-10">
-                    <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-xl shadow-indigo-900/40 shrink-0">
+                    <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center text-[var(--text-primary)] shadow-xl shrink-0">
                         <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
                     </div>
                     <div>
-                        <h2 className="text-2xl font-black text-white tracking-tight">AI Debugger</h2>
-                        <p className="text-[10px] text-zinc-500 font-bold tracking-widest">Autonomous Logical Analysis & Fault Localization</p>
+                        <h2 className="text-2xl font-black text-[var(--text-primary)] tracking-tight">AI Debugger</h2>
+                        <p className="text-[10px] text-[var(--text-muted)] font-bold tracking-widest">Autonomous Logical Analysis & Fault Localization</p>
                     </div>
                 </div>
 
                 {!debugInfo ? (
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 @sm:p-10 flex flex-col items-center text-center">
-                        <div className="text-zinc-300 font-bold mb-3">Explain why this request happened the way it did</div>
-                        <p className="text-xs text-zinc-600 mb-8 max-w-sm italic">AI will inspect the request journey, headers, and body to identify logic flaws or performance quirks.</p>
+                    <div className="bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-2xl p-6 @sm:p-10 flex flex-col items-center text-center">
+                        <div className="text-[var(--text-secondary)] font-bold mb-3">Explain why this request happened the way it did</div>
+                        <p className="text-xs text-[var(--text-muted)] mb-8 max-w-sm italic">AI will inspect the request journey, headers, and body to identify logic flaws or performance quirks.</p>
                         <button
                             onClick={handleDebug}
                             disabled={analyzing}
-                            className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-10 rounded-full transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3"
+                            className="bg-indigo-600 hover:bg-indigo-500 text-[var(--text-primary)] font-bold py-3 px-10 rounded-full transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3"
                         >
                             {analyzing && <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>}
                             {analyzing ? 'Analyzing Architecture...' : 'Analyze Request'}
                         </button>
                     </div>
                 ) : (
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 animate-in zoom-in duration-300">
-                        <div className="flex justify-between items-center mb-6 pb-4 border-b border-zinc-800">
+                    <div className="bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-2xl p-8 animate-in zoom-in duration-300">
+                        <div className="flex justify-between items-center mb-6 pb-4 border-b border-[var(--border-primary)]">
                             <span className="text-[10px] font-black text-indigo-400 tracking-widest">AI EXPLANATION</span>
-                            <button onClick={() => setDebugInfo(null)} className="text-[10px] text-zinc-600 font-bold hover:text-white">Reset</button>
+                            <button onClick={() => setDebugInfo(null)} className="text-[10px] text-[var(--text-muted)] font-bold hover:text-[var(--text-primary)]">Reset</button>
                         </div>
                         <div className="prose prose-invert prose-sm">
-                            <pre className="whitespace-pre-wrap text-zinc-300 font-sans leading-relaxed text-sm">
+                            <pre className="whitespace-pre-wrap text-[var(--text-secondary)] font-sans leading-relaxed text-sm">
                                 {debugInfo}
                             </pre>
                         </div>
@@ -90,7 +90,7 @@ AI Insights:
 };
 
 const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-zinc-950">
+    <div className="h-full flex items-center justify-center text-zinc-500 bg-[var(--bg-app)]">
         <div className="text-center">
             <div className="text-4xl font-black opacity-10 mb-2 truncate max-w-xs">DEBUGGER</div>
             <div className="text-sm">{text}</div>

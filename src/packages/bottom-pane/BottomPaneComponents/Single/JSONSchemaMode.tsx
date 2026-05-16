@@ -205,19 +205,19 @@ export const JSONSchemaMode = () => {
     if (loading) return <SchemaPlaceholder text="Constructing Blueprints..." subtext="Analyzing data structure and preparing validator environment..." />;
 
     return (
-        <div className="h-full bg-[#0a0a0a] flex flex-col overflow-hidden">
+        <div className="h-full bg-[var(--bg-app)] flex flex-col overflow-hidden">
             {/* Header */}
-            <div className="px-4 @sm:px-6 py-4 border-b border-zinc-900 bg-[#0c0c0c] flex justify-between items-center shrink-0">
+            <div className="px-4 @sm:px-6 py-4 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] flex justify-between items-center shrink-0">
                 <div className="flex items-center gap-4 @sm:p-6">
                     <div>
-                        <h2 className="text-xl font-black text-white italic tracking-tighter font-mono">JSON Blueprint</h2>
-                        <div className="text-[9px] text-zinc-500 font-bold tracking-widest mt-0.5">Schema Design & Validation</div>
+                        <h2 className="text-xl font-black text-[var(--text-primary)] italic tracking-tighter font-mono">JSON Blueprint</h2>
+                        <div className="text-[9px] text-[var(--text-muted)] font-bold tracking-widest mt-0.5">Schema Design & Validation</div>
                     </div>
 
-                    <div className="flex bg-zinc-900/50 rounded-xl p-1 border border-zinc-800">
+                    <div className="flex bg-[var(--bg-surface)]/50 rounded-xl p-1 border border-[var(--border-primary)]">
                         <button
                             onClick={() => setMode("builder")}
-                            className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all flex items-center gap-2 ${mode === "builder" ? 'bg-blue-600 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
+                            className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all flex items-center gap-2 ${mode === "builder" ? 'bg-blue-600 text-[var(--text-primary)] shadow-lg' : 'text-[var(--text-muted)] hover:text-[var(--text-tertiary)]'}`}
                         >
                             <FiCpu className={mode === "builder" ? "animate-pulse" : ""} />
                             Builder
@@ -227,7 +227,7 @@ export const JSONSchemaMode = () => {
                                 setMode("validator");
                                 setTimeout(handleValidate, 100);
                             }}
-                            className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all flex items-center gap-2 ${mode === "validator" ? 'bg-purple-600 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
+                            className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all flex items-center gap-2 ${mode === "validator" ? 'bg-purple-600 text-[var(--text-primary)] shadow-lg' : 'text-[var(--text-muted)] hover:text-[var(--text-tertiary)]'}`}
                         >
                             <FiCheckCircle />
                             Validator
@@ -236,16 +236,16 @@ export const JSONSchemaMode = () => {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <div className="flex bg-zinc-900 rounded-lg p-0.5 border border-zinc-800">
+                    <div className="flex bg-[var(--bg-surface)] rounded-lg p-0.5 border border-[var(--border-primary)]">
                         <button
                             onClick={() => setActiveSource("request")}
-                            className={`px-3 py-1 rounded-md text-[9px] font-black transition-all ${activeSource === "request" ? 'bg-zinc-700 text-white' : 'text-zinc-600 hover:text-zinc-400'}`}
+                            className={`px-3 py-1 rounded-md text-[9px] font-black transition-all ${activeSource === "request" ? 'bg-[var(--bg-surface-elevated)] text-[var(--text-primary)]' : 'text-[var(--text-muted)] hover:text-[var(--text-tertiary)]'}`}
                         >
                             Request
                         </button>
                         <button
                             onClick={() => setActiveSource("response")}
-                            className={`px-3 py-1 rounded-md text-[9px] font-black transition-all ${activeSource === "response" ? 'bg-zinc-700 text-white' : 'text-zinc-600 hover:text-zinc-400'}`}
+                            className={`px-3 py-1 rounded-md text-[9px] font-black transition-all ${activeSource === "response" ? 'bg-[var(--bg-surface-elevated)] text-[var(--text-primary)]' : 'text-[var(--text-muted)] hover:text-[var(--text-tertiary)]'}`}
                         >
                             Response
                         </button>
@@ -255,9 +255,9 @@ export const JSONSchemaMode = () => {
 
             <div className="flex-1 flex overflow-hidden">
                 {/* Left: Schema Editor */}
-                <div className="flex-1 flex flex-col border-r border-zinc-900">
-                    <div className="px-4 py-2 border-b border-zinc-900 bg-[#080808] flex justify-between items-center">
-                        <span className="text-[10px] font-black text-zinc-500 tracking-widest flex items-center gap-2">
+                <div className="flex-1 flex flex-col border-r border-[var(--border-primary)]">
+                    <div className="px-4 py-2 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] flex justify-between items-center">
+                        <span className="text-[10px] font-black text-[var(--text-muted)] tracking-widest flex items-center gap-2">
                             <FiCode /> {mode === "builder" ? "Schema Generator" : "Schema Definition"}
                         </span>
                         {mode === "builder" && (
@@ -296,14 +296,14 @@ export const JSONSchemaMode = () => {
 
                 {/* Right: Body Viewer & Validation */}
                 <div className="flex-1 flex flex-col">
-                    <div className="px-4 py-2 border-b border-zinc-900 bg-[#080808] flex justify-between items-center">
-                        <span className="text-[10px] font-black text-zinc-500 tracking-widest flex items-center gap-2">
+                    <div className="px-4 py-2 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] flex justify-between items-center">
+                        <span className="text-[10px] font-black text-[var(--text-muted)] tracking-widest flex items-center gap-2">
                             <FiDatabase /> Data Payload
                         </span>
                         {mode === "validator" && (
                             <button
                                 onClick={handleValidate}
-                                className="flex items-center gap-2 px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded-full text-[9px] font-black shadow-lg transition-all"
+                                className="flex items-center gap-2 px-3 py-1 bg-purple-600 hover:bg-purple-500 text-[var(--text-primary)] rounded-full text-[9px] font-black shadow-lg transition-all"
                             >
                                 <FiActivity /> Re-Validate
                             </button>
@@ -330,9 +330,9 @@ export const JSONSchemaMode = () => {
                 </div>
 
                 {/* Sidebar: Validation Results */}
-                <div className="w-72 bg-[#080808] border-l border-zinc-900 overflow-auto">
+                <div className="w-72 bg-[var(--bg-sidebar)] border-l border-[var(--border-primary)] overflow-auto">
                     <div className="p-4 @sm:p-6 space-y-6">
-                        <h3 className="text-[10px] font-black text-zinc-600 tracking-widest">Analysis Results</h3>
+                        <h3 className="text-[10px] font-black text-[var(--text-muted)] tracking-widest">Analysis Results</h3>
 
                         {validationSuccess === null && validationErrors.length === 0 ? (
                             <div className="py-12 text-center opacity-20">
@@ -345,7 +345,7 @@ export const JSONSchemaMode = () => {
                                     <FiCheckCircle className="text-lg" />
                                     <span className="text-[10px] font-black">Valid Contract</span>
                                 </div>
-                                <p className="text-[9px] text-zinc-500 leading-relaxed italic">
+                                <p className="text-[9px] text-[var(--text-muted)] leading-relaxed italic">
                                     Zero structural violations detected in the payload.
                                 </p>
                             </div>
@@ -356,7 +356,7 @@ export const JSONSchemaMode = () => {
                                         <FiAlertTriangle className="text-lg" />
                                         <span className="text-[10px] font-black">Contract Breaches</span>
                                     </div>
-                                    <p className="text-[9px] text-zinc-500 leading-relaxed">
+                                    <p className="text-[9px] text-[var(--text-muted)] leading-relaxed">
                                         Found {validationErrors.length} issues in the data payload.
                                     </p>
                                 </div>
@@ -372,16 +372,16 @@ export const JSONSchemaMode = () => {
                                                     bodyEditorRef.current.focus();
                                                 }
                                             }}
-                                            className="w-full text-left p-3 bg-zinc-900 rounded-xl border border-zinc-800 hover:border-zinc-700 transition-all group"
+                                            className="w-full text-left p-3 bg-[var(--bg-surface)] rounded-xl border border-[var(--border-primary)] hover:border-[var(--border-primary)] transition-all group"
                                         >
-                                            <div className="text-[8px] font-black text-zinc-500 mb-1 group-hover:text-zinc-300">
+                                            <div className="text-[8px] font-black text-[var(--text-muted)] mb-1 group-hover:text-[var(--text-secondary)]">
                                                 Path: {err.path}
                                             </div>
                                             <div className="text-[9px] text-red-400 font-mono leading-tight">
                                                 {err.message}
                                             </div>
                                             {err.line && (
-                                                <div className="text-[7px] text-zinc-600 mt-1">Line {err.line}</div>
+                                                <div className="text-[7px] text-[var(--text-muted)] mt-1">Line {err.line}</div>
                                             )}
                                         </button>
                                     ))}
@@ -389,10 +389,10 @@ export const JSONSchemaMode = () => {
                             </div>
                         )}
 
-                        <div className="pt-6 border-t border-zinc-900">
-                            <div className="p-4 bg-zinc-900/30 border border-dashed border-zinc-800 rounded-xl">
-                                <h4 className="text-[9px] font-black text-zinc-500 mb-2">Architect Tip</h4>
-                                <p className="text-[9px] text-zinc-600 leading-relaxed">
+                        <div className="pt-6 border-t border-[var(--border-primary)]">
+                            <div className="p-4 bg-[var(--bg-surface)]/30 border border-dashed border-[var(--border-primary)] rounded-xl">
+                                <h4 className="text-[9px] font-black text-[var(--text-muted)] mb-2">Architect Tip</h4>
+                                <p className="text-[9px] text-[var(--text-muted)] leading-relaxed">
                                     Click an error to jump directly to the failing node in the data payload.
                                 </p>
                             </div>

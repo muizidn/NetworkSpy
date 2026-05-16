@@ -38,15 +38,15 @@ export const ConversationTab: React.FC<ConversationTabProps> = ({
   return (
     <>
       {/* Filter / Search Bar */}
-      <div className="px-4 py-2 border-b border-zinc-800 bg-zinc-900/50 flex flex-wrap items-center gap-3 shrink-0">
-        <div className="flex bg-black/40 rounded-lg p-1 border border-zinc-800">
+      <div className="px-4 py-2 border-b border-[var(--border-primary)] bg-[var(--bg-surface)]/50 flex flex-wrap items-center gap-3 shrink-0">
+        <div className="flex bg-[var(--bg-surface-inset)]/40 rounded-lg p-1 border border-[var(--border-primary)]">
           {["all", "user", "assistant", "tool", "system"].map(role => (
             <button
               key={role}
               onClick={() => setRoleFilter(role)}
               className={twMerge(
                 "px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition-all",
-                roleFilter === role ? "bg-emerald-600 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+                roleFilter === role ? "bg-emerald-600 text-white shadow-lg" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
               )}
             >
               {role}
@@ -54,20 +54,20 @@ export const ConversationTab: React.FC<ConversationTabProps> = ({
           ))}
         </div>
         <div className="flex-grow relative group">
-          <FiTerminal className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-emerald-500 transition-colors" size={12} />
+          <FiTerminal className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-emerald-500 transition-colors" size={12} />
           <input
             type="text"
             placeholder="Search messages..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-black/40 border border-zinc-800 rounded-lg pl-9 pr-4 py-1.5 text-xs text-zinc-300 focus:outline-none focus:border-emerald-500/50 transition-all"
+            className="w-full bg-[var(--bg-surface-inset)]/40 border border-[var(--border-primary)] rounded-lg pl-9 pr-4 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-emerald-500/50 transition-all"
           />
         </div>
       </div>
 
-      <div className="flex-grow overflow-y-auto p-4 @sm:p-6 space-y-6 custom-scrollbar scroll-smooth bg-[#0a0a0a]">
+      <div className="flex-grow overflow-y-auto p-4 @sm:p-6 space-y-6 custom-scrollbar scroll-smooth bg-[var(--bg-app)]">
         {filteredMessages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-zinc-600 opacity-50 py-20">
+          <div className="h-full flex flex-col items-center justify-center text-[var(--text-muted)] opacity-50 py-20">
             <FiInfo size={40} className="mb-4" />
             <p className="text-sm">No messages match your current filters</p>
           </div>
@@ -78,7 +78,7 @@ export const ConversationTab: React.FC<ConversationTabProps> = ({
                 "flex items-center gap-2 px-3 py-1 rounded-full border w-fit",
                 msg.role === 'user' ? "bg-blue-900/20 border-blue-800/30 text-blue-400" :
                 msg.role === 'assistant' ? "bg-emerald-900/20 border-emerald-800/30 text-emerald-400" :
-                msg.role === 'system' ? "bg-zinc-800 border-zinc-700 text-zinc-400" :
+                msg.role === 'system' ? "bg-[var(--bg-surface-elevated)] border-[var(--border-primary)] text-[var(--text-muted)]" :
                 "bg-purple-900/20 border-purple-800/30 text-purple-400"
               )}>
                 {msg.role === 'user' ? <FiUser size={10} /> : <FiCpu size={10} />}
@@ -89,8 +89,8 @@ export const ConversationTab: React.FC<ConversationTabProps> = ({
                 <div 
                   onClick={() => typeof msg.content === 'string' && msg.content.length > 120 && toggleCollapse(i)}
                   className={twMerge(
-                    "group relative bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-5 text-sm leading-relaxed text-zinc-300 shadow-xl transition-all",
-                    typeof msg.content === 'string' && msg.content.length > 120 && "cursor-pointer hover:bg-zinc-800/80 hover:border-zinc-700",
+                    "group relative bg-[var(--bg-surface)]/50 border border-[var(--border-primary)]/50 rounded-2xl p-5 text-sm leading-relaxed text-[var(--text-secondary)] shadow-xl transition-all",
+                    typeof msg.content === 'string' && msg.content.length > 120 && "cursor-pointer hover:bg-[var(--bg-surface-elevated)]/80 hover:border-[var(--border-primary)]",
                     collapsedMsgs.has(i) && "max-h-16 overflow-hidden"
                   )}
                 >

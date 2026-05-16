@@ -20,9 +20,9 @@ export const BreakpointBodyEditor: React.FC<BodyEditorProps> = ({ editedBody, se
     }, [editedBody, setEditedBody]);
 
     return (
-        <div className="flex-1 flex flex-col rounded-2xl overflow-hidden border border-zinc-800 bg-[#0d0d0d] shadow-2xl group transition-all focus-within:border-blue-500/50 min-h-0">
-            <div className="px-4 py-2 bg-zinc-900/50 border-b border-zinc-800 flex items-center justify-between">
-                <div className="text-[9px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+        <div className="flex-1 flex flex-col rounded-2xl overflow-hidden border border-[var(--border-primary)] bg-[var(--bg-surface-inset)] shadow-2xl group transition-all focus-within:border-blue-500/50 min-h-0">
+            <div className="px-4 py-2 bg-[var(--bg-surface)]/50 border-b border-[var(--border-primary)] flex items-center justify-between">
+                <div className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-2">
                     <FiFileText size={12} />
                     Code Content Editor
                 </div>
@@ -35,7 +35,7 @@ export const BreakpointBodyEditor: React.FC<BodyEditorProps> = ({ editedBody, se
                         <FiZap size={10} />
                         Beautify
                     </button>
-                    <div className="text-[9px] text-zinc-600 font-mono italic">
+                    <div className="text-[9px] text-[var(--text-muted)] font-mono italic">
                         UTF-8 Encoded
                     </div>
                 </div>

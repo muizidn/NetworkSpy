@@ -72,16 +72,16 @@ export const TrafficList: React.FC = () => {
       renderer: {
         render: ({ input }: { input: TrafficItemMap }) => {
           const getStatusColor = (code: string, method: string) => {
-            if (method === 'CONNECT') return 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.3)]';
+            if (method === 'CONNECT') return 'bg-[var(--text-primary)] shadow-[0_0_8px_rgba(255,255,255,0.3)]';
             const c = parseInt(code);
-            if (isNaN(c)) return 'bg-zinc-600'; // Pending
+            if (isNaN(c)) return 'bg-[var(--text-muted)]'; // Pending
             if (c >= 500) return 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]';
             if (c >= 400) return 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]';
             if (c >= 300) return 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]';
             if (c >= 200) return 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]';
             if (c >= 100) return 'bg-zinc-400 shadow-[0_0_10px_rgba(161,161,170,0.5)]';
 
-            return 'bg-zinc-600';
+            return 'bg-[var(--text-muted)]';
           };
 
           return (
@@ -106,7 +106,7 @@ export const TrafficList: React.FC = () => {
 
           return (
             <div className="flex items-center justify-center gap-1.5 h-full">
-              <div className={`${intercepted ? 'text-purple-400' : 'text-zinc-500'}`} title={intercepted ? 'Intercepted (Decrypted)' : 'Tunneled (Encrypted)'}>
+              <div className={`${intercepted ? 'text-purple-400' : 'text-[var(--text-muted)]'}`} title={intercepted ? 'Intercepted (Decrypted)' : 'Tunneled (Encrypted)'}>
                 {intercepted ? <FiUnlock size={14} /> : <FiLock size={14} />}
               </div>
               {isModified && (

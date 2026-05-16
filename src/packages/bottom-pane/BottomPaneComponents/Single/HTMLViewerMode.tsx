@@ -26,12 +26,12 @@ export const HTMLViewerMode = () => {
     const isHTML = data?.content_type?.toLowerCase().includes('html');
 
     return (
-        <div className="bg-white flex flex-col min-h-full">
+        <div className="bg-[var(--bg-app)] flex flex-col min-h-full">
             <div className="flex-grow overflow-hidden">
                 {isHTML ? (
                     <HTMLWebView data={decodeBody(data?.body, 'text/html')} />
                 ) : (
-                    <div className="h-full flex items-center justify-center bg-[#0a0a0a] text-zinc-500 text-sm italic">
+                    <div className="h-full flex items-center justify-center bg-[var(--bg-app)] text-[var(--text-muted)] text-sm italic">
                         Response is not HTML ({data?.content_type || 'Unknown Type'})
                     </div>
                 )}
@@ -41,7 +41,7 @@ export const HTMLViewerMode = () => {
 };
 
 const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0a0a0a]">
+    <div className="h-full flex items-center justify-center text-zinc-500 bg-[var(--bg-app)]">
         <div className="text-center">
             <div className="text-4xl font-black opacity-10 mb-2 italic">BROWSER</div>
             <div className="text-sm">{text}</div>

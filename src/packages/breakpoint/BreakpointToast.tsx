@@ -46,7 +46,7 @@ export const BreakpointToast = () => {
                     const realId = id.replace(/_(req|res)$/, "");
                     
                     return (
-                        <div key={id} className="bg-[#121212]/95 backdrop-blur-xl border border-blue-500/30 rounded-xl shadow-[0_0_50px_-12px_rgba(59,130,246,0.3)] p-3.5 flex flex-col gap-3 animate-in fade-in slide-in-from-right-8 duration-300">
+                        <div key={id} className="bg-[var(--bg-surface)]/95 backdrop-blur-xl border border-blue-500/30 rounded-xl shadow-[0_0_50px_-12px_rgba(59,130,246,0.3)] p-3.5 flex flex-col gap-3 animate-in fade-in slide-in-from-right-8 duration-300">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2.5">
                                     <div className={twMerge(
@@ -62,7 +62,7 @@ export const BreakpointToast = () => {
                                         )}>
                                             {isRequest ? "Request Breakpoint" : "Response Breakpoint"}
                                         </div>
-                                        <div className="text-[11px] text-zinc-300 font-medium mt-0.5 flex items-center gap-1.5 capitalize">
+                                        <div className="text-[11px] text-[var(--text-secondary)] font-medium mt-0.5 flex items-center gap-1.5 capitalize">
                                             {isRequest ? "Outgoing to Server" : "Incoming to Client"}
                                         </div>
                                     </div>

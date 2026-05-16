@@ -58,19 +58,19 @@ const FilterNodeRenderer = ({
 
   if (!node.isGroup) {
     return (
-      <div className={twMerge("flex w-full border-b border-black items-center group/filter-row hover:bg-white/5 transition-colors")} style={{ paddingLeft: `${depth * 16}px` }}>
+      <div className={twMerge("flex w-full border-b border-black items-center group/filter-row hover:bg-[var(--bg-surface-elevated)]/5 transition-colors")} style={{ paddingLeft: `${depth * 16}px` }}>
         <div className="flex items-center space-x-3 w-full p-1 pl-4">
           <div className='flex items-center justify-center shrink-0'>
             <input
               type='checkbox'
-              className="checkbox checkbox-xs border-zinc-600 rounded"
+              className="checkbox checkbox-xs border-[var(--border-primary)] rounded"
               checked={node.enabled}
               onChange={(e) => updateNode(node.id, { enabled: e.target.checked })}
             />
           </div>
 
           <select
-            className='select select-xs bg-zinc-900 border border-zinc-800 rounded text-[11px] focus:outline-none focus:border-blue-500 h-6 min-h-0 shrink-0'
+            className='select select-xs bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded text-[11px] focus:outline-none focus:border-blue-500 h-6 min-h-0 shrink-0'
             value={node.type}
             onChange={(e) => updateNode(node.id, { type: e.target.value as FilterType })}
           >
@@ -79,7 +79,7 @@ const FilterNodeRenderer = ({
           </select>
 
           <select
-            className='select select-xs bg-zinc-900 border border-zinc-800 rounded text-[11px] focus:outline-none focus:border-blue-500 h-6 min-h-0 w-[120px] shrink-0'
+            className='select select-xs bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded text-[11px] focus:outline-none focus:border-blue-500 h-6 min-h-0 w-[120px] shrink-0'
             value={node.operator}
             onChange={(e) => updateNode(node.id, { operator: e.target.value as FilterOperator })}
           >
@@ -89,7 +89,7 @@ const FilterNodeRenderer = ({
 
           <input
             type='text'
-            className='filter-value-input input input-xs flex-grow rounded bg-[#2a2d2c] border border-zinc-800 text-[11px] focus:outline-none focus:border-blue-500 py-0 h-6'
+            className='filter-value-input input input-xs flex-grow rounded bg-[var(--bg-surface-inset)] border border-[var(--border-primary)] text-[11px] focus:outline-none focus:border-blue-500 py-0 h-6'
             placeholder={`Search ${node.type}...`}
             value={node.value}
             onChange={(e) => updateNode(node.id, { value: e.target.value })}
@@ -99,7 +99,7 @@ const FilterNodeRenderer = ({
 
             <button
               onClick={() => removeNode(node.id)}
-              className='btn btn-xs btn-ghost text-zinc-500 hover:text-red-400 p-0 h-6 w-6 min-h-0'
+              className='btn btn-xs btn-ghost text-[var(--text-muted)] hover:text-red-400 p-0 h-6 w-6 min-h-0'
               title="Remove Rule"
             >
               <FiX size={12} />
@@ -112,46 +112,46 @@ const FilterNodeRenderer = ({
 
   return (
     <div className="flex flex-col w-full border-b border-black">
-      <div className="flex items-center space-x-2 w-full p-1.5 bg-[#17191a] group/filter-group border-l-[3px] border-blue-500/50 hover:bg-[#1c1e20] transition-colors" style={{ paddingLeft: `${depth * 16 + 8}px` }}>
+      <div className="flex items-center space-x-2 w-full p-1.5 bg-[var(--bg-surface)] group/filter-group border-l-[3px] border-blue-500/50 hover:bg-[var(--bg-surface-elevated)] transition-colors" style={{ paddingLeft: `${depth * 16 + 8}px` }}>
         <input
           type='checkbox'
-          className="checkbox checkbox-xs border-zinc-600 rounded"
+          className="checkbox checkbox-xs border-[var(--border-primary)] rounded"
           checked={node.enabled}
           onChange={(e) => updateNode(node.id, { enabled: e.target.checked })}
         />
         <select
-          className='select select-xs bg-zinc-900 border border-zinc-800 rounded text-[11px] focus:outline-none focus:border-blue-500 h-6 min-h-0 text-blue-400 font-bold tracking-wider uppercase'
+          className='select select-xs bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded text-[11px] focus:outline-none focus:border-blue-500 h-6 min-h-0 text-blue-400 font-bold tracking-wider uppercase'
           value={node.logic}
           onChange={(e) => updateNode(node.id, { logic: e.target.value as "AND" | "OR" })}
         >
           <option value="AND">AND (All)</option>
           <option value="OR">OR (Any)</option>
         </select>
-        <div className="text-[10px] text-zinc-500 uppercase tracking-widest ml-2 flex-grow">Condition Group</div>
+        <div className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest ml-2 flex-grow">Condition Group</div>
 
         <div className="flex items-center gap-1">
           <button
             onClick={() => addRule(node.id)}
-            className='btn btn-xs bg-zinc-800/50 border-zinc-700/50 text-zinc-300 hover:bg-blue-600 hover:text-white hover:border-blue-500 p-0 h-6 px-2 min-h-0 text-[10px] font-medium transition-colors'
+            className='btn btn-xs bg-[var(--bg-surface-elevated)]/50 border border-[var(--border-primary)]/50 text-[var(--text-secondary)] hover:bg-blue-600 hover:text-white hover:border-blue-500 p-0 h-6 px-2 min-h-0 text-[10px] font-medium transition-colors'
           >
             + Rule
           </button>
           <button
             onClick={() => addGroup(node.id)}
-            className='btn btn-xs bg-zinc-800/50 border-zinc-700/50 text-amber-500 hover:bg-amber-600 hover:text-black hover:border-amber-500 p-0 h-6 px-2 min-h-0 text-[10px] font-medium transition-colors'
+            className='btn btn-xs bg-[var(--bg-surface-elevated)]/50 border border-[var(--border-primary)]/50 text-amber-500 hover:bg-amber-600 hover:text-black hover:border-amber-500 p-0 h-6 px-2 min-h-0 text-[10px] font-medium transition-colors'
           >
             + Group
           </button>
           <button
             onClick={() => removeNode(node.id)}
-            className='btn btn-xs btn-ghost text-zinc-500 hover:text-red-400 p-0 h-6 w-6 min-h-0 ml-1'
+            className='btn btn-xs btn-ghost text-[var(--text-muted)] hover:text-red-400 p-0 h-6 w-6 min-h-0 ml-1'
             title="Remove Group"
           >
             <FiX size={12} />
           </button>
         </div>
       </div>
-      <div className="flex flex-col w-full border-l-[3px] border-zinc-800/20">
+      <div className="flex flex-col w-full border-l-[3px] border-[var(--border-primary)]/20">
         {node.children.map(child => (
           <FilterNodeRenderer
             key={child.id}
@@ -354,7 +354,7 @@ export const FilterBar = () => {
   };
 
   return (
-    <div className='bg-[#202020] text-white flex flex-col w-full relative'>
+    <div className='bg-[var(--bg-surface)] text-[var(--text-primary)] flex flex-col w-full relative'>
       {errorMsg && (
         <div className="absolute top-[-36px] left-0 right-0 h-9 bg-rose-600 flex items-center px-4 gap-2 animate-in slide-in-from-top duration-300 z-50 shadow-xl overflow-hidden">
           <FiAlertCircle size={14} className="text-white" />
@@ -366,28 +366,28 @@ export const FilterBar = () => {
       )}
       <div className='flex items-center border-y border-black h-9 relative'>
         {/* Search Input for Presets */}
-        <div className="flex items-center px-3 border-r border-zinc-800 h-full group shrink-0">
-          <FiSearch className="text-zinc-500 group-focus-within:text-blue-500 transition-colors" size={14} />
+        <div className="flex items-center px-3 border-r border-[var(--border-primary)] h-full group shrink-0">
+          <FiSearch className="text-[var(--text-muted)] group-focus-within:text-blue-500 transition-colors" size={14} />
           <input
             type="text"
             placeholder="Search filters..."
-            className="bg-transparent border-none outline-none text-[11px] text-zinc-300 ml-2 w-20 focus:w-32 transition-all duration-300"
+            className="bg-transparent border-none outline-none text-[11px] text-[var(--text-secondary)] ml-2 w-20 focus:w-32 transition-all duration-300"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
-        <div className="flex items-center px-2 space-x-1 border-r border-zinc-800 h-full shrink-0">
+        <div className="flex items-center px-2 space-x-1 border-r border-[var(--border-primary)] h-full shrink-0">
           <button
             onClick={() => addRule(null)}
-            className='btn btn-xs bg-zinc-800/50 border-zinc-800/50 rounded text-zinc-400 hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all duration-200 h-6 min-h-0 text-[10px] whitespace-nowrap'
+            className='btn btn-xs bg-[var(--bg-surface-elevated)]/50 border border-[var(--border-primary)]/50 text-[var(--text-secondary)] hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all duration-200 h-6 min-h-0 text-[10px] whitespace-nowrap'
           >
             + Rule
           </button>
 
           <button
             onClick={() => addGroup(null)}
-            className='btn btn-xs bg-zinc-800/50 border-zinc-800/50 rounded text-amber-500 hover:bg-amber-600 hover:text-black hover:border-amber-500 transition-all duration-200 h-6 min-h-0 text-[10px] whitespace-nowrap'
+            className='btn btn-xs bg-[var(--bg-surface-elevated)]/50 border border-[var(--border-primary)]/50 text-amber-500 hover:bg-amber-600 hover:text-black hover:border-amber-500 transition-all duration-200 h-6 min-h-0 text-[10px] whitespace-nowrap'
           >
             + Group
           </button>
@@ -406,7 +406,7 @@ export const FilterBar = () => {
             <div className="flex items-center space-x-1 animate-in fade-in slide-in-from-left-2 duration-300 shrink-0">
               <input
                 autoFocus
-                className="input input-xs bg-[#2a2d2c] border border-blue-500/50 rounded text-[10px] w-32 h-6 focus:outline-none shrink-0"
+                className="input input-xs bg-[var(--bg-surface-inset)] border border-blue-500/50 rounded text-[10px] w-32 h-6 focus:outline-none shrink-0"
                 placeholder="Name preset..."
                 value={saveName}
                 onChange={(e) => setSaveName(e.target.value)}
@@ -423,7 +423,7 @@ export const FilterBar = () => {
               </button>
               <button
                 onClick={() => setShowSaveInput(false)}
-                className="btn btn-xs bg-zinc-800 border-zinc-700 text-zinc-400 hover:text-white h-6 min-h-0 text-[10px] shrink-0"
+                className="btn btn-xs bg-[var(--bg-surface-elevated)] border border-[var(--border-primary)] text-[var(--text-secondary)] hover:text-white h-6 min-h-0 text-[10px] shrink-0"
               >
                 ✕
               </button>
@@ -444,7 +444,7 @@ export const FilterBar = () => {
                     'group/predefined relative flex items-center justify-between h-6 px-3 rounded-md transition-all duration-200 border text-[10px] font-medium whitespace-nowrap cursor-pointer',
                     isActive
                       ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-900/20'
-                      : 'bg-zinc-900/50 border-zinc-800/50 text-zinc-400 hover:bg-blue-600 hover:text-white hover:border-blue-500'
+                      : 'bg-[var(--bg-surface)]/50 border border-[var(--border-primary)]/50 text-[var(--text-secondary)] hover:bg-blue-600 hover:text-white hover:border-blue-500'
                   )}>
                   <span>{tab.name}</span>
                 </div>
@@ -454,7 +454,7 @@ export const FilterBar = () => {
 
           {/* Vertical Separator */}
           {userPredefined.length > 0 && (
-            <div className="h-4 w-[1px] bg-zinc-800 mx-2 shrink-0" />
+            <div className="h-4 w-[1px] bg-[var(--border-primary)] mx-2 shrink-0" />
           )}
 
           {/* User Created Filters */}
@@ -469,7 +469,7 @@ export const FilterBar = () => {
                     'group/predefined relative flex items-center justify-between h-6 px-3 rounded-md transition-all duration-200 border text-[10px] font-medium whitespace-nowrap cursor-pointer',
                     isActive
                       ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-900/20'
-                      : 'bg-zinc-900/50 border-zinc-800/50 text-zinc-400 hover:bg-zinc-600 hover:text-white hover:border-zinc-500'
+                      : 'bg-[var(--bg-surface)]/50 border border-[var(--border-primary)]/50 text-[var(--text-secondary)] hover:bg-zinc-600 hover:text-white hover:border-zinc-500'
                   )}>
                   <span>{tab.name}</span>
                 </div>
@@ -478,16 +478,16 @@ export const FilterBar = () => {
           </div>
 
           {appPredefined.length === 0 && userPredefined.length === 0 && searchTerm && (
-            <span className="text-[10px] text-zinc-600 italic px-2 shrink-0">No presets match...</span>
+            <span className="text-[10px] text-[var(--text-muted)] italic px-2 shrink-0">No presets match...</span>
           )}
         </div>
 
         {/* Right Gradient Fade */}
-        <div className="w-8 h-full bg-gradient-to-l from-[#202020] to-transparent pointer-events-none absolute right-0" />
+        <div className="w-8 h-full bg-gradient-to-l from-[var(--bg-surface)] to-transparent pointer-events-none absolute right-0" />
       </div>
 
       {filters.length === 0 ? null : (
-        <div className="flex flex-col w-full bg-black/20 max-h-[300px] overflow-y-auto no-scrollbar">
+        <div className="flex flex-col w-full bg-[var(--bg-surface-inset)]/20 max-h-[300px] overflow-y-auto no-scrollbar">
           {filters.map((filter) => (
 
             <FilterNodeRenderer

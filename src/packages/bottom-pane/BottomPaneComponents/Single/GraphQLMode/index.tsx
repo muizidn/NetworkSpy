@@ -91,9 +91,9 @@ export const GraphQLMode = () => {
   if (!activeData) return <GraphQLPlaceholder text="Invalid Query" subtext="The detected GraphQL content could not be correctly parsed into operations." />;
 
   return (
-    <div className="h-full bg-[#0d0d0d] flex flex-col font-sans overflow-hidden">
+    <div className="h-full bg-[var(--bg-app)] flex flex-col font-sans overflow-hidden">
       {/* Dynamic Header */}
-      <div className="flex items-center px-4 py-3 border-b border-zinc-800 bg-zinc-900 justify-between shrink-0">
+      <div className="flex items-center px-4 py-3 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] justify-between shrink-0">
         <div className="flex items-center gap-3">
           <div className={twMerge(
             "w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold shadow-lg",
@@ -103,7 +103,7 @@ export const GraphQLMode = () => {
           </div>
           <div className="hidden @sm:block">
             <div className="flex items-center gap-2">
-              <div className="text-sm font-bold text-zinc-200">
+              <div className="text-sm font-bold text-[var(--text-secondary)]">
                 {activeData.operationName}
               </div>
               {hasErrors && (
@@ -119,7 +119,7 @@ export const GraphQLMode = () => {
                 </div>
               )}
             </div>
-            <div className="text-[10px] text-zinc-500 tracking-widest font-black">
+            <div className="text-[10px] text-[var(--text-muted)] tracking-widest font-black">
               {isBatched ? `BATCHED (${gqlItems.length} OPERATIONS)` : `GRAPHQL ${activeData.type}`}
             </div>
           </div>
@@ -127,12 +127,12 @@ export const GraphQLMode = () => {
 
         <div className="flex items-center gap-2 @sm:gap-4">
           {/* Layout Mode Toggle (Desktop only) */}
-          <div className="hidden @5xl:flex items-center bg-black/40 rounded-lg p-0.5 border border-zinc-800 mr-2 shrink-0">
+          <div className="hidden @5xl:flex items-center bg-[var(--bg-surface-inset)]/40 rounded-lg p-0.5 border border-[var(--border-primary)] mr-2 shrink-0">
             <button
               onClick={() => setLayoutMode("grid")}
               className={twMerge(
                 "p-1.5 rounded-md transition-all",
-                layoutMode === "grid" ? "bg-zinc-800 text-pink-400 shadow-xl" : "text-zinc-600 hover:text-zinc-400"
+                layoutMode === "grid" ? "bg-[var(--bg-surface-elevated)] text-pink-400 shadow-xl" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
               )}
               title="Multi-Pane Layout"
             >
@@ -142,7 +142,7 @@ export const GraphQLMode = () => {
               onClick={() => setLayoutMode("tabbed")}
               className={twMerge(
                 "p-1.5 rounded-md transition-all",
-                layoutMode === "tabbed" ? "bg-zinc-800 text-pink-400 shadow-xl" : "text-zinc-600 hover:text-zinc-400"
+                layoutMode === "tabbed" ? "bg-[var(--bg-surface-elevated)] text-pink-400 shadow-xl" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
               )}
               title="Focused Tab Layout"
             >
@@ -151,14 +151,14 @@ export const GraphQLMode = () => {
           </div>
 
           {isBatched && (
-            <div className="flex bg-black/40 rounded-lg p-1 border border-zinc-800 shrink-0">
+            <div className="flex bg-[var(--bg-surface-inset)]/40 rounded-lg p-1 border border-[var(--border-primary)] shrink-0">
               {gqlItems.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setSelectedIndex(idx)}
                   className={twMerge(
                     "px-2 @sm:px-3 py-1 @sm:py-1.5 rounded text-[9px] @sm:text-[10px] font-bold transition-all",
-                    selectedIndex === idx ? "bg-pink-600 text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
+                    selectedIndex === idx ? "bg-pink-600 text-white shadow-lg" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
                   )}
                 >
                   Op {idx + 1}
@@ -169,8 +169,8 @@ export const GraphQLMode = () => {
           <button
             onClick={() => setShowSidebar(!showSidebar)}
             className={twMerge(
-              "p-2 rounded-lg border border-zinc-800 transition-all",
-              showSidebar ? "bg-zinc-800 text-pink-400" : "bg-black/40 text-zinc-600 hover:text-zinc-400"
+              "p-2 rounded-lg border border-[var(--border-primary)] transition-all",
+              showSidebar ? "bg-[var(--bg-surface-elevated)] text-pink-400" : "bg-[var(--bg-surface-inset)]/40 text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
             )}
             title="Toggle Inspection Sidebar"
           >
@@ -188,14 +188,14 @@ export const GraphQLMode = () => {
 
           {/* Tab Navigation for Mobile/Cramped Views */}
           <div className={twMerge(
-            "flex bg-zinc-900 border-b border-zinc-800 h-10 shrink-0",
+            "flex bg-[var(--bg-surface)] border-b border-[var(--border-primary)] h-10 shrink-0",
             layoutMode === "grid" && "@5xl:hidden"
           )}>
             <button
               onClick={() => setActiveTab("query")}
               className={twMerge(
                 "flex-1 text-[10px] font-black tracking-widest flex items-center justify-center gap-2 transition-all",
-                activeTab === "query" ? "text-pink-500 bg-pink-500/5 border-b-2 border-pink-500" : "text-zinc-500"
+                activeTab === "query" ? "text-pink-500 bg-pink-500/5 border-b-2 border-pink-500" : "text-[var(--text-muted)]"
               )}
             >
               <FiCode size={12} />
@@ -205,7 +205,7 @@ export const GraphQLMode = () => {
               onClick={() => setActiveTab("variables")}
               className={twMerge(
                 "flex-1 text-[10px] font-black tracking-widest flex items-center justify-center gap-2 transition-all",
-                activeTab === "variables" ? "text-blue-500 bg-blue-500/5 border-b-2 border-blue-500" : "text-zinc-500"
+                activeTab === "variables" ? "text-blue-500 bg-blue-500/5 border-b-2 border-blue-500" : "text-[var(--text-muted)]"
               )}
             >
               <FiLayers size={12} />
@@ -215,7 +215,7 @@ export const GraphQLMode = () => {
               onClick={() => setActiveTab("response")}
               className={twMerge(
                 "flex-1 text-[10px] font-black tracking-widest flex items-center justify-center gap-2 transition-all",
-                activeTab === "response" ? "text-emerald-500 bg-emerald-500/5 border-b-2 border-emerald-500" : "text-zinc-500"
+                activeTab === "response" ? "text-emerald-500 bg-emerald-500/5 border-b-2 border-emerald-500" : "text-[var(--text-muted)]"
               )}
             >
               <FiTerminal size={12} />
@@ -226,7 +226,7 @@ export const GraphQLMode = () => {
                 onClick={() => setActiveTab("extensions")}
                 className={twMerge(
                   "flex-1 text-[10px] font-black tracking-widest flex items-center justify-center gap-2 transition-all",
-                  activeTab === "extensions" ? "text-amber-500 bg-amber-500/5 border-b-2 border-amber-500" : "text-zinc-500"
+                  activeTab === "extensions" ? "text-amber-500 bg-amber-500/5 border-b-2 border-amber-500" : "text-[var(--text-muted)]"
                 )}
               >
                 <FiActivity size={12} />

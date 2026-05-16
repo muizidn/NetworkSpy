@@ -150,11 +150,11 @@ export const BottomPane = () => {
       {selections.firstSelected && <SelectionViewer />}
       <ErrorBoundary>
         <Suspense fallback={
-          <div className="flex items-center justify-center h-full text-zinc-600 italic text-xs animate-pulse">
+          <div className="flex items-center justify-center h-full text-[var(--text-muted)] italic text-xs animate-pulse">
             Loading viewer...
           </div>
         }>
-          <div className="flex-grow overflow-y-auto h-full custom-scrollbar bg-[#111] @container">
+          <div className="flex-grow overflow-y-auto h-full custom-scrollbar bg-[var(--bg-app)] @container">
             <ContainerQueryProvider>
               {(() => {
                 if (!selected) return renderMode(mode, sizes, setSizes);

@@ -31,19 +31,19 @@ export const ReplayMode = () => {
     }, 1500);
   };
 
-  if (!trafficId) return <div className="h-full flex items-center justify-center text-zinc-500">Select a request to replay</div>;
+  if (!trafficId) return <div className="h-full flex items-center justify-center text-[var(--text-muted)]">Select a request to replay</div>;
 
   return (
-    <div className="h-full bg-[#1e1e1e] p-4 @sm:p-6 flex flex-col items-center overflow-auto">
+    <div className="h-full bg-[var(--bg-app)] p-4 @sm:p-6 flex flex-col items-center overflow-auto">
       <div className="max-w-xl w-full">
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 mb-8 text-center shadow-xl">
+        <div className="bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-xl p-8 mb-8 text-center shadow-xl">
           <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center text-white mx-auto mb-4 shadow-lg shadow-purple-900/40">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
           </div>
-          <h3 className="text-lg font-bold text-white mb-2">Request Replayer</h3>
-          <p className="text-xs text-zinc-500 mb-6 tracking-widest font-black">ID: {trafficId}</p>
+          <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2">Request Replayer</h3>
+          <p className="text-xs text-[var(--text-muted)] mb-6 tracking-widest font-black">ID: {trafficId}</p>
 
           <button
             onClick={handleReplay}
@@ -56,18 +56,18 @@ export const ReplayMode = () => {
         </div>
 
         <div className="space-y-4">
-          <h4 className="text-[10px] font-black text-zinc-600 tracking-widest pl-2">Previous Replays</h4>
+          <h4 className="text-[10px] font-black text-[var(--text-muted)] tracking-widest pl-2">Previous Replays</h4>
           <div className="space-y-2">
             {replays.length === 0 ? (
-              <div className="text-center py-8 bg-zinc-900/20 border border-dashed border-zinc-800 rounded-lg text-zinc-600 text-xs">No replay history for this session</div>
+              <div className="text-center py-8 bg-[var(--bg-surface-inset)]/20 border border-dashed border-[var(--border-primary)] text-[var(--text-muted)] text-xs">No replay history for this session</div>
             ) : (
               replays.map(r => (
-                <div key={r.id} className="flex items-center justify-between bg-zinc-900 p-3 rounded-lg border border-zinc-800 animate-in slide-in-from-top-2 duration-300">
+                <div key={r.id} className="flex items-center justify-between bg-[var(--bg-surface)] p-3 rounded-lg border border-[var(--border-primary)] animate-in slide-in-from-top-2 duration-300">
                   <div className="flex items-center gap-3">
                     <span className="bg-green-900/30 text-green-500 text-[10px] font-bold px-1.5 py-0.5 rounded border border-green-900/50">{r.status}</span>
-                    <span className="text-xs text-zinc-300">{r.time}</span>
+                    <span className="text-xs text-[var(--text-secondary)]">{r.time}</span>
                   </div>
-                  <span className="text-xs text-zinc-500 font-mono">{r.duration}</span>
+                  <span className="text-xs text-[var(--text-muted)] font-mono">{r.duration}</span>
                 </div>
               ))
             )}

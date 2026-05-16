@@ -53,25 +53,25 @@ const FindingCard = ({ finding }: { finding: HeaderFinding & { isCustom?: boolea
   <div className={twMerge(
     "group overflow-hidden rounded-3xl border transition-all duration-300 shadow-xl mb-4",
     finding.isError
-      ? "border-red-900/50 bg-red-950/10 hover:border-red-500/50"
-      : "border-blue-900/30 bg-blue-950/5 hover:border-blue-500/50"
+      ? "border-red-900/50 bg-[var(--bg-surface-inset)]/10 hover:border-red-500/50"
+      : "border-blue-900/30 bg-[var(--bg-surface-inset)]/5 hover:border-blue-500/50"
   )}>
     <div className="p-4 flex flex-col gap-3">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-2">
           <span className={twMerge(
             "text-[10px] font-black tracking-widest px-2 py-0.5 rounded",
-            finding.isError ? "bg-red-500 text-white" : "bg-blue-600 text-white"
+            finding.isError ? "bg-red-500 text-[var(--text-primary)]" : "bg-blue-600 text-[var(--text-primary)]"
           )}>
             {finding.type}
           </span>
-          <span className="text-[10px] font-black text-zinc-500 tracking-widest pl-1">Protocol Finding</span>
+          <span className="text-[10px] font-black text-[var(--text-muted)] tracking-widest pl-1">Protocol Finding</span>
         </div>
         <div className={twMerge(
           "text-[8px] font-black px-2 py-0.5 rounded-full border tracking-tighter shadow-sm",
           finding.isError
-            ? "bg-red-600 text-white border-red-500"
-            : "bg-blue-950 text-blue-400 border-blue-900/30"
+            ? "bg-red-600 text-[var(--text-primary)] border-red-500"
+            : "bg-[var(--bg-surface-inset)] text-blue-400 border-blue-900/30"
         )}>
           {finding.isError ? "Runtime Error" : "Success"}
         </div>
@@ -80,24 +80,24 @@ const FindingCard = ({ finding }: { finding: HeaderFinding & { isCustom?: boolea
       <div className={twMerge(
         "text-xs font-mono p-3 rounded-xl border leading-relaxed",
         finding.isError
-          ? "text-red-400 bg-red-950/20 border-red-500/20"
-          : "text-zinc-300 bg-black/30 border-white/5"
+          ? "text-red-400 bg-[var(--bg-surface-inset)]/20 border-red-500/20"
+          : "text-[var(--text-secondary)] bg-[var(--bg-surface-inset)]/30 border-[var(--border-primary)]/5"
       )}>
         {finding.value}
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-black/20 p-2.5 rounded-xl border border-white/5">
-          <div className="text-[8px] font-black text-zinc-600 tracking-widest mb-1 flex items-center gap-1">
+        <div className="bg-[var(--bg-surface-inset)]/20 p-2.5 rounded-xl border border-[var(--border-primary)]/5">
+          <div className="text-[8px] font-black text-[var(--text-muted)] tracking-widest mb-1 flex items-center gap-1">
             {finding.isError ? <FiAlertTriangle size={8} /> : <FiInfo size={8} />} {finding.isError ? "Cause" : "Info"}
           </div>
-          <div className="text-[10px] text-zinc-400 italic font-medium leading-tight">{finding.risk}</div>
+          <div className="text-[10px] text-[var(--text-tertiary)] italic font-medium leading-tight">{finding.risk}</div>
         </div>
-        <div className="bg-black/20 p-2.5 rounded-xl border border-white/5">
-          <div className="text-[8px] font-black text-zinc-600 tracking-widest mb-1 flex items-center gap-1">
+        <div className="bg-[var(--bg-surface-inset)]/20 p-2.5 rounded-xl border border-[var(--border-primary)]/5">
+          <div className="text-[8px] font-black text-[var(--text-muted)] tracking-widest mb-1 flex items-center gap-1">
             {finding.isError ? <FiEdit2 size={8} /> : <FiCheckCircle size={8} />} {finding.isError ? "Fix" : "Result"}
           </div>
-          <div className="text-[10px] text-zinc-400 italic font-medium leading-tight">{finding.solution}</div>
+          <div className="text-[10px] text-[var(--text-tertiary)] italic font-medium leading-tight">{finding.solution}</div>
         </div>
       </div>
     </div>
@@ -171,33 +171,33 @@ export const HeaderExplainerMode = () => {
   if (loading) return <Placeholder text="Scanning headers..." />;
 
   return (
-    <div className="h-full bg-[#050505] flex flex-col overflow-hidden font-sans">
-      <div className="px-6 pt-4 border-b border-zinc-900 bg-[#0a0a0a] flex flex-col shadow-lg shrink-0">
+    <div className="h-full bg-[var(--bg-app)] flex flex-col overflow-hidden font-sans">
+      <div className="px-6 pt-4 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] flex flex-col shadow-lg shrink-0">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-500">
               <FiInfo size={18} />
             </div>
             <div>
-              <h2 className="text-sm font-black text-white tracking-tighter">Header Explainer</h2>
-              <div className="text-[9px] text-zinc-500 font-bold tracking-widest italic leading-none">Intelligence Layer</div>
+              <h2 className="text-sm font-black text-[var(--text-primary)] tracking-tighter">Header Explainer</h2>
+              <div className="text-[9px] text-[var(--text-muted)] font-bold tracking-widest italic leading-none">Intelligence Layer</div>
             </div>
           </div>
 
           {activeTab !== "Custom Scripts" && (
-            <div className="flex items-center gap-2 bg-black/40 border border-zinc-800 rounded-lg px-3 py-1.5 focus-within:border-blue-500/50 transition-all">
-              <FiInfo size={12} className="text-zinc-600" />
+            <div className="flex items-center gap-2 bg-[var(--bg-surface-inset)]/40 border border-[var(--border-primary)] rounded-lg px-3 py-1.5 focus-within:border-blue-500/50 transition-all">
+              <FiInfo size={12} className="text-[var(--text-muted)]" />
               <input
                 type="text"
                 placeholder={`Search ${activeTab.toLowerCase()} headers...`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-transparent border-none outline-none text-[10px] text-zinc-300 placeholder:text-zinc-600 w-32 @sm:w-48 font-medium"
+                className="bg-transparent border-none outline-none text-[10px] text-[var(--text-secondary)] placeholder:text-[var(--text-muted)] w-32 @sm:w-48 font-medium"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="text-[10px] text-zinc-600 hover:text-zinc-400 font-black tracking-widest"
+                  className="text-[10px] text-[var(--text-muted)] hover:text-[var(--text-tertiary)] font-black tracking-widest"
                 >
                   Clear
                 </button>
@@ -244,7 +244,7 @@ export const HeaderExplainerMode = () => {
               </div>
             )}
 
-            <div className="text-[10px] font-black text-zinc-600 tracking-widest pl-1 mb-4 flex items-center justify-between">
+            <div className="text-[10px] font-black text-[var(--text-muted)] tracking-widest pl-1 mb-4 flex items-center justify-between">
               <span>Protocol Explanations ({headers.length})</span>
               {isRunning && <span className="text-blue-500 animate-pulse">Scanning...</span>}
             </div>
@@ -257,39 +257,39 @@ export const HeaderExplainerMode = () => {
 
             {headers.map((header, idx) => (
               <div key={idx} className={twMerge(
-                "group bg-zinc-900/30 border border-zinc-800/80 rounded-2xl p-5 hover:bg-zinc-900/50 transition-all duration-300",
+                "group bg-[var(--bg-surface)]/30 border border-[var(--border-primary)]/80 rounded-2xl p-5 hover:bg-[var(--bg-surface)]/50 transition-all duration-300",
                 header.explanation?.category === "Cloudflare" && "border-orange-500/20 bg-orange-500/5",
                 header.explanation?.category === "Security" && "border-red-500/20 bg-red-500/5",
                 header.isCustom && "border-purple-500/20 bg-purple-500/5"
               )}>
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-zinc-200 font-mono text-xs font-bold">{header.key}</span>
+                    <span className="text-[var(--text-secondary)] font-mono text-xs font-bold">{header.key}</span>
                     {header.isCustom && <CustomHeaderIcon />}
                   </div>
                   {header.explanation && (
-                    <div className="flex items-center gap-2 px-2 py-1 bg-zinc-800 rounded-lg shrink-0">
+                    <div className="flex items-center gap-2 px-2 py-1 bg-[var(--bg-surface-elevated)] rounded-lg shrink-0">
                       {header.explanation.icon}
-                      <span className="text-[9px] font-black text-zinc-400 tracking-widest">{header.explanation.category}</span>
+                      <span className="text-[9px] font-black text-[var(--text-tertiary)] tracking-widest">{header.explanation.category}</span>
                     </div>
                   )}
                 </div>
 
-                <div className="bg-black/40 rounded-xl p-3 mb-3 border border-zinc-800/50">
-                  <code className="text-[11px] text-zinc-400 break-all leading-relaxed whitespace-pre-wrap">{header.value}</code>
+                <div className="bg-[var(--bg-surface-inset)]/40 rounded-xl p-3 mb-3 border border-[var(--border-primary)]/50">
+                  <code className="text-[11px] text-[var(--text-tertiary)] break-all leading-relaxed whitespace-pre-wrap">{header.value}</code>
                 </div>
 
                 {header.explanation && (
-                  <div className="flex flex-col gap-1.5 border-l-2 border-zinc-800 pl-3">
+                  <div className="flex flex-col gap-1.5 border-l-2 border-[var(--border-primary)] pl-3">
                     <div className="text-[10px] font-black text-blue-400/80 tracking-wider">{header.explanation.title}</div>
-                    <p className="text-xs text-zinc-500 leading-relaxed italic">
+                    <p className="text-xs text-[var(--text-muted)] leading-relaxed italic">
                       {header.explanation.description}
                     </p>
                   </div>
                 )}
 
                 {header.cookieAnalysis && (
-                  <div className="mt-4 pt-4 border-t border-zinc-800/50 grid grid-cols-1 @sm:grid-cols-3 gap-3">
+                  <div className="mt-4 pt-4 border-t border-[var(--border-primary)]/50 grid grid-cols-1 @sm:grid-cols-3 gap-3">
                     <div className={twMerge("p-2 rounded-lg text-center border", header.cookieAnalysis.isHttpOnly ? "bg-green-600/10 border-green-500/20 text-green-500" : "bg-red-600/10 border-red-500/20 text-red-500")}>
                       <div className="text-[8px] font-black mb-1 opacity-60">HttpOnly</div>
                       <div className="text-[10px] font-bold">{header.cookieAnalysis.isHttpOnly ? "SECURE" : "INSECURE"}</div>
@@ -298,9 +298,9 @@ export const HeaderExplainerMode = () => {
                       <div className="text-[8px] font-black mb-1 opacity-60">Secure</div>
                       <div className="text-[10px] font-bold">{header.cookieAnalysis.isSecure ? "ENABLED" : "MISSING"}</div>
                     </div>
-                    <div className="p-2 bg-zinc-800/50 rounded-lg text-center border border-zinc-700/50">
-                      <div className="text-[8px] font-black text-zinc-500 mb-1">SameSite</div>
-                      <div className="text-[10px] font-bold text-zinc-300">{header.cookieAnalysis.sameSite}</div>
+                    <div className="p-2 bg-[var(--bg-surface-elevated)]/50 rounded-lg text-center border border-[var(--border-primary)]/50">
+                      <div className="text-[8px] font-black text-[var(--text-muted)] mb-1">SameSite</div>
+                      <div className="text-[10px] font-bold text-[var(--text-secondary)]">{header.cookieAnalysis.sameSite}</div>
                     </div>
                   </div>
                 )}
@@ -314,12 +314,12 @@ export const HeaderExplainerMode = () => {
 };
 
 const Placeholder = ({ text }: { text: string }) => (
-  <div className="h-full flex flex-col items-center justify-center bg-[#050505] p-6 @sm:p-10 text-center">
-    <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-700 mb-6 rotate-12">
+  <div className="h-full flex flex-col items-center justify-center bg-[var(--bg-app)] p-6 @sm:p-10 text-center">
+    <div className="w-16 h-16 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-primary)] flex items-center justify-center text-zinc-700 mb-6 rotate-12">
       <FiInfo size={32} />
     </div>
-    <h3 className="text-zinc-400 font-bold mb-1 italic">Protocol Inspector Ready</h3>
-    <p className="text-[11px] text-zinc-600 leading-relaxed max-w-[180px]">{text}</p>
+    <h3 className="text-[var(--text-tertiary)] font-bold mb-1 italic">Protocol Inspector Ready</h3>
+    <p className="text-[11px] text-[var(--text-muted)] leading-relaxed max-w-[180px]">{text}</p>
   </div>
 );
 

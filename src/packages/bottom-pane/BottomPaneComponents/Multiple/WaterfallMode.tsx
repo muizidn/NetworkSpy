@@ -7,7 +7,7 @@ export const WaterfallMode = () => {
     const selectedItems = selections.others || [];
 
     if (selectedItems.length === 0) {
-        return <div className="h-full flex items-center justify-center text-zinc-500 bg-[#1e1e1e]">Select multiple requests to view network waterfall</div>;
+        return <div className="h-full flex items-center justify-center text-[var(--text-muted)] bg-[var(--bg-app)]">Select multiple requests to view network waterfall</div>;
     }
 
     const itemsWithTiming = useMemo(() => {
@@ -35,10 +35,10 @@ export const WaterfallMode = () => {
     }, [itemsWithTiming]);
 
     return (
-        <div className="h-full bg-[#1e1e1e] flex flex-col overflow-hidden">
-            <div className="p-4 border-b border-zinc-800 bg-zinc-900/50 flex flex-col @sm:flex-row justify-between items-start @sm:items-center gap-2">
-                <h2 className="text-xs @sm:text-sm font-bold text-zinc-300 tracking-widest">Network Waterfall</h2>
-                <div className="text-[9px] @sm:text-[10px] text-zinc-500 font-mono">Total Time: {maxTime.toFixed(0)} ms</div>
+        <div className="h-full bg-[var(--bg-app)] flex flex-col overflow-hidden">
+            <div className="p-4 border-b border-[var(--border-primary)] bg-[var(--bg-surface)]/50 flex flex-col @sm:flex-row justify-between items-start @sm:items-center gap-2">
+                <h2 className="text-xs @sm:text-sm font-bold text-[var(--text-secondary)] tracking-widest">Network Waterfall</h2>
+                <div className="text-[9px] @sm:text-[10px] text-[var(--text-muted)] font-mono">Total Time: {maxTime.toFixed(0)} ms</div>
             </div>
 
             <div className="flex-grow overflow-auto p-2 @sm:p-4">
@@ -50,12 +50,12 @@ export const WaterfallMode = () => {
                         return (
                             <div key={i} className="flex items-center group">
                                 <div className="w-24 @sm:w-48 shrink-0 flex flex-col pr-2 @sm:pr-4">
-                                    <span className="text-[8px] @sm:text-[10px] font-mono text-zinc-400 truncate">{String(item.method)} {String(item.url).split('/').pop()}</span>
-                                    <span className="text-[7px] @sm:text-[9px] text-zinc-600 truncate">{String(item.url)}</span>
+                                    <span className="text-[8px] @sm:text-[10px] font-mono text-[var(--text-secondary)] truncate">{String(item.method)} {String(item.url).split('/').pop()}</span>
+                                    <span className="text-[7px] @sm:text-[9px] text-[var(--text-muted)] truncate">{String(item.url)}</span>
                                 </div>
-                                <div className="flex-grow bg-zinc-900/30 h-5 @sm:h-6 rounded flex items-center relative overflow-hidden group-hover:bg-zinc-800/50 transition-colors">
+                                <div className="flex-grow bg-[var(--bg-surface)]/30 h-5 @sm:h-6 rounded flex items-center relative overflow-hidden group-hover:bg-[var(--bg-surface-elevated)]/50 transition-colors">
                                     <div className="absolute inset-0 flex justify-between opacity-10 pointer-events-none">
-                                        {[...Array(5)].map((_, j) => <div key={j} className="h-full w-px bg-zinc-500"></div>)}
+                                        {[...Array(5)].map((_, j) => <div key={j} className="h-full w-px bg-[var(--text-muted)]"></div>)}
                                     </div>
                                     <div
                                         className={`h-3 rounded-sm shadow-sm transition-all relative group-hover:brightness-110 ${getStatusColor(String(item.code))}`}
@@ -65,7 +65,7 @@ export const WaterfallMode = () => {
                                         }}
                                         title={`${item.width}ms starting at ${item.startOffset.toFixed(0)}ms`}
                                     >
-                                        <div className="absolute -top-4 left-0 text-[8px] font-bold opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 whitespace-nowrap">
+                                        <div className="absolute -top-4 left-0 text-[8px] font-bold opacity-0 group-hover:opacity-100 transition-opacity text-[var(--text-muted)] whitespace-nowrap">
                                             {item.width}ms
                                         </div>
                                     </div>

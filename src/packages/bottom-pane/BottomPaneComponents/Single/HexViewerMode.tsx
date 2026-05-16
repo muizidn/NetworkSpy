@@ -36,12 +36,12 @@ export const HexViewerMode = () => {
     const byteCount = data?.body ? (data.body as Uint8Array).length : 0;
 
     return (
-        <div className="bg-[#050505] flex flex-col min-h-full h-full font-sans relative overflow-hidden">
+        <div className="bg-[var(--bg-app)] flex flex-col min-h-full h-full font-sans relative overflow-hidden">
             {/* Scanline Effect */}
             <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(21,20,20,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]"></div>
 
             {/* Premium Toolbar */}
-            <div className="flex items-center justify-between px-4 @sm:px-6 py-4 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-emerald-500/10 relative z-10">
+            <div className="flex items-center justify-between px-4 @sm:px-6 py-4 bg-[var(--bg-sidebar)]/80 backdrop-blur-xl border-b border-emerald-500/10 relative z-10">
                 <div className="flex items-center gap-4">
                     <div className="relative group">
                         <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full scale-0 group-hover:scale-110 transition-transform"></div>
@@ -50,9 +50,9 @@ export const HexViewerMode = () => {
                         </div>
                     </div>
                     <div>
-                        <h2 className="text-sm font-black text-white tracking-tight italic">Binary Heap Inspector</h2>
+                        <h2 className="text-sm font-black text-[var(--text-primary)] tracking-tight italic">Binary Heap Inspector</h2>
                         <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[9px] font-bold text-zinc-500 tracking-widest">Address Space: </span>
+                            <span className="text-[9px] font-bold text-[var(--text-muted)] tracking-widest">Address Space: </span>
                             <span className="text-[9px] font-mono text-emerald-400/80 font-bold tracking-wider">{byteCount} Bytes (0x{byteCount.toString(16).toUpperCase()})</span>
                         </div>
                     </div>
@@ -70,7 +70,7 @@ export const HexViewerMode = () => {
             </div>
 
             <div className="flex-grow p-4 @sm:p-6 overflow-auto custom-scrollbar relative z-10">
-                <div className="bg-[#080808] rounded-2xl border border-white/[0.03] p-4 @sm:p-6 shadow-3xl hover:border-emerald-500/20 transition-all duration-500">
+                <div className="bg-[var(--bg-surface-inset)] rounded-2xl border border-white/[0.03] p-4 @sm:p-6 shadow-3xl hover:border-emerald-500/20 transition-all duration-500">
                     <HexView data={data?.body as Uint8Array} />
                 </div>
             </div>
@@ -79,7 +79,7 @@ export const HexViewerMode = () => {
 };
 
 const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-[#050505] font-sans relative">
+    <div className="h-full flex items-center justify-center text-zinc-500 bg-[var(--bg-app)] font-sans relative">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:20px_20px]"></div>
         <div className="text-center relative z-10">
             <div className="w-16 h-16 @sm:w-20 @sm:h-20 bg-emerald-600/5 rounded-3xl border border-emerald-500/10 flex items-center justify-center text-emerald-500 mx-auto mb-6 shadow-2xl relative">

@@ -69,8 +69,8 @@ export const XMLViewerMode = () => {
     const isXML = data?.content_type?.toLowerCase().includes('xml') || displayXML?.trim().startsWith('<');
 
     return (
-        <div className="bg-[#0a0a0a] flex flex-col min-h-full h-full font-sans">
-            <div className="flex items-center justify-between px-4 @sm:px-6 py-4 bg-[#111] border-b border-orange-500/10 shadow-2xl relative z-10">
+        <div className="bg-[var(--bg-app)] flex flex-col min-h-full h-full font-sans">
+            <div className="flex items-center justify-between px-4 @sm:px-6 py-4 bg-[var(--bg-sidebar)] border-b border-[var(--border-primary)]/10 shadow-2xl relative z-10">
                 <div className="flex items-center gap-4">
                     <div className="relative group">
                         <div className="absolute inset-0 bg-orange-500/10 blur-xl rounded-full scale-0 group-hover:scale-110 transition-transform"></div>
@@ -79,9 +79,9 @@ export const XMLViewerMode = () => {
                         </div>
                     </div>
                     <div>
-                        <h2 className="text-sm font-black text-white tracking-tight italic">XML / SOAP Inspector</h2>
+                        <h2 className="text-sm font-black text-[var(--text-primary)] tracking-tight italic">XML / SOAP Inspector</h2>
                         <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[9px] font-bold text-zinc-500 tracking-widest">Type: </span>
+                            <span className="text-[9px] font-bold text-[var(--text-muted)] tracking-widest">Type: </span>
                             <span className="text-[9px] font-mono text-orange-400/80 font-bold tracking-wider">{data?.content_type || 'application/xml'}</span>
                         </div>
                     </div>
@@ -92,7 +92,7 @@ export const XMLViewerMode = () => {
                         onClick={() => setIsFormatted(!isFormatted)}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all duration-300 border ${isFormatted
                             ? 'bg-orange-500/10 border-orange-500/30 text-orange-400'
-                            : 'bg-zinc-800/50 border-white/5 text-zinc-500 hover:text-zinc-300'
+                            : 'bg-[var(--bg-surface-elevated)]/50 border border-[var(--border-primary)]/5 text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
                             }`}
                     >
                         <FiWind size={12} />
@@ -101,7 +101,7 @@ export const XMLViewerMode = () => {
 
                     <button
                         onClick={handleCopy}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-800/50 border border-white/5 text-[10px] font-bold text-zinc-400 hover:text-white transition-all duration-300"
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-surface-elevated)]/50 border border-white/5 text-[10px] font-bold text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-all duration-300"
                     >
                         {copied ? <FiCheck className="text-emerald-500" size={12} /> : <FiCopy size={12} />}
                         {copied ? 'COPIED' : 'COPY'}
@@ -111,13 +111,13 @@ export const XMLViewerMode = () => {
 
             <div className="flex-grow p-4 relative h-full">
                 {isXML ? (
-                    <div className="h-full bg-[#050505] rounded-2xl border border-white/[0.03] overflow-hidden shadow-3xl">
+                    <div className="h-full bg-[var(--bg-surface-inset)] rounded-2xl border border-[var(--border-primary)]/3 overflow-hidden shadow-3xl">
                         <XMLView data={displayXML} />
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center h-full text-zinc-500 bg-orange-500/5 rounded-2xl border border-orange-500/10 m-4 italic">
+                    <div className="flex flex-col items-center justify-center h-full text-[var(--text-muted)] bg-[var(--bg-surface-elevated)]/5 border border-[var(--border-primary)]/10 m-4 italic">
                         <div className="text-xs mb-1 font-bold tracking-widest text-orange-500/40">XML Mismatch</div>
-                        <div className="text-[10px] text-zinc-600">This payload does not appear to be valid XML</div>
+                        <div className="text-[10px] text-[var(--text-muted)]">This payload does not appear to be valid XML</div>
                     </div>
                 )}
             </div>

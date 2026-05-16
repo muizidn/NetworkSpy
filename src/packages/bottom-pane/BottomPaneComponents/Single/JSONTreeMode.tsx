@@ -206,25 +206,25 @@ export const JSONTreeMode = () => {
   };
 
   return (
-    <div className="h-full bg-[#0a0a0a] flex flex-col overflow-hidden">
+    <div className="h-full bg-[var(--bg-app)] flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="px-4 @sm:px-4 @sm:px-6 py-4 border-b border-zinc-800 flex flex-col @sm:flex-row justify-between items-start @sm:items-center bg-[#0c0c0c] shrink-0 gap-4">
+      <div className="px-4 @sm:px-4 @sm:px-6 py-4 border-b border-[var(--border-primary)] flex flex-col @sm:flex-row justify-between items-start @sm:items-center bg-[var(--bg-sidebar)] shrink-0 gap-4">
         <div className="flex items-center gap-4">
           <div>
-            <h2 className="text-lg font-black text-white italic tracking-tighter">JSON Architect</h2>
-            <div className="text-[9px] text-zinc-500 font-bold tracking-widest mt-0.5">Structural Analysis & Transformation</div>
+            <h2 className="text-lg font-black text-[var(--text-primary)] italic tracking-tighter">JSON Architect</h2>
+            <div className="text-[9px] text-[var(--text-muted)] font-bold tracking-widest mt-0.5">Structural Analysis & Transformation</div>
           </div>
 
-          <div className="flex bg-zinc-900 rounded-lg p-0.5 border border-zinc-800 ml-0 @sm:ml-4">
+          <div className="flex bg-[var(--bg-surface)] rounded-lg p-0.5 border border-[var(--border-primary)] ml-0 @sm:ml-4">
             <button
               onClick={() => setActiveTab("request")}
-              className={`px-3 py-1 rounded-md text-[9px] font-black transition-all ${activeTab === "request" ? 'bg-zinc-700 text-white shadow-lg' : 'text-zinc-600 hover:text-zinc-400'}`}
+              className={`px-3 py-1 rounded-md text-[9px] font-black transition-all ${activeTab === "request" ? 'bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] shadow-lg' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}
             >
               Request
             </button>
             <button
               onClick={() => setActiveTab("response")}
-              className={`px-3 py-1 rounded-md text-[9px] font-black transition-all ${activeTab === "response" ? 'bg-zinc-700 text-white shadow-lg' : 'text-zinc-600 hover:text-zinc-400'}`}
+              className={`px-3 py-1 rounded-md text-[9px] font-black transition-all ${activeTab === "response" ? 'bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] shadow-lg' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}
             >
               Response
             </button>
@@ -243,16 +243,16 @@ export const JSONTreeMode = () => {
       </div>
 
       {/* Transformation Toolbar */}
-      <div className="px-4 @sm:px-6 py-3 border-b border-zinc-900 bg-[#080808] flex flex-col @md:flex-row gap-4 items-stretch @md:items-center shrink-0">
+      <div className="px-4 @sm:px-6 py-3 border-b border-[var(--border-primary)] bg-[var(--bg-surface-inset)] flex flex-col @md:flex-row gap-4 items-stretch @md:items-center shrink-0">
         <div className="flex-1 relative">
-          <div className="flex items-center gap-2 bg-zinc-900/50 border border-zinc-800 rounded-xl px-3 py-1.5 focus-within:border-blue-500/50 transition-all">
+          <div className="flex items-center gap-2 bg-[var(--bg-surface)]/50 border border-[var(--border-primary)] rounded-xl px-3 py-1.5 focus-within:border-blue-500/50 transition-all">
             <div className="flex items-center gap-2 shrink-0">
-              <FiSearch className="text-zinc-600 text-sm" />
+              <FiSearch className="text-[var(--text-muted)] text-sm" />
               <a
                 href="https://jmespath.org/tutorial.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[8px] bg-zinc-800 text-zinc-500 px-1 py-0.5 rounded border border-zinc-700 hover:text-blue-400 hover:border-blue-500/30 transition-all font-black tracking-tighter cursor-help"
+                className="text-[8px] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)] px-1 py-0.5 rounded border border-[var(--border-primary)] hover:text-blue-400 hover:border-blue-500/30 transition-all font-black tracking-tighter cursor-help"
                 title="Click for JMESPath language tutorial"
               >
                 JMESPath
@@ -266,25 +266,25 @@ export const JSONTreeMode = () => {
               }}
               onKeyDown={handleKeyDown}
               placeholder={placeholderHint}
-              className="bg-transparent border-none text-xs text-zinc-300 w-full focus:outline-none placeholder:text-zinc-700 font-mono min-w-0"
+              className="bg-transparent border-none text-xs text-[var(--text-secondary)] w-full focus:outline-none placeholder:text-[var(--text-muted)] font-mono min-w-0"
             />
             {filterQuery && (
-              <button onClick={() => setFilterQuery("")} className="text-zinc-600 hover:text-zinc-400 text-[10px] font-bold transition-colors">Clear</button>
+              <button onClick={() => setFilterQuery("")} className="text-[var(--text-muted)] hover:text-[var(--text-tertiary)] text-[10px] font-bold transition-colors">Clear</button>
             )}
           </div>
 
           {/* Autocomplete Dropdown */}
           {suggestions.length > 0 && filterQuery.length > 0 && (
-            <div className="absolute top-full left-0 mt-1 w-full bg-[#121212] border border-zinc-800 rounded-xl shadow-2xl z-50 overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
+            <div className="absolute top-full left-0 mt-1 w-full bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-xl shadow-2xl z-50 overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
               {suggestions.map((s, idx) => (
                 <div
                   key={s}
                   onClick={() => selectSuggestion(s)}
                   onMouseEnter={() => setSuggestionIndex(idx)}
-                  className={`px-3 py-2 text-[10px] font-mono cursor-pointer transition-colors flex items-center justify-between ${idx === suggestionIndex ? 'bg-blue-600/20 text-blue-300' : 'text-zinc-500 hover:bg-zinc-800'}`}
+                  className={`px-3 py-2 text-[10px] font-mono cursor-pointer transition-colors flex items-center justify-between ${idx === suggestionIndex ? 'bg-blue-600/20 text-blue-300' : 'text-[var(--text-muted)] hover:bg-[var(--bg-surface-elevated)]'}`}
                 >
                   <span>{s}</span>
-                  {idx === suggestionIndex && <span className="text-[8px] bg-blue-600 text-white px-1 rounded font-black">ENTER</span>}
+                  {idx === suggestionIndex && <span className="text-[8px] bg-blue-600 text-[var(--text-primary)] px-1 rounded font-black">ENTER</span>}
                 </div>
               ))}
             </div>
@@ -294,32 +294,32 @@ export const JSONTreeMode = () => {
         <div className="flex gap-2 shrink-0 overflow-x-auto no-scrollbar">
           <button
             onClick={() => setIsFlattened(!isFlattened)}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-[10px] font-bold tracking-widest transition-all whitespace-nowrap ${isFlattened ? 'bg-blue-600 border-blue-500 text-white shadow-[0_0_15px_rgba(37,99,235,0.3)]' : 'bg-zinc-900/50 border-zinc-800 text-zinc-500 hover:border-zinc-700'}`}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-[10px] font-bold tracking-widest transition-all whitespace-nowrap ${isFlattened ? 'bg-blue-600 border-blue-500 text-[var(--text-primary)] shadow-[0_0_15px_rgba(37,99,235,0.3)]' : 'bg-[var(--bg-surface)]/50 border-[var(--border-primary)] text-[var(--text-muted)] hover:border-[var(--border-secondary)]'}`}
           >
             <FiLayers className={isFlattened ? "animate-pulse" : ""} />
             Flatten
           </button>
           <button
             onClick={() => setHideNulls(!hideNulls)}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-[10px] font-bold tracking-widest transition-all whitespace-nowrap ${hideNulls ? 'bg-purple-600 border-purple-500 text-white shadow-[0_0_15px_rgba(147,51,234,0.3)]' : 'bg-zinc-900/50 border-zinc-800 text-zinc-500 hover:border-zinc-700'}`}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-[10px] font-bold tracking-widest transition-all whitespace-nowrap ${hideNulls ? 'bg-purple-600 border-purple-500 text-[var(--text-primary)] shadow-[0_0_15px_rgba(147,51,234,0.3)]' : 'bg-[var(--bg-surface)]/50 border-[var(--border-primary)] text-[var(--text-muted)] hover:border-[var(--border-secondary)]'}`}
           >
             <FiZap />
             Hide Nulls
           </button>
 
-          <div className="h-6 w-px bg-zinc-800 mx-2 self-center" />
+          <div className="h-6 w-px bg-[var(--border-primary)] mx-2 self-center" />
 
-          <div className="flex bg-black rounded-xl p-1 border border-zinc-800">
+          <div className="flex bg-black rounded-xl p-1 border border-[var(--border-primary)]">
             <button
               onClick={() => setViewType("tree")}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[9px] font-black tracking-tight transition-all ${viewType === "tree" ? 'bg-zinc-700 text-white shadow-md' : 'text-zinc-600 hover:text-zinc-400'}`}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[9px] font-black tracking-tight transition-all ${viewType === "tree" ? 'bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}
             >
               <FiEye />
               Tree
             </button>
             <button
               onClick={() => setViewType("raw")}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[9px] font-black tracking-tight transition-all ${viewType === "raw" ? 'bg-zinc-700 text-white shadow-md' : 'text-zinc-600 hover:text-zinc-400'}`}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[9px] font-black tracking-tight transition-all ${viewType === "raw" ? 'bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}
             >
               <FiCode />
               Raw
@@ -329,7 +329,7 @@ export const JSONTreeMode = () => {
       </div>
 
       {/* Tree Content */}
-      <div className="flex-1 overflow-auto p-4 @sm:p-6 bg-[#0a0a0a]">
+      <div className="flex-1 overflow-auto p-4 @sm:p-6 bg-[var(--bg-app)]">
         {!rawJson ? (
           <JSONPlaceholder
             text="No JSON Body Detected"
@@ -339,24 +339,24 @@ export const JSONTreeMode = () => {
           <div className="h-full flex flex-col items-center justify-center space-y-4">
             <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-center max-w-xs">
               <div className="text-red-400 font-bold text-xs mb-1">Path not found</div>
-              <div className="text-[10px] text-zinc-600 font-medium">The query "{filterQuery}" did not match any nodes in the current tree.</div>
+              <div className="text-[10px] text-[var(--text-muted)] font-medium">The query "{filterQuery}" did not match any nodes in the current tree.</div>
             </div>
           </div>
         ) : (
           <div className="h-full flex flex-col">
             {viewType === "tree" ? (
-              <div className="max-w-5xl w-full mx-auto bg-zinc-900/10 rounded-2xl p-4 border border-zinc-800/50 shadow-inner overflow-auto">
+              <div className="max-w-5xl w-full mx-auto bg-[var(--bg-surface)]/10 rounded-2xl p-4 border border-[var(--border-primary)]/50 shadow-inner overflow-auto">
                 <JSONTree
                   data={transformedJson}
                   theme={theme}
                   invertTheme={false}
                   hideRoot={false}
-                  labelRenderer={(keyPath: ReadonlyArray<string | number>) => <span className="text-zinc-500 font-mono text-xs">{keyPath[0]}:</span>}
+                  labelRenderer={(keyPath: ReadonlyArray<string | number>) => <span className="text-[var(--text-muted)] font-mono text-xs">{keyPath[0]}:</span>}
                   valueRenderer={(val: any) => <span className="text-blue-300 font-mono text-xs italic">{String(val)}</span>}
                 />
               </div>
             ) : (
-              <div className="h-full w-full rounded-2xl border border-zinc-900 overflow-hidden shadow-2xl">
+              <div className="h-full w-full rounded-2xl border border-[var(--border-primary)] overflow-hidden shadow-2xl">
                 <MonacoEditor
                   value={JSON.stringify(transformedJson, null, 2)}
                   language="json"
@@ -380,7 +380,7 @@ export const JSONTreeMode = () => {
       </div>
 
       {/* Footer Info */}
-      <div className="px-6 py-2 bg-[#0c0c0c] border-t border-zinc-900 flex justify-between items-center text-[9px] font-bold text-zinc-600 tracking-widest">
+      <div className="px-6 py-2 bg-[var(--bg-sidebar)] border-t border-[var(--border-primary)] flex justify-between items-center text-[9px] font-bold text-[var(--text-muted)] tracking-widest">
         <div className="flex gap-4">
           <span>Encoding: UTF-8</span>
           <span>Type: application/json</span>

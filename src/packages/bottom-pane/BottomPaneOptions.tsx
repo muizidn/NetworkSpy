@@ -310,8 +310,8 @@ export const BottomPaneOptions = () => {
               className={twMerge(
                 "group relative flex items-center h-6 px-3 rounded-md transition-all duration-200 whitespace-nowrap text-[11px] font-medium shrink-0",
                 isActive
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
-                  : "bg-zinc-900/50 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 border border-zinc-800/50"
+                  ? "bg-blue-600 text-[var(--text-primary)] shadow-lg shadow-blue-900/20"
+                  : "bg-[var(--bg-surface)]/50 text-[var(--text-tertiary)] hover:bg-[var(--bg-surface-elevated)] hover:text-[var(--text-primary)] border border-[var(--border-primary)]/50"
               )}
             >
               {opt.title}

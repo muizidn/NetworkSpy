@@ -68,11 +68,11 @@ export const SidebarTreeView: React.FC<SidebarTreeViewProps> = ({
         <div className="flex justify-between w-full p-1 items-center">
           <div className="flex space-x-1.5 items-center">
             {icon}
-            <label className="font-bold text-zinc-500 text-[10px] uppercase tracking-tight">
+            <label className="font-bold text-[var(--text-muted)] text-[10px] uppercase tracking-tight">
               {name}
             </label>
           </div>
-          <span className="text-[9px] text-zinc-600 italic px-2">Empty</span>
+          <span className="text-[9px] text-[var(--text-muted)] italic px-2">Empty</span>
         </div>
       </div>
     );
@@ -82,13 +82,13 @@ export const SidebarTreeView: React.FC<SidebarTreeViewProps> = ({
     <div className="w-full flex flex-col items-start transition-all duration-300">
       <button
         onClick={() => setIsShown(!isShown)}
-        className="flex justify-between hover:bg-white/5 rounded-md w-full p-1 items-center group transition-colors"
+        className="flex justify-between hover:bg-[var(--bg-surface-elevated)]/5 rounded-md w-full p-1 items-center group transition-colors"
       >
         <div className="flex space-x-1.5 items-center">
-          <div className="text-zinc-400 group-hover:text-blue-400 transition-colors">
+          <div className="text-[var(--text-secondary)] group-hover:text-blue-400 transition-colors">
              {icon}
           </div>
-          <label className="font-bold text-zinc-200 cursor-pointer text-[10px] uppercase tracking-tight">
+          <label className="font-bold text-[var(--text-primary)] cursor-pointer text-[10px] uppercase tracking-tight">
             {name}
           </label>
         </div>
@@ -109,7 +109,7 @@ export const SidebarTreeView: React.FC<SidebarTreeViewProps> = ({
               <div
                 {...getNodeProps()}
                 style={{ paddingLeft: 8 * (level - 1) }}
-                className="flex space-x-1.5 hover:bg-white/5 rounded-md w-full py-0 px-1.5 items-center group cursor-pointer"
+                className="flex space-x-1.5 hover:bg-[var(--bg-surface-elevated)]/5 rounded-md w-full py-0 px-1.5 items-center group cursor-pointer"
               >
                 <div className="shrink-0">
                   {isBranch ? (
@@ -119,7 +119,7 @@ export const SidebarTreeView: React.FC<SidebarTreeViewProps> = ({
                   )}
                 </div>
                 <span 
-                  className="text-[10px] text-zinc-300 truncate group-hover:text-zinc-100" 
+                  className="text-[10px] text-[var(--text-secondary)] truncate group-hover:text-[var(--text-primary)]" 
                   onClick={(e) => {
                     e.stopPropagation();
                     onClick(element.id.toString());

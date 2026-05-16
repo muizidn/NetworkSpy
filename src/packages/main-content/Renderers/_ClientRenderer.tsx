@@ -40,19 +40,19 @@ const ICON_MAP: Record<string, { icon: any, color: string }> = {
   "vscode": { icon: SiVisualstudiocode, color: "text-blue-500" },
   "cursor": { icon: SiVisualstudiocode, color: "text-cyan-400" },
   "spotify": { icon: SiSpotify, color: "text-green-500" },
-  "terminal": { icon: FiTerminal, color: "text-zinc-400" },
-  "iterm": { icon: FiTerminal, color: "text-zinc-400" },
-  "zsh": { icon: FiTerminal, color: "text-zinc-400" },
-  "bash": { icon: FiTerminal, color: "text-zinc-400" },
-  "sh": { icon: FiTerminal, color: "text-zinc-400" },
+  "terminal": { icon: FiTerminal, color: "text-[var(--text-muted)]" },
+  "iterm": { icon: FiTerminal, color: "text-[var(--text-muted)]" },
+  "zsh": { icon: FiTerminal, color: "text-[var(--text-muted)]" },
+  "bash": { icon: FiTerminal, color: "text-[var(--text-muted)]" },
+  "sh": { icon: FiTerminal, color: "text-[var(--text-muted)]" },
   "node": { icon: SiNodedotjs, color: "text-green-600" },
   "python": { icon: SiPython, color: "text-yellow-500" },
   "docker": { icon: SiDocker, color: "text-blue-400" },
   "git": { icon: SiGit, color: "text-orange-600" },
-  "curl": { icon: FiCode, color: "text-zinc-300" },
-  "wget": { icon: FiCode, color: "text-zinc-300" },
+  "curl": { icon: FiCode, color: "text-[var(--text-secondary)]" },
+  "wget": { icon: FiCode, color: "text-[var(--text-secondary)]" },
   "network-spy": { icon: FiGlobe, color: "text-purple-400" },
-  "system": { icon: FiCpu, color: "text-zinc-500" },
+  "system": { icon: FiCpu, color: "text-[var(--text-muted)]" },
 };
 
 export class ClientRenderer implements Renderer<TrafficItemMap> {
@@ -71,10 +71,10 @@ export class ClientRenderer implements Renderer<TrafficItemMap> {
     }
 
     if (lower.includes("helper") || lower.includes("service")) {
-        return { icon: FiBox, color: "text-zinc-500" };
+        return { icon: FiBox, color: "text-[var(--text-muted)]" };
     }
 
-    return { icon: FiGlobe, color: "text-zinc-400" };
+    return { icon: FiGlobe, color: "text-[var(--text-secondary)]" };
   }
 
   render({ input }: { input: TrafficItemMap }): React.ReactNode {
@@ -108,7 +108,7 @@ export class ClientRenderer implements Renderer<TrafficItemMap> {
           )}
         </div>
         <div className="flex flex-col min-w-0">
-          <span className="truncate leading-tight font-medium underline underline-offset-2 decoration-zinc-700/50">{name}</span>
+          <span className="truncate leading-tight font-medium underline underline-offset-2 decoration-[var(--border-primary)]/50">{name}</span>
         </div>
       </div>
     );

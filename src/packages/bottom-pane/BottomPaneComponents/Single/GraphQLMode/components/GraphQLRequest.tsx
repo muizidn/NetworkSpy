@@ -13,16 +13,16 @@ export const GraphQLRequest = ({ activeData, layoutMode, activeTab }: GraphQLReq
   return (
     <div className={twMerge(
       "w-full flex flex-col h-full overflow-hidden transition-all duration-300",
-      layoutMode === 'grid' ? "@5xl:w-5/12 border-r border-zinc-900" : "",
+      layoutMode === 'grid' ? "@5xl:w-5/12 border-r border-[var(--border-primary)]" : "",
       layoutMode === 'grid' ? (activeTab !== "query" && "hidden @5xl:flex") : (activeTab !== "query" && "hidden")
     )}>
       <div className={twMerge(
-        "hidden items-center gap-2 px-4 py-2 border-b border-zinc-800/50 bg-zinc-900/30 justify-between",
+        "hidden items-center gap-2 px-4 py-2 border-b border-[var(--border-primary)]/50 bg-[var(--bg-surface)]/30 justify-between",
         layoutMode === 'grid' && "@5xl:flex"
       )}>
         <div className="flex items-center gap-2">
           <FiCode className="text-pink-500" size={14} />
-          <span className="text-[10px] font-bold text-zinc-500 tracking-wider">
+          <span className="text-[10px] font-bold text-[var(--text-muted)] tracking-wider">
             {activeData.isPersisted ? "Persisted Query ID" : "Query Definition"}
           </span>
         </div>
@@ -32,7 +32,7 @@ export const GraphQLRequest = ({ activeData, layoutMode, activeTab }: GraphQLReq
           </div>
         )}
       </div>
-      <div className="flex-grow bg-black/30">
+      <div className="flex-grow bg-[var(--bg-surface-inset)]/30">
         <MonacoEditor
           height="100%"
           defaultLanguage="graphql"

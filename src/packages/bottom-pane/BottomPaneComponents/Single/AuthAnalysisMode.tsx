@@ -20,16 +20,16 @@ const FindingCard = ({ finding }: { finding: AuthFinding & { isCustom?: boolean,
                 <div className="flex items-center gap-2">
                     <span className={twMerge(
                         "text-[10px] font-black tracking-widest px-2 py-0.5 rounded",
-                        finding.isError ? "bg-red-500 text-white" : "bg-blue-600 text-white"
+                        finding.isError ? "bg-red-500 text-[var(--text-primary)]" : "bg-blue-600 text-[var(--text-primary)]"
                     )}>
                         {finding.type}
                     </span>
-                    <span className="text-[10px] font-black text-zinc-500 tracking-widest pl-1">Auth Insight</span>
+                    <span className="text-[10px] font-black text-[var(--text-muted)] tracking-widest pl-1">Auth Insight</span>
                 </div>
                 <div className={twMerge(
                     "text-[8px] font-black px-2 py-0.5 rounded-full border tracking-tighter shadow-sm",
                     finding.isError
-                        ? "bg-red-600 text-white border-red-500"
+                        ? "bg-red-600 text-[var(--text-primary)] border-red-500"
                         : "bg-blue-950 text-blue-400 border-blue-900/30"
                 )}>
                     {finding.isError ? "Runtime Error" : "Analysis Success"}
@@ -40,23 +40,23 @@ const FindingCard = ({ finding }: { finding: AuthFinding & { isCustom?: boolean,
                 "text-sm font-mono p-3 rounded-xl border leading-relaxed",
                 finding.isError
                     ? "text-red-400 bg-red-950/20 border-red-500/20"
-                    : "text-zinc-300 bg-black/30 border-white/5"
+                    : "text-[var(--text-secondary)] bg-[var(--bg-surface-inset)]/30 border-[var(--border-primary)]/5"
             )}>
                 {finding.value}
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-                <div className="bg-black/20 p-2.5 rounded-xl border border-white/5">
-                    <div className="text-[8px] font-black text-zinc-600 tracking-widest mb-1 flex items-center gap-1">
+                <div className="bg-[var(--bg-surface-inset)]/20 p-2.5 rounded-xl border border-[var(--border-primary)]/5">
+                    <div className="text-[8px] font-black text-[var(--text-muted)] tracking-widest mb-1 flex items-center gap-1">
                         {finding.isError ? <FiAlertTriangle size={8} /> : <FiShield size={8} />} {finding.isError ? "Cause" : "Risk"}
                     </div>
-                    <div className="text-[10px] text-zinc-400 italic font-medium leading-tight">{finding.risk}</div>
+                    <div className="text-[10px] text-[var(--text-tertiary)] italic font-medium leading-tight">{finding.risk}</div>
                 </div>
-                <div className="bg-black/20 p-2.5 rounded-xl border border-white/5">
-                    <div className="text-[8px] font-black text-zinc-600 tracking-widest mb-1 flex items-center gap-1">
+                <div className="bg-[var(--bg-surface-inset)]/20 p-2.5 rounded-xl border border-[var(--border-primary)]/5">
+                    <div className="text-[8px] font-black text-[var(--text-muted)] tracking-widest mb-1 flex items-center gap-1">
                         {finding.isError ? <FiEdit2 size={8} /> : <FiCheckCircle size={8} />} {finding.isError ? "Fix" : "Result"}
                     </div>
-                    <div className="text-[10px] text-zinc-400 italic font-medium leading-tight">{finding.solution}</div>
+                    <div className="text-[10px] text-[var(--text-tertiary)] italic font-medium leading-tight">{finding.solution}</div>
                 </div>
             </div>
         </div>
@@ -175,28 +175,28 @@ export const AuthAnalysisMode = () => {
     if (loading) return <Placeholder text="Loading data..." />;
 
     return (
-        <div className="bg-[#0a0a0a] overflow-hidden h-full flex flex-col font-sans">
-            <div className="px-6 pt-4 border-b border-zinc-900 bg-[#0a0a0a] flex flex-col shadow-lg shrink-0">
+        <div className="bg-[var(--bg-app)] overflow-hidden h-full flex flex-col font-sans">
+            <div className="px-6 pt-4 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] flex flex-col shadow-lg shrink-0">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-500">
                             <FiLock size={18} />
                         </div>
                         <div>
-                            <h2 className="text-sm font-black text-white tracking-tighter">Auth Auditor</h2>
-                            <div className="text-[9px] text-zinc-500 font-bold tracking-widest mt-0.5">Session & Token Inspector</div>
+                            <h2 className="text-sm font-black text-[var(--text-primary)] tracking-tighter">Auth Auditor</h2>
+                            <div className="text-[9px] text-[var(--text-muted)] font-bold tracking-widest mt-0.5">Session & Token Inspector</div>
                         </div>
                     </div>
 
                     {tab === 'Analysis' && detectedTokens.length > 1 && (
-                        <div className="flex bg-zinc-900 rounded-lg p-0.5 border border-zinc-800 shrink-0">
+                        <div className="flex bg-[var(--bg-surface)] rounded-lg p-0.5 border border-[var(--border-primary)] shrink-0">
                             {detectedTokens.map((t, i) => (
                                 <button
                                     key={i}
                                     onClick={() => setSelectedTokenIndex(i)}
                                     className={twMerge(
                                         "px-3 py-1 rounded-md text-[9px] font-black transition-all whitespace-nowrap",
-                                        selectedTokenIndex === i ? "bg-blue-600 text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
+                                        selectedTokenIndex === i ? "bg-blue-600 text-[var(--text-primary)] shadow-lg" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
                                     )}
                                 >
                                     {t.label || `Token ${i + 1}`}
@@ -213,7 +213,7 @@ export const AuthAnalysisMode = () => {
                             onClick={() => setTab(t)}
                             className={twMerge(
                                 "pb-3 text-[11px] font-black tracking-widest transition-all relative",
-                                tab === t ? t === "Custom Scripts" ? "text-orange-500" : "text-blue-500" : "text-zinc-600 hover:text-zinc-400"
+                                tab === t ? t === "Custom Scripts" ? "text-orange-500" : "text-blue-500" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
                             )}
                         >
                             {t}
@@ -247,24 +247,24 @@ export const AuthAnalysisMode = () => {
                             )}
 
                             {detectedTokens.length === 0 && cookies.length === 0 ? (
-                                <div className="py-20 text-center bg-zinc-900/10 rounded-3xl border border-dashed border-zinc-800/50">
-                                    <div className="text-zinc-500 text-sm italic font-medium">No standard authentication tokens detected.</div>
-                                    <div className="text-[10px] text-zinc-700 font-black tracking-widest mt-4">Scanned: Headers, Cookies, JSON Body</div>
+                                <div className="py-20 text-center bg-[var(--bg-surface)]/10 rounded-3xl border border-dashed border-[var(--border-primary)]/50">
+                                    <div className="text-[var(--text-muted)] text-sm italic font-medium">No standard authentication tokens detected.</div>
+                                    <div className="text-[10px] text-[var(--text-muted)] font-black tracking-widest mt-4">Scanned: Headers, Cookies, JSON Body</div>
                                 </div>
                             ) : (
                                 <div className="space-y-8">
                                     {activeDetails?.jwt && (
                                         <div className="space-y-4">
-                                            <div className="bg-zinc-900 rounded-3xl border border-zinc-800 overflow-hidden shadow-2xl">
-                                                <div className="px-6 py-4 bg-zinc-800/50 border-b border-zinc-800 flex justify-between items-center">
+                                            <div className="bg-[var(--bg-surface)] rounded-3xl border border-[var(--border-primary)] overflow-hidden shadow-2xl">
+                                                <div className="px-6 py-4 bg-[var(--bg-surface-elevated)]/50 border-b border-[var(--border-primary)] flex justify-between items-center">
                                                     <div className="flex items-center gap-3">
                                                         <FiKey className="text-blue-500" />
-                                                        <span className="text-xs font-black text-zinc-300 tracking-tighter">{activeDetails.label || 'Token'} Payload</span>
-                                                        <span className="text-[8px] bg-zinc-950 text-zinc-500 px-2 py-1 rounded-lg font-mono tracking-widest border border-white/5">{activeDetails.source}</span>
+                                                        <span className="text-xs font-black text-[var(--text-secondary)] tracking-tighter">{activeDetails.label || 'Token'} Payload</span>
+                                                        <span className="text-[8px] bg-[var(--bg-surface-inset)] text-[var(--text-muted)] px-2 py-1 rounded-lg font-mono tracking-widest border border-[var(--border-primary)]/5">{activeDetails.source}</span>
                                                     </div>
                                                     <span className="text-[9px] bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full font-black tracking-widest border border-blue-500/20">Auto-Decoded</span>
                                                 </div>
-                                                <div className="p-6 overflow-auto max-h-[500px] bg-black/40">
+                                                <div className="p-6 overflow-auto max-h-[500px] bg-[var(--bg-surface-inset)]/40">
                                                     <pre className="text-xs text-blue-300/60 font-mono leading-relaxed whitespace-pre-wrap selection:bg-blue-500/30">
                                                         {JSON.stringify(activeDetails.jwt, null, 2)}
                                                     </pre>
@@ -272,30 +272,30 @@ export const AuthAnalysisMode = () => {
                                             </div>
 
                                             <div className="grid grid-cols-1 @sm:grid-cols-3 gap-4">
-                                                <div className="bg-zinc-900/50 border border-white/5 p-5 rounded-3xl group hover:border-blue-500/30 transition-all shadow-lg">
-                                                    <div className="text-[10px] font-black text-zinc-500 mb-2 tracking-widest opacity-60">Algorithm</div>
-                                                    <div className="text-sm font-black text-white italic tracking-tighter">{activeDetails.token?.split('.')[0] ? (JSON.parse(atob(activeDetails.token.split('.')[0])).alg || 'Unknown') : 'Unknown'}</div>
+                                                <div className="bg-[var(--bg-surface)]/50 border border-[var(--border-primary)]/5 p-5 rounded-3xl group hover:border-blue-500/30 transition-all shadow-lg">
+                                                    <div className="text-[10px] font-black text-[var(--text-muted)] mb-2 tracking-widest opacity-60">Algorithm</div>
+                                                    <div className="text-sm font-black text-[var(--text-primary)] italic tracking-tighter">{activeDetails.token?.split('.')[0] ? (JSON.parse(atob(activeDetails.token.split('.')[0])).alg || 'Unknown') : 'Unknown'}</div>
                                                 </div>
-                                                <div className="bg-zinc-900/50 border border-white/5 p-5 rounded-3xl group hover:border-blue-500/30 transition-all shadow-lg">
-                                                    <div className="text-[10px] font-black text-zinc-500 mb-2 tracking-widest opacity-60">Issued At (iat)</div>
+                                                <div className="bg-[var(--bg-surface)]/50 border border-[var(--border-primary)]/5 p-5 rounded-3xl group hover:border-blue-500/30 transition-all shadow-lg">
+                                                    <div className="text-[10px] font-black text-[var(--text-muted)] mb-2 tracking-widest opacity-60">Issued At (iat)</div>
                                                     <div className="space-y-1">
-                                                        <div className="text-xs font-black text-white italic tracking-tighter">
+                                                        <div className="text-xs font-black text-[var(--text-primary)] italic tracking-tighter">
                                                             {activeDetails.jwt.iat ? new Date(activeDetails.jwt.iat * 1000).toUTCString().replace('GMT', '') : 'N/A'}
                                                             <span className="ml-1 text-[8px] text-blue-500/50">UTC</span>
                                                         </div>
-                                                        <div className="text-[10px] text-zinc-600 font-medium italic">
+                                                        <div className="text-[10px] text-[var(--text-muted)] font-medium italic">
                                                             {activeDetails.jwt.iat ? new Date(activeDetails.jwt.iat * 1000).toLocaleString() : 'N/A'}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="bg-zinc-900/50 border border-white/5 p-5 rounded-3xl group hover:border-blue-500/30 transition-all shadow-lg">
-                                                    <div className="text-[10px] font-black text-zinc-500 mb-2 tracking-widest opacity-60">Expires (exp)</div>
+                                                <div className="bg-[var(--bg-surface)]/50 border border-[var(--border-primary)]/5 p-5 rounded-3xl group hover:border-blue-500/30 transition-all shadow-lg">
+                                                    <div className="text-[10px] font-black text-[var(--text-muted)] mb-2 tracking-widest opacity-60">Expires (exp)</div>
                                                     <div className="space-y-1">
-                                                        <div className="text-xs font-black text-white italic tracking-tighter">
+                                                        <div className="text-xs font-black text-[var(--text-primary)] italic tracking-tighter">
                                                             {activeDetails.jwt.exp ? new Date(activeDetails.jwt.exp * 1000).toUTCString().replace('GMT', '') : 'N/A'}
                                                             <span className="ml-1 text-[8px] text-blue-500/50">UTC</span>
                                                         </div>
-                                                        <div className="text-[10px] text-zinc-600 font-medium italic">
+                                                        <div className="text-[10px] text-[var(--text-muted)] font-medium italic">
                                                             {activeDetails.jwt.exp ? new Date(activeDetails.jwt.exp * 1000).toLocaleString() : 'N/A'}
                                                         </div>
                                                     </div>
@@ -306,14 +306,14 @@ export const AuthAnalysisMode = () => {
 
                                     {cookies.length > 0 && (
                                         <div className="space-y-4">
-                                            <h3 className="text-[10px] font-black text-zinc-600 tracking-widest pl-2 flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-zinc-700 animate-pulse" />
+                                            <h3 className="text-[10px] font-black text-[var(--text-muted)] tracking-widest pl-2 flex items-center gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-[var(--bg-surface-elevated)] animate-pulse" />
                                                 Session Cookies ({cookies.length})
                                             </h3>
                                             <div className="grid grid-cols-1 gap-3">
                                                 {cookies.map((c, i) => (
-                                                    <div key={i} className="bg-zinc-900/50 border border-white/5 px-5 py-3 rounded-2xl text-xs font-mono text-zinc-400 break-all shadow-lg hover:border-blue-500/20 transition-all group">
-                                                        <span className="text-zinc-600 group-hover:text-blue-500/50 transition-colors mr-2">/&gt;</span>
+                                                    <div key={i} className="bg-[var(--bg-surface)]/50 border border-[var(--border-primary)]/5 px-5 py-3 rounded-2xl text-xs font-mono text-[var(--text-tertiary)] break-all shadow-lg hover:border-blue-500/20 transition-all group">
+                                                        <span className="text-[var(--text-muted)] group-hover:text-blue-500/50 transition-colors mr-2">/&gt;</span>
                                                         {c}
                                                     </div>
                                                 ))}
@@ -326,7 +326,7 @@ export const AuthAnalysisMode = () => {
                                             <FiShield size={80} className="rotate-12" />
                                         </div>
                                         <h4 className="text-[10px] font-black text-blue-500 tracking-[0.2em] mb-3">Auditor Security Advice</h4>
-                                        <p className="text-[11px] text-zinc-500 leading-relaxed italic max-w-2xl">
+                                        <p className="text-[11px] text-[var(--text-muted)] leading-relaxed italic max-w-2xl">
                                             {activeDetails?.label === 'Refresh Token' ?
                                                 'CRITICAL: Refresh tokens are highly sensitive long-lived credentials. They must be stored in secure HTTP-only cookies or encrypted local storage and require rotation policies to prevent replay attacks.' :
                                                 'ADVICE: Access tokens should be ephemeral with low expiry times. Ensure they are not leaked in URL parameters or browser history. Use PKCE for mobile/public clients.'}
@@ -343,13 +343,13 @@ export const AuthAnalysisMode = () => {
 };
 
 const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex flex-col items-center justify-center bg-[#0a0a0a] p-10 text-center font-sans">
-        <div className="w-20 h-20 rounded-3xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-700 mb-8 shadow-2xl relative group">
+    <div className="h-full flex flex-col items-center justify-center bg-[var(--bg-app)] p-10 text-center font-sans">
+        <div className="w-20 h-20 rounded-3xl bg-[var(--bg-surface)] border border-[var(--border-primary)] text-[var(--text-muted)] mb-8 shadow-2xl relative group">
             <FiLock size={32} className="group-hover:text-blue-500 transition-colors" />
             <div className="absolute -top-2 -right-2 w-6 h-6 bg-blue-600 rounded-full animate-ping opacity-20"></div>
         </div>
-        <h3 className="text-zinc-400 font-black mb-2 italic tracking-tight">Auth Inspector Ready</h3>
-        <p className="text-[11px] text-zinc-600 leading-relaxed max-w-[200px] font-bold tracking-widest">{text}</p>
+        <h3 className="text-[var(--text-tertiary)] font-black mb-2 italic tracking-tight">Auth Inspector Ready</h3>
+        <p className="text-[11px] text-[var(--text-muted)] leading-relaxed max-w-[200px] font-bold tracking-widest">{text}</p>
     </div>
 );
 

@@ -41,7 +41,7 @@ export const WelcomeDialog: React.FC<WelcomeDialogProps> = ({
       />
 
       {/* dialog */}
-      <div className="relative w-full max-w-lg bg-[#0a0a0a] border border-zinc-800/50 rounded-3xl shadow-[0_32px_128px_rgba(0,0,0,0.8)] overflow-hidden">
+      <div className="relative w-full max-w-lg bg-[var(--bg-app)] border border-[var(--border-primary)]/50 rounded-3xl shadow-[0_32px_128px_rgba(0,0,0,0.8)] overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 animate-gradient-x" />
         
         <div className="p-10 flex flex-col items-center text-center">
@@ -54,11 +54,11 @@ export const WelcomeDialog: React.FC<WelcomeDialogProps> = ({
             />
           </div>
 
-          <h3 className="text-3xl font-black text-white mb-4 tracking-tight">
+          <h3 className="text-3xl font-black text-[var(--text-primary)] mb-4 tracking-tight">
             Welcome to NetworkSpy
           </h3>
 
-          <p className="text-zinc-400 text-base leading-relaxed mb-8 max-w-md">
+          <p className="text-[var(--text-secondary)] text-base leading-relaxed mb-8 max-w-md">
             To start intercepting and analyzing HTTPS traffic, you need to install our trusted certificate. 
             <span className="block mt-4 text-amber-400 font-bold flex items-center justify-center gap-2">
               <FiAlertTriangle size={18} />
@@ -80,14 +80,14 @@ export const WelcomeDialog: React.FC<WelcomeDialogProps> = ({
             
             <button
               onClick={onClose}
-              className="w-full py-2 text-[11px] font-bold tracking-widest text-zinc-500 hover:text-zinc-300 transition-colors"
+              className="w-full py-2 text-[11px] font-bold tracking-widest text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
             >
               I'LL DO IT LATER
             </button>
 
             <button
               onClick={onAcknowledge}
-              className="w-full py-1 text-[9px] font-medium tracking-widest text-zinc-600 hover:text-zinc-400 transition-colors opacity-50 uppercase"
+              className="w-full py-1 text-[9px] font-medium tracking-widest text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors opacity-50 uppercase"
             >
               Don't show this again
             </button>

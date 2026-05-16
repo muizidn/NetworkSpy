@@ -49,36 +49,36 @@ export const DiffMode = () => {
 
   if (selectedOthers.length < 2) {
     return (
-      <div className="h-full flex flex-col items-center justify-center text-zinc-500 bg-[#0a0a0a]">
+      <div className="h-full flex flex-col items-center justify-center text-[var(--text-muted)] bg-[var(--bg-app)]">
         <div className="text-6xl font-black opacity-5 mb-4 tracking-tighter">DIFF ENGINE</div>
         <div className="max-w-xs text-center">
-          <p className="text-sm font-medium text-zinc-400 mb-1">Comparative Analysis Required</p>
-          <p className="text-[11px] text-zinc-600 italic">Select two or more requests from the traffic list to begin deep content comparison.</p>
+          <p className="text-sm font-medium text-[var(--text-tertiary)] mb-1">Comparative Analysis Required</p>
+          <p className="text-[11px] text-[var(--text-muted)] italic">Select two or more requests from the traffic list to begin deep content comparison.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-full bg-[#0a0a0a] flex flex-col overflow-hidden">
-      <div className="flex items-center px-4 py-2 border-b border-zinc-800 bg-[#111] justify-between z-10 shadow-xl">
+    <div className="h-full bg-[var(--bg-app)] flex flex-col overflow-hidden">
+      <div className="flex items-center px-4 py-2 border-b border-[var(--border-primary)] bg-[var(--bg-surface)] justify-between z-10 shadow-xl">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black bg-blue-600 text-white px-2 py-0.5 rounded tracking-tighter shadow-lg shadow-blue-900/20">Diff Engine v2</span>
+            <span className="text-[10px] font-black bg-blue-600 text-[var(--text-primary)] px-2 py-0.5 rounded tracking-tighter shadow-lg shadow-blue-900/20">Diff Engine v2</span>
           </div>
 
-          <div className="h-4 w-px bg-zinc-800" />
+          <div className="h-4 w-px bg-[var(--border-primary)]" />
 
-          <div className="flex bg-zinc-900 p-0.5 rounded-lg border border-zinc-800">
+          <div className="flex bg-[var(--bg-surface-inset)] p-0.5 rounded-lg border border-[var(--border-primary)]">
             <button
               onClick={() => setTarget("body")}
-              className={`px-3 py-1 rounded-md text-[10px] font-black transition-all ${target === "body" ? "bg-zinc-800 text-blue-400 shadow-inner" : "text-zinc-500 hover:text-zinc-300"}`}
+              className={`px-3 py-1 rounded-md text-[10px] font-black transition-all ${target === "body" ? "bg-[var(--bg-surface-elevated)] text-blue-400 shadow-inner" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"}`}
             >
               Body
             </button>
             <button
               onClick={() => setTarget("headers")}
-              className={`px-3 py-1 rounded-md text-[10px] font-black transition-all ${target === "headers" ? "bg-zinc-800 text-blue-400 shadow-inner" : "text-zinc-500 hover:text-zinc-300"}`}
+              className={`px-3 py-1 rounded-md text-[10px] font-black transition-all ${target === "headers" ? "bg-[var(--bg-surface-elevated)] text-blue-400 shadow-inner" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"}`}
             >
               Headers
             </button>
@@ -88,7 +88,7 @@ export const DiffMode = () => {
             onClick={() => setIsFormatted(!isFormatted)}
             className={`flex items-center gap-2 px-3 py-1 rounded-md text-[10px] font-black transition-all border ${isFormatted
               ? 'bg-blue-600/10 border-blue-500/30 text-blue-400'
-              : 'bg-zinc-900 border-zinc-800 text-zinc-500'
+              : 'bg-[var(--bg-surface)] border-[var(--border-primary)] text-[var(--text-tertiary)]'
               }`}
           >
             <FiWind size={12} />
@@ -98,11 +98,11 @@ export const DiffMode = () => {
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-zinc-600">Left:</span>
+            <span className="text-[10px] font-bold text-[var(--text-muted)]">Left:</span>
             <select
               value={leftIdx}
               onChange={(e) => setLeftIdx(parseInt(e.target.value))}
-              className="bg-zinc-900 border border-zinc-800 text-[10px] text-zinc-300 px-2 py-1 rounded outline-none font-mono"
+              className="bg-[var(--bg-surface-inset)] border border-[var(--border-primary)] text-[10px] text-[var(--text-secondary)] px-2 py-1 rounded outline-none font-mono"
             >
               {selectedOthers.map((item, idx) => (
                 <option key={String(item.id)} value={idx}>#{item.id} - {item.method}</option>
@@ -113,11 +113,11 @@ export const DiffMode = () => {
           <FiChevronRight size={14} className="text-zinc-800" />
 
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-zinc-600">Right:</span>
+            <span className="text-[10px] font-bold text-[var(--text-muted)]">Right:</span>
             <select
               value={rightIdx}
               onChange={(e) => setRightIdx(parseInt(e.target.value))}
-              className="bg-zinc-900 border border-zinc-800 text-[10px] text-blue-400 px-2 py-1 rounded outline-none font-mono"
+              className="bg-[var(--bg-surface-inset)] border border-[var(--border-primary)] text-[10px] text-blue-400 px-2 py-1 rounded outline-none font-mono"
             >
               {selectedOthers.map((item, idx) => (
                 <option key={String(item.id)} value={idx}>#{item.id} - {item.method}</option>

@@ -7,7 +7,7 @@ export const CompareMode = () => {
 
   if (selectedItems.length < 2) {
     return (
-      <div className="h-full flex flex-col items-center justify-center text-zinc-500 bg-[#1e1e1e]">
+      <div className="h-full flex flex-col items-center justify-center text-[var(--text-muted)] bg-[var(--bg-app)]">
         <div className="text-4xl opacity-10 mb-4 font-bold">COMPARE</div>
         <div className="text-sm">Select at least 2 requests to compare</div>
       </div>
@@ -15,17 +15,17 @@ export const CompareMode = () => {
   }
 
   return (
-    <div className="h-full bg-[#1e1e1e] overflow-auto p-4">
+    <div className="h-full bg-[var(--bg-app)] overflow-auto p-4">
       <div className="inline-block min-w-full">
         <table className="min-w-full border-collapse text-xs">
           <thead>
-            <tr className="bg-zinc-900">
-              <th className="border border-zinc-700 p-2 text-left text-zinc-500 sticky left-0 z-10 bg-zinc-900">Property</th>
+            <tr className="bg-[var(--bg-surface)]">
+              <th className="border border-[var(--border-primary)] p-2 text-left text-[var(--text-muted)] sticky left-0 z-10 bg-[var(--bg-surface)]">Property</th>
               {selectedItems.map((item) => (
-                <th key={String(item.id)} className="border border-zinc-700 p-2 text-left min-w-[250px]">
+                <th key={String(item.id)} className="border border-[var(--border-primary)] p-2 text-left min-w-[250px]">
                   <div className="flex items-center gap-2">
-                    <span className="bg-zinc-800 px-1.5 rounded text-zinc-400">#{item.id}</span>
-                    <span className="font-mono text-zinc-300">{String(item.method)}</span>
+                    <span className="bg-[var(--bg-surface-elevated)] px-1.5 rounded text-[var(--text-secondary)]">#{item.id}</span>
+                    <span className="font-mono text-[var(--text-secondary)]">{String(item.method)}</span>
                   </div>
                 </th>
               ))}
@@ -50,10 +50,10 @@ const CompareRow = ({ label, property, items, highlight = false }: { label: stri
   const allSame = values.every(v => v === values[0]);
 
   return (
-    <tr className={`${highlight ? 'bg-zinc-900/30' : ''} hover:bg-zinc-800/50 transition-colors`}>
-      <td className="border border-zinc-700 p-2 font-semibold text-zinc-400 sticky left-0 z-10 bg-[#1e1e1e] whitespace-nowrap">{label}</td>
+    <tr className={`${highlight ? 'bg-[var(--bg-surface)]/30' : ''} hover:bg-[var(--bg-surface-elevated)]/50 transition-colors`}>
+      <td className="border border-[var(--border-primary)] p-2 font-semibold text-[var(--text-secondary)] sticky left-0 z-10 bg-[var(--bg-app)] whitespace-nowrap">{label}</td>
       {values.map((val, i) => (
-        <td key={i} className={`border border-zinc-700 p-2 font-mono ${!allSame && i > 0 ? 'text-orange-400' : 'text-zinc-300'}`}>
+        <td key={i} className={`border border-[var(--border-primary)] p-2 font-mono ${!allSame && i > 0 ? 'text-orange-400' : 'text-[var(--text-secondary)]'}`}>
           <div className="max-h-20 overflow-auto break-all">
             {val}
           </div>

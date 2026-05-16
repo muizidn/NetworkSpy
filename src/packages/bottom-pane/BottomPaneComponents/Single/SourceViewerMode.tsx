@@ -73,12 +73,12 @@ export const SourceViewerMode = ({ language, title }: SourceViewerProps) => {
     if (loading) return <Placeholder text={`Formatting ${title}...`} title={title} />;
 
     return (
-        <div className="bg-[#111] flex flex-col min-h-full h-full font-sans">
+        <div className="bg-[var(--bg-app)] flex flex-col min-h-full h-full font-sans">
             {/* Premium Toolbar */}
-            <div className="flex items-center justify-between px-6 py-3 bg-[#1a1a1a] border-b border-white/5">
+            <div className="flex items-center justify-between px-6 py-3 bg-[var(--bg-sidebar)] border-b border-[var(--border-primary)]">
                 <div className="flex items-center gap-3">
                     <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
-                    <span className="text-[10px] font-black tracking-[0.2em] text-zinc-400">{title} Inspector</span>
+                    <span className="text-[10px] font-black tracking-[0.2em] text-[var(--text-tertiary)]">{title} Inspector</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -86,7 +86,7 @@ export const SourceViewerMode = ({ language, title }: SourceViewerProps) => {
                         onClick={() => setIsFormatted(!isFormatted)}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all duration-300 border ${isFormatted
                             ? 'bg-blue-500/10 border-blue-500/30 text-blue-400'
-                            : 'bg-zinc-800/50 border-white/5 text-zinc-500 hover:text-zinc-300'
+                            : 'bg-[var(--bg-surface-elevated)]/50 border-white/5 text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
                             }`}
                     >
                         <FiWind size={12} />
@@ -95,7 +95,7 @@ export const SourceViewerMode = ({ language, title }: SourceViewerProps) => {
 
                     <button
                         onClick={handleCopy}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-800/50 border border-white/5 text-[10px] font-bold text-zinc-400 hover:text-white transition-all duration-300"
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-surface-elevated)]/50 border border-white/5 text-[10px] font-bold text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-all duration-300"
                     >
                         {copied ? <FiCheck className="text-emerald-500" size={12} /> : <FiCopy size={12} />}
                         {copied ? 'Copied!' : 'Copy'}
@@ -111,11 +111,11 @@ export const SourceViewerMode = ({ language, title }: SourceViewerProps) => {
 };
 
 const Placeholder = ({ text, title }: { text: string, title: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-[#111]">
+    <div className="h-full flex items-center justify-center text-[var(--text-muted)] bg-[var(--bg-app)]">
         <div className="text-center">
             <div className="text-5xl font-black opacity-5 mb-3 italic tracking-tighter">{title}</div>
-            <div className="text-[10px] font-bold tracking-widest text-zinc-600 mb-2">Source Engine Standby</div>
-            <div className="text-xs text-zinc-500 italic">{text}</div>
+            <div className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] mb-2">Source Engine Standby</div>
+            <div className="text-xs text-[var(--text-muted)] italic">{text}</div>
         </div>
     </div>
 );

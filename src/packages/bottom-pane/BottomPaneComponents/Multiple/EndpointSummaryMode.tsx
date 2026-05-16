@@ -25,30 +25,30 @@ export const EndpointSummaryMode = () => {
     }, [selectedItems]);
 
     if (selectedItems.length === 0) {
-        return <div className="h-full flex items-center justify-center text-zinc-500 bg-[#1e1e1e]">Select requests to view endpoint summary</div>;
+        return <div className="h-full flex items-center justify-center text-[var(--text-muted)] bg-[var(--bg-app)]">Select requests to view endpoint summary</div>;
     }
 
     return (
-        <div className="h-full bg-[#1e1e1e] p-4 @sm:p-6 overflow-auto">
+        <div className="h-full bg-[var(--bg-app)] p-4 @sm:p-6 overflow-auto">
             <div className="max-w-4xl mx-auto">
                 <h2 className="text-xl font-bold mb-8 text-blue-400">Endpoint Usage Summary</h2>
 
                 <table className="w-full text-xs text-left border-collapse">
                     <thead>
-                        <tr className="text-zinc-500 font-black tracking-widest text-[10px]">
+                        <tr className="text-[var(--text-muted)] font-black tracking-widest text-[10px]">
                             <th className="pb-4">Endpoint</th>
                             <th className="pb-4 text-center">Calls</th>
                             <th className="pb-4 text-right">Avg Duration</th>
                         </tr>
                     </thead>
-                    <tbody className="text-zinc-300">
+                    <tbody className="text-[var(--text-secondary)]">
                         {Object.entries(summaries).sort((a, b) => b[1].count - a[1].count).map(([key, data]) => (
-                            <tr key={key} className="border-t border-zinc-800 hover:bg-zinc-900/50 transition-colors">
+                            <tr key={key} className="border-t border-[var(--border-primary)] hover:bg-[var(--bg-surface)]/50 transition-colors">
                                 <td className="py-3 font-mono">{key}</td>
                                 <td className="py-3 text-center">
-                                    <span className="bg-zinc-800 text-zinc-400 px-2 py-1 rounded-full font-bold">{data.count}</span>
+                                    <span className="bg-[var(--bg-surface-elevated)] text-[var(--text-secondary)] px-2 py-1 rounded-full font-bold">{data.count}</span>
                                 </td>
-                                <td className="py-3 text-right font-bold text-zinc-400">{data.avgTime.toFixed(1)}ms</td>
+                                <td className="py-3 text-right font-bold text-[var(--text-secondary)]">{data.avgTime.toFixed(1)}ms</td>
                             </tr>
                         ))}
                     </tbody>

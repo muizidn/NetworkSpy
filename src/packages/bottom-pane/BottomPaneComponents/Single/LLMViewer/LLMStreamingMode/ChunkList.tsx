@@ -22,17 +22,17 @@ export const ChunkList: React.FC<ChunkListProps> = ({
   scrollRef
 }) => {
   return (
-    <div className="w-1/2 border-r border-zinc-900 flex flex-col bg-black/10">
-      <div className="px-4 py-2 bg-zinc-900/40 border-b border-zinc-800 shrink-0 flex items-center justify-between">
+    <div className="w-1/2 border-r border-[var(--border-primary)] flex flex-col bg-[var(--bg-surface-inset)]/10">
+      <div className="px-4 py-2 bg-[var(--bg-surface)]/40 border-b border-[var(--border-primary)] shrink-0 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FiTerminal size={12} className="text-zinc-500" />
-          <span className="text-[10px] font-bold text-zinc-400 tracking-widest">Raw Chunks</span>
+          <FiTerminal size={12} className="text-[var(--text-muted)]" />
+          <span className="text-[10px] font-bold text-[var(--text-tertiary)] tracking-widest">Raw Chunks</span>
         </div>
         <button
           onClick={() => setIsBeautified(!isBeautified)}
           className={twMerge(
             "px-2 py-0.5 rounded text-[9px] font-black tracking-widest transition-all",
-            isBeautified ? "bg-amber-600 text-white shadow-lg" : "bg-zinc-800 text-zinc-500 hover:text-zinc-300"
+            isBeautified ? "bg-amber-600 text-white shadow-lg" : "bg-[var(--bg-surface-elevated)] text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
           )}
         >
           {isBeautified ? "Raw" : "Beautify"}
@@ -55,7 +55,7 @@ export const ChunkList: React.FC<ChunkListProps> = ({
                 ? "bg-amber-950/20 border-amber-900/30"
                 : hoveredChunkId === chunk.id
                   ? "bg-blue-600/20 border-blue-500 shadow-lg shadow-blue-500/10 scale-[1.02]"
-                  : "bg-[#1e1e1e] border-zinc-800/50 hover:border-zinc-700"
+                  : "bg-[var(--bg-app)] border border-[var(--border-primary)]/50 hover:border-[var(--border-primary)]"
             )}
           >
             <div className="flex justify-between items-center">
@@ -66,13 +66,13 @@ export const ChunkList: React.FC<ChunkListProps> = ({
                 )}>
                   {chunk.event}
                 </span>
-                <span className="text-[9px] font-mono text-zinc-600">+{chunk.elapsedMs}ms</span>
+                <span className="text-[9px] font-mono text-[var(--text-muted)]">+{chunk.elapsedMs}ms</span>
               </div>
-              <span className="text-[9px] font-mono text-zinc-600 opacity-0 group-hover:opacity-100 italic transition-opacity">
+              <span className="text-[9px] font-mono text-[var(--text-muted)] opacity-0 group-hover:opacity-100 italic transition-opacity">
                 {chunk.timestamp}
               </span>
             </div>
-            <div className="text-[11px] font-mono text-zinc-300 break-all bg-black/20 p-2 rounded border border-white/5 overflow-x-auto">
+            <div className="text-[11px] font-mono text-[var(--text-secondary)] break-all bg-[var(--bg-surface-inset)]/20 p-2 rounded border border-[var(--border-primary)]/5 overflow-x-auto">
               {(() => {
                 if (!isBeautified) return chunk.data;
                 try {

@@ -118,41 +118,41 @@ export const CustomViewerMode: React.FC<CustomViewerModeProps> = ({ viewerId }) 
     if (!trafficId) return <Placeholder text="Select a request to apply custom viewer" />;
 
     return (
-        <div className="h-full bg-[#0a0a0a] flex flex-col overflow-hidden">
+        <div className="h-full bg-[var(--bg-app)] flex flex-col overflow-hidden">
             {/* Header / Selection - Only show if no viewerId prop is provided */}
             {!viewerId && (
-                <div className="px-4 @sm:px-6 py-4 border-b border-zinc-900 flex justify-between items-center bg-[#0c0c0c] shrink-0">
+                <div className="px-4 @sm:px-6 py-4 border-b border-[var(--border-primary)] flex justify-between items-center bg-[var(--bg-sidebar)] shrink-0">
                     <div className="flex items-center gap-4 flex-1">
                         <div>
-                            <h2 className="text-lg font-black text-white italic tracking-tighter">Viewer Selector</h2>
-                            <div className="text-[9px] text-zinc-500 font-bold tracking-widest mt-0.5">Apply custom inspection logic</div>
+                            <h2 className="text-lg font-black text-[var(--text-primary)] italic tracking-tighter">Viewer Selector</h2>
+                            <div className="text-[9px] text-[var(--text-muted)] font-bold tracking-widest mt-0.5">Apply custom inspection logic</div>
                         </div>
 
                         <div className="relative flex-1 max-w-md ml-8">
-                            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={14} />
+                            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={14} />
                             <input
                                 type="text"
                                 placeholder="Search your viewers..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2 text-sm text-zinc-300 focus:outline-none focus:border-blue-500/50 transition-all font-medium"
+                                className="w-full bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-xl pl-10 pr-4 py-2 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-blue-500/50 transition-all font-medium"
                             />
 
                             {searchTerm && (
-                                <div className="absolute top-full left-0 right-0 mt-2 bg-[#121212] border border-zinc-800 rounded-xl shadow-2xl z-[100] max-h-60 overflow-y-auto overflow-hidden custom-scrollbar animate-in fade-in slide-in-from-top-1">
+                                <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-xl shadow-2xl z-[100] max-h-60 overflow-y-auto overflow-hidden custom-scrollbar animate-in fade-in slide-in-from-top-1">
                                     {filteredViewers.length > 0 ? (
                                         filteredViewers.map(v => (
                                             <button
                                                 key={v.id}
                                                 onClick={() => { setSelectedViewer(v); setSearchTerm(""); }}
-                                                className="w-full px-4 py-3 text-left hover:bg-zinc-800 flex items-center gap-3 transition-colors border-b border-zinc-900 last:border-0"
+                                                className="w-full px-4 py-3 text-left hover:bg-[var(--bg-surface-elevated)] flex items-center gap-3 transition-colors border-b border-[var(--border-primary)] last:border-0"
                                             >
                                                 <FiEye size={14} className="text-blue-400" />
-                                                <span className="text-sm text-zinc-300 font-bold">{v.name}</span>
+                                                <span className="text-sm text-[var(--text-secondary)] font-bold">{v.name}</span>
                                             </button>
                                         ))
                                     ) : (
-                                        <div className="px-4 py-3 text-xs text-zinc-600 italic">No custom viewers found</div>
+                                        <div className="px-4 py-3 text-xs text-[var(--text-muted)] italic">No custom viewers found</div>
                                     )}
                                 </div>
                             )}
@@ -160,12 +160,12 @@ export const CustomViewerMode: React.FC<CustomViewerModeProps> = ({ viewerId }) 
                     </div>
 
                     {selectedViewer && (
-                        <div className="flex items-center gap-3 bg-zinc-900/50 border border-zinc-800 rounded-xl px-4 py-2">
+                        <div className="flex items-center gap-3 bg-[var(--bg-surface)]/50 border border-[var(--border-primary)] rounded-xl px-4 py-2">
                             <FiEye size={14} className="text-blue-400" />
-                            <span className="text-xs font-bold text-zinc-300 tracking-widest">{selectedViewer.name}</span>
+                            <span className="text-xs font-bold text-[var(--text-secondary)] tracking-widest">{selectedViewer.name}</span>
                             <button
                                 onClick={() => { setSelectedViewer(null); setRunningViewers({}); }}
-                                className="ml-2 text-zinc-600 hover:text-red-400 transition-colors"
+                                className="ml-2 text-[var(--text-muted)] hover:text-red-400 transition-colors"
                             >
                                 <FiZap size={14} />
                             </button>
@@ -175,20 +175,20 @@ export const CustomViewerMode: React.FC<CustomViewerModeProps> = ({ viewerId }) 
             )}
 
             {/* Viewer Content */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#080808]">
+            <div className="flex-1 overflow-y-auto custom-scrollbar bg-[var(--bg-app)]">
                 {!selectedViewer ? (
                     <div className="h-full flex flex-col items-center justify-center space-y-4 opacity-30 grayscale cursor-default">
-                        <FiLayers className="text-6xl text-zinc-500" />
+                        <FiLayers className="text-6xl text-[var(--text-muted)]" />
                         <div className="text-center">
-                            <div className="text-sm font-black text-zinc-400 tracking-widest">No Viewer Selected</div>
-                            <div className="text-[10px] text-zinc-600 font-medium">Search and select a custom viewer above to start analysis.</div>
+                            <div className="text-sm font-black text-[var(--text-tertiary)] tracking-widest">No Viewer Selected</div>
+                            <div className="text-[10px] text-[var(--text-muted)] font-medium">Search and select a custom viewer above to start analysis.</div>
                         </div>
                     </div>
                 ) : isLoading ? (
                     <div className="h-full flex items-center justify-center">
                         <div className="flex flex-col items-center gap-4">
                             <div className="w-8 h-8 @sm:w-10 @sm:h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
-                            <span className="text-[10px] font-black text-zinc-600 tracking-[0.2em]">Executing Logic Blocks...</span>
+                            <span className="text-[10px] font-black text-[var(--text-muted)] tracking-[0.2em]">Executing Logic Blocks...</span>
                         </div>
                     </div>
                 ) : viewerContent && (
@@ -206,10 +206,10 @@ export const CustomViewerMode: React.FC<CustomViewerModeProps> = ({ viewerId }) 
 };
 
 const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0a0a0a]">
+    <div className="h-full flex items-center justify-center text-zinc-500 bg-[var(--bg-app)]">
         <div className="text-center">
             <div className="text-5xl font-black opacity-5 mb-4 italic tracking-tighter">CUSTOM VIEWER</div>
-            <div className="text-xs tracking-[0.2em] font-bold text-zinc-700">{text}</div>
+            <div className="text-xs tracking-[0.2em] font-bold text-[var(--text-muted)]">{text}</div>
         </div>
     </div>
 )

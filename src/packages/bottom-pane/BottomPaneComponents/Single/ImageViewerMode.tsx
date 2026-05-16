@@ -25,12 +25,12 @@ export const ImageViewerMode = () => {
     const isImage = data?.content_type?.toLowerCase().includes('image');
 
     return (
-        <div className="bg-[#0a0a0a] flex flex-col min-h-full">
+        <div className="bg-[var(--bg-app)] flex flex-col min-h-full">
             <div className="flex-grow flex items-center justify-center p-8">
                 {isImage ? (
                     <ImageView data={data?.body as Uint8Array} />
                 ) : (
-                    <div className="text-zinc-500 text-sm italic">Response is not an image ({data?.content_type || 'Unknown Type'})</div>
+                    <div className="text-[var(--text-muted)] text-sm italic">Response is not an image ({data?.content_type || 'Unknown Type'})</div>
                 )}
             </div>
         </div>
@@ -38,7 +38,7 @@ export const ImageViewerMode = () => {
 };
 
 const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0a0a0a]">
+    <div className="h-full flex items-center justify-center text-zinc-500 bg-[var(--bg-app)]">
         <div className="text-center">
             <div className="text-4xl font-black opacity-10 mb-2 italic">IMAGE</div>
             <div className="text-sm">{text}</div>

@@ -14,7 +14,7 @@ export const ProStatusDialog: React.FC<ProStatusDialogProps> = ({ isOpen, onClos
   return createPortal(
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
       <div 
-        className="w-full max-w-lg bg-[#111111] border border-zinc-800 rounded-3xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] p-8 flex flex-col gap-8 animate-in zoom-in-95 duration-300 relative overflow-hidden"
+        className="w-full max-w-lg bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-3xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] p-8 flex flex-col gap-8 animate-in zoom-in-95 duration-300 relative overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Glow effect */}
@@ -25,10 +25,10 @@ export const ProStatusDialog: React.FC<ProStatusDialogProps> = ({ isOpen, onClos
                 <FiStar size={32} className="text-white fill-white/20" />
             </div>
             
-            <h2 className="text-3xl font-black text-white tracking-tighter uppercase mb-2">
+            <h2 className="text-3xl font-black text-[var(--text-primary)] tracking-tighter uppercase mb-2">
                 {status === 'pro' ? 'Professional Active' : 'Start Professional Trial'}
             </h2>
-            <p className="text-zinc-500 text-sm max-w-xs">
+            <p className="text-[var(--text-muted)] text-sm max-w-xs">
                 {status === 'pro' 
                     ? 'Thank you for supporting NetworkSpy! You have full access to all elite features.' 
                     : 'Unlock the full power of NetworkSpy with an unrestricted 14-day professional trial.'}
@@ -45,14 +45,14 @@ export const ProStatusDialog: React.FC<ProStatusDialogProps> = ({ isOpen, onClos
         <div className="flex flex-col gap-3">
             <button 
                 onClick={onClose}
-                className="w-full py-4 bg-white text-black font-black text-xs tracking-widest uppercase rounded-2xl hover:bg-zinc-200 transition-all active:scale-95 shadow-lg"
+                className="w-full py-4 bg-[var(--text-primary)] text-[var(--bg-app)] font-black text-xs tracking-widest uppercase rounded-2xl hover:bg-[var(--text-secondary)] transition-all active:scale-95 shadow-lg"
             >
                 {status === 'pro' ? 'Close Panel' : 'Upgrade to Pro — $19/mo'}
             </button>
             {status === 'trial' && (
                 <button 
                     onClick={onClose}
-                    className="w-full py-4 bg-transparent text-zinc-500 font-bold text-[10px] tracking-widest uppercase rounded-2xl hover:text-zinc-300 transition-all"
+                    className="w-full py-4 bg-transparent text-[var(--text-muted)] font-bold text-[10px] tracking-widest uppercase rounded-2xl hover:text-[var(--text-secondary)] transition-all"
                 >
                     Continue with Free Trial
                 </button>
@@ -65,11 +65,11 @@ export const ProStatusDialog: React.FC<ProStatusDialogProps> = ({ isOpen, onClos
 };
 
 const FeatureItem = ({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) => (
-    <div className="flex items-start gap-3 p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+    <div className="flex items-start gap-3 p-4 bg-[var(--bg-surface-elevated)]/5 border border-[var(--border-primary)]/5 rounded-2xl">
         <div className="mt-1 text-blue-500">{icon}</div>
         <div className="flex flex-col gap-0.5">
-            <span className="text-[11px] font-bold text-zinc-100">{title}</span>
-            <span className="text-[10px] text-zinc-500 leading-tight">{desc}</span>
+            <span className="text-[11px] font-bold text-[var(--text-primary)]">{title}</span>
+            <span className="text-[10px] text-[var(--text-muted)] leading-tight">{desc}</span>
         </div>
     </div>
 );

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { invoke } from "@tauri-apps/api/core";
-import { FiSettings, FiTarget, FiInfo, FiTerminal, FiCpu, FiPlay, FiCheckCircle, FiXCircle, FiKey, FiShield, FiZap, FiLayers } from 'react-icons/fi';
+import { FiSettings, FiTarget, FiInfo, FiTerminal, FiCpu, FiPlay, FiCheckCircle, FiXCircle, FiKey, FiShield, FiZap, FiLayers, FiSun, FiMoon } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
 import { useSettingsContext } from '../context/SettingsProvider';
 import { getVersion } from '@tauri-apps/api/app';
 
 export default function Settings() {
     const {
+        theme,
+        setTheme,
         streamCertificateLogs,
         setStreamCertificateLogs,
         mcpStdioEnabled,
@@ -77,10 +79,10 @@ export default function Settings() {
     }, []);
 
     return (
-        <div className="flex flex-col h-full bg-[#0a0a0a] text-zinc-300 overflow-y-auto no-scrollbar">
+        <div className="flex flex-col h-full bg-[var(--bg-app)] text-zinc-300 overflow-y-auto no-scrollbar">
             <div className="p-12 max-w-4xl mx-auto w-full">
                 <div className="flex items-center gap-4 mb-12">
-                    <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center relative shadow-2xl">
+                    <div className="w-12 h-12 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-primary)] flex items-center justify-center relative shadow-2xl">
                         <FiSettings size={24} className="text-zinc-500 animate-[spin_8s_linear_infinite]" />
                     </div>
                     <div>
@@ -91,7 +93,7 @@ export default function Settings() {
 
                 <div className="space-y-6">
                     {/* License Section */}
-                    <div className="p-8 rounded-3xl bg-gradient-to-br from-zinc-900 to-[#0c0c0c] border border-zinc-800 shadow-2xl relative overflow-hidden group">
+                    <div className="p-8 rounded-3xl bg-gradient-to-br from-[var(--bg-surface)] to-[var(--bg-app)] border border-[var(--border-primary)] shadow-2xl relative overflow-hidden group">
                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
                             <FiShield size={120} className="text-blue-500" />
                         </div>
@@ -110,7 +112,7 @@ export default function Settings() {
                             {isVerified ? (
                                 <div className="relative group overflow-hidden">
                                     <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                    <div className="relative flex items-center justify-between p-6 rounded-2xl bg-zinc-900/40 border border-green-500/20 backdrop-blur-sm animate-in fade-in zoom-in duration-500">
+                                    <div className="relative flex items-center justify-between p-6 rounded-2xl bg-[var(--bg-surface)]/40 border border-green-500/20 backdrop-blur-sm animate-in fade-in zoom-in duration-500">
                                         <div className="flex items-center gap-5">
                                             <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-500 shadow-[0_0_20px_rgba(34,197,94,0.2)]">
                                                 <FiShield size={24} />
@@ -136,7 +138,7 @@ export default function Settings() {
                                         </div>
                                         <button
                                             onClick={revokeLicense}
-                                            className="px-5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-red-500 hover:border-red-500/50 hover:bg-red-500/5 transition-all cursor-pointer z-10"
+                                            className="px-5 py-2.5 rounded-xl bg-[var(--bg-zinc-950)] border border-[var(--border-primary)] text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-red-500 hover:border-red-500/50 hover:bg-red-500/5 transition-all cursor-pointer z-10"
                                         >
                                             Revoke License
                                         </button>
@@ -152,7 +154,7 @@ export default function Settings() {
                                                 placeholder="NS-XXXX-XXXX-XXXX-XXXX"
                                                 value={localLicenseKey}
                                                 onChange={(e) => setLocalLicenseKey(e.target.value.toUpperCase())}
-                                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-12 pr-5 py-4 text-sm font-mono text-white placeholder:text-zinc-700 outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                                                className="w-full bg-[var(--bg-zinc-950)] border border-[var(--border-primary)] rounded-xl pl-12 pr-5 py-4 text-sm font-mono text-white placeholder:text-zinc-700 outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all"
                                             />
                                         </div>
                                         <button
@@ -188,11 +190,11 @@ export default function Settings() {
                     </div>
 
                     <div
-                        className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 flex items-center justify-between group hover:border-zinc-700 transition-all duration-300 cursor-pointer"
+                        className="p-6 rounded-2xl bg-[var(--bg-surface)]/40 border border-[var(--border-primary)] flex items-center justify-between group hover:border-zinc-700 transition-all duration-300 cursor-pointer"
                         onClick={() => setSmartViewerMatch(!smartViewerMatch)}
                     >
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-yellow-500 group-hover:scale-110 transition-transform">
+                            <div className="w-10 h-10 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-primary)] flex items-center justify-center text-yellow-500 group-hover:scale-110 transition-transform">
                                 <FiTarget size={20} />
                             </div>
                             <div>
@@ -204,17 +206,17 @@ export default function Settings() {
                         </div>
 
                         <button
-                            className={`w-12 h-6 rounded-full relative transition-all duration-300 ${smartViewerMatch ? 'bg-yellow-600 shadow-[0_0_15px_rgba(202,138,4,0.4)]' : 'bg-zinc-800'}`}
+                            className={`w-12 h-6 rounded-full relative transition-all duration-300 ${smartViewerMatch ? 'bg-yellow-600 shadow-[0_0_15px_rgba(202,138,4,0.4)]' : 'bg-[var(--bg-surface-elevated)]'}`}
                         >
                             <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300 ${smartViewerMatch ? 'left-7' : 'left-1'}`} />
                         </button>
                     </div>
 
                     <div
-                        className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 flex items-center justify-between group hover:border-zinc-700 transition-all duration-300"
+                        className="p-6 rounded-2xl bg-[var(--bg-surface)]/40 border border-[var(--border-primary)] flex items-center justify-between group hover:border-zinc-700 transition-all duration-300"
                     >
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
+                            <div className="w-10 h-10 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-primary)] flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
                                 <FiLayers size={20} />
                             </div>
                             <div>
@@ -225,12 +227,12 @@ export default function Settings() {
                             </div>
                         </div>
 
-                        <div className="flex bg-zinc-950 p-1 rounded-xl border border-zinc-800">
+                        <div className="flex bg-[var(--bg-zinc-950)] p-1 rounded-xl border border-[var(--border-primary)]">
                             <button
                                 onClick={() => setBottomPaneTabPosition('top')}
                                 className={twMerge(
                                     "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
-                                    bottomPaneTabPosition === 'top' ? "bg-zinc-800 text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
+                                    bottomPaneTabPosition === 'top' ? "bg-[var(--bg-surface-elevated)] text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
                                 )}
                             >
                                 Top
@@ -239,7 +241,7 @@ export default function Settings() {
                                 onClick={() => setBottomPaneTabPosition('bottom')}
                                 className={twMerge(
                                     "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
-                                    bottomPaneTabPosition === 'bottom' ? "bg-zinc-800 text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
+                                    bottomPaneTabPosition === 'bottom' ? "bg-[var(--bg-surface-elevated)] text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
                                 )}
                             >
                                 Bottom
@@ -248,11 +250,48 @@ export default function Settings() {
                     </div>
 
                     <div
-                        className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 flex items-center justify-between group hover:border-zinc-700 transition-all duration-300 cursor-pointer"
+                        className="p-6 rounded-2xl bg-[var(--bg-surface)]/40 border border-[var(--border-primary)] flex items-center justify-between group hover:border-zinc-700 transition-all duration-300"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-primary)] flex items-center justify-center text-yellow-500 group-hover:scale-110 transition-transform">
+                                {theme === 'light' ? <FiSun size={20} /> : <FiMoon size={20} />}
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-white mb-0.5">App Theme</h3>
+                                <p className="text-xs text-zinc-500 max-w-md leading-relaxed">
+                                    Choose between light and dark mode.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex bg-[var(--bg-zinc-950)] p-1 rounded-xl border border-[var(--border-primary)]">
+                            <button
+                                onClick={() => setTheme('light')}
+                                className={twMerge(
+                                    "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                                    theme === 'light' ? "bg-[var(--bg-surface-elevated)] text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
+                                )}
+                            >
+                                Light
+                            </button>
+                            <button
+                                onClick={() => setTheme('dark')}
+                                className={twMerge(
+                                    "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                                    theme === 'dark' ? "bg-[var(--bg-surface-elevated)] text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
+                                )}
+                            >
+                                Dark
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        className="p-6 rounded-2xl bg-[var(--bg-surface)]/40 border border-[var(--border-primary)] flex items-center justify-between group hover:border-zinc-700 transition-all duration-300 cursor-pointer"
                         onClick={() => setStartProxyOnLaunch(!startProxyOnLaunch)}
                     >
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+                            <div className="w-10 h-10 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-primary)] flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
                                 <FiPlay size={20} />
                             </div>
                             <div>
@@ -264,7 +303,7 @@ export default function Settings() {
                         </div>
 
                         <button
-                            className={`w-12 h-6 rounded-full relative transition-all duration-300 ${startProxyOnLaunch ? 'bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.4)]' : 'bg-zinc-800'}`}
+                            className={`w-12 h-6 rounded-full relative transition-all duration-300 ${startProxyOnLaunch ? 'bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.4)]' : 'bg-[var(--bg-surface-elevated)]'}`}
                         >
                             <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300 ${startProxyOnLaunch ? 'left-7' : 'left-1'}`} />
                         </button>
@@ -273,11 +312,11 @@ export default function Settings() {
 
 
                     <div
-                        className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 flex items-center justify-between group hover:border-zinc-700 transition-all duration-300 cursor-pointer"
+                        className="p-6 rounded-2xl bg-[var(--bg-surface)]/40 border border-[var(--border-primary)] flex items-center justify-between group hover:border-zinc-700 transition-all duration-300 cursor-pointer"
                         onClick={() => setStreamCertificateLogs(!streamCertificateLogs)}
                     >
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-green-500 group-hover:scale-110 transition-transform">
+                            <div className="w-10 h-10 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-primary)] flex items-center justify-center text-green-500 group-hover:scale-110 transition-transform">
                                 <FiTerminal size={20} />
                             </div>
                             <div>
@@ -289,12 +328,12 @@ export default function Settings() {
                         </div>
 
                         <button
-                            className={`w-12 h-6 rounded-full relative transition-all duration-300 ${streamCertificateLogs ? 'bg-green-600 shadow-[0_0_15px_rgba(34,197,94,0.4)]' : 'bg-zinc-800'}`}
+                            className={`w-12 h-6 rounded-full relative transition-all duration-300 ${streamCertificateLogs ? 'bg-green-600 shadow-[0_0_15px_rgba(34,197,94,0.4)]' : 'bg-[var(--bg-surface-elevated)]'}`}
                         >
                         </button>
                     </div>
 
-                    <div className="pt-8 border-t border-zinc-900 mt-12 pb-4">
+                    <div className="pt-8 border-t border-[var(--border-primary)] mt-12 pb-4">
                         <h2 className="text-sm font-black text-white flex items-center gap-2">
                             <FiZap size={14} className="text-blue-500" />
                             AI Configuration
@@ -302,7 +341,7 @@ export default function Settings() {
                         <p className="text-zinc-500 text-[10px] font-bold mt-1">Connect to LLMs for automated analysis</p>
                     </div>
 
-                    <div className="p-8 rounded-3xl bg-gradient-to-br from-zinc-900 to-[#0c0c0c] border border-zinc-800 shadow-2xl relative overflow-hidden group">
+                    <div className="p-8 rounded-3xl bg-gradient-to-br from-[var(--bg-surface)] to-[var(--bg-app)] border border-[var(--border-primary)] shadow-2xl relative overflow-hidden group">
                         <div className="flex flex-col gap-5">
                             <div className="flex flex-col gap-2">
                                 <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest px-1">API Key</label>
@@ -313,7 +352,7 @@ export default function Settings() {
                                         placeholder="OpenRouter API Key (sk-or-v1-...)"
                                         value={openRouterKey}
                                         onChange={(e) => setOpenRouterKey(e.target.value)}
-                                        className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-12 pr-5 py-4 text-sm font-mono text-white placeholder:text-zinc-700 outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                                        className="w-full bg-[var(--bg-zinc-950)] border border-[var(--border-primary)] rounded-xl pl-12 pr-5 py-4 text-sm font-mono text-white placeholder:text-zinc-700 outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all"
                                     />
                                 </div>
                             </div>
@@ -327,7 +366,7 @@ export default function Settings() {
                                         placeholder="anthropic/claude-sonnet-4.6"
                                         value={openRouterModel}
                                         onChange={(e) => setOpenRouterModel(e.target.value)}
-                                        className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-12 pr-5 py-4 text-sm font-mono text-white placeholder:text-zinc-700 outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                                        className="w-full bg-[var(--bg-zinc-950)] border border-[var(--border-primary)] rounded-xl pl-12 pr-5 py-4 text-sm font-mono text-white placeholder:text-zinc-700 outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all"
                                     />
                                 </div>
                                 <p className="text-[10px] text-zinc-600 leading-relaxed px-1 mt-1">
@@ -335,13 +374,13 @@ export default function Settings() {
                                 </p>
                             </div>
 
-                            <p className="text-[10px] text-zinc-600 leading-relaxed px-1 border-t border-zinc-800/50 pt-4">
+                            <p className="text-[10px] text-zinc-600 leading-relaxed px-1 border-t border-[var(--border-primary)]/50 pt-4">
                                 Your key is stored locally and used to power the in-app AI chat for generating custom viewers. Get one at <a href="https://openrouter.ai/" target="_blank" className="text-blue-500 hover:underline">openrouter.ai</a>.
                             </p>
                         </div>
                     </div>
 
-                    <div className="pt-8 border-t border-zinc-900 mt-12 pb-4">
+                    <div className="pt-8 border-t border-[var(--border-primary)] mt-12 pb-4">
                         <h2 className="text-sm font-black text-white flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
                             Model Context Protocol (MCP)
@@ -350,11 +389,11 @@ export default function Settings() {
                     </div>
 
                     <div
-                        className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 flex items-center justify-between group hover:border-purple-900/50 transition-all duration-300 cursor-pointer"
+                        className="p-6 rounded-2xl bg-[var(--bg-surface)]/40 border border-[var(--border-primary)] flex items-center justify-between group hover:border-purple-900/50 transition-all duration-300 cursor-pointer"
                         onClick={() => setMcpStdioEnabled(!mcpStdioEnabled)}
                     >
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform">
+                            <div className="w-10 h-10 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-primary)] flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform">
                                 <FiCpu size={20} />
                             </div>
                             <div>
@@ -366,18 +405,18 @@ export default function Settings() {
                         </div>
 
                         <button
-                            className={`w-12 h-6 rounded-full relative transition-all duration-300 ${mcpStdioEnabled ? 'bg-purple-600 shadow-[0_0_15px_rgba(147,51,234,0.4)]' : 'bg-zinc-800'}`}
+                            className={`w-12 h-6 rounded-full relative transition-all duration-300 ${mcpStdioEnabled ? 'bg-purple-600 shadow-[0_0_15px_rgba(147,51,234,0.4)]' : 'bg-[var(--bg-surface-elevated)]'}`}
                         >
                             <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300 ${mcpStdioEnabled ? 'left-7' : 'left-1'}`} />
                         </button>
                     </div>
 
                     <div
-                        className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 flex items-center justify-between group hover:border-indigo-900/50 transition-all duration-300 cursor-pointer"
+                        className="p-6 rounded-2xl bg-[var(--bg-surface)]/40 border border-[var(--border-primary)] flex items-center justify-between group hover:border-indigo-900/50 transition-all duration-300 cursor-pointer"
                         onClick={() => setMcpHttpEnabled(!mcpHttpEnabled)}
                     >
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-indigo-500 group-hover:scale-110 transition-transform">
+                            <div className="w-10 h-10 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-primary)] flex items-center justify-center text-indigo-500 group-hover:scale-110 transition-transform">
                                 <FiCpu size={20} />
                             </div>
                             <div>
@@ -389,14 +428,14 @@ export default function Settings() {
                         </div>
 
                         <button
-                            className={`w-12 h-6 rounded-full relative transition-all duration-300 ${mcpHttpEnabled ? 'bg-indigo-600 shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'bg-zinc-800'}`}
+                            className={`w-12 h-6 rounded-full relative transition-all duration-300 ${mcpHttpEnabled ? 'bg-indigo-600 shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'bg-[var(--bg-surface-elevated)]'}`}
                         >
                             <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300 ${mcpHttpEnabled ? 'left-7' : 'left-1'}`} />
                         </button>
                     </div>
 
                     {mcpHttpEnabled && (
-                        <div className="ml-14 p-4 rounded-xl bg-indigo-900/10 border border-indigo-900/30 flex items-center justify-between mb-4">
+                        <div className="ml-14 p-4 rounded-xl bg-[var(--bg-surface)]/40 border border-indigo-900/30 flex items-center justify-between mb-4">
                             <div>
                                 <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1">HTTP Port</h4>
                                 <p className="text-[10px] text-zinc-500 font-medium leading-relaxed">AI agents will connect to this port on localhost.</p>
@@ -405,7 +444,7 @@ export default function Settings() {
                                 type="number"
                                 value={mcpHttpPort}
                                 onChange={(e) => setMcpHttpPort(parseInt(e.target.value) || 3001)}
-                                className="w-24 bg-zinc-900 border border-indigo-900/50 rounded-lg px-3 py-1.5 text-xs font-bold text-white outline-none focus:border-indigo-500 transition-colors"
+                                className="w-24 bg-[var(--bg-zinc-950)] border border-indigo-900/50 rounded-lg px-3 py-1.5 text-xs font-bold text-white outline-none focus:border-indigo-500 transition-colors"
                                 min="1024"
                                 max="65535"
                             />
@@ -439,13 +478,13 @@ export default function Settings() {
 
                 </div>
 
-                <div className="mt-24 pt-8 border-t border-zinc-900 flex items-center justify-between">
+                <div className="mt-24 pt-8 border-t border-[var(--border-primary)] flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-blue-500/50 shadow-[0_0_8px_rgba(59,130,246,0.5)] animate-pulse" />
                         <span className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest">Environment Synced</span>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900/50 rounded-xl border border-zinc-800 shadow-inner group">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-surface)]/50 rounded-xl border border-[var(--border-primary)] shadow-inner group">
                             <FiInfo size={14} className="text-zinc-600 group-hover:text-blue-500 transition-colors" />
                             <span className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Version {appVersion}</span>
                         </div>

@@ -36,29 +36,29 @@ export const Dialog: React.FC<DialogProps> = ({
       {/* backdrop */}
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        className="absolute inset-0 bg-[var(--bg-app)]/80 backdrop-blur-sm"
       />
 
       {/* dialog */}
-      <div className="relative w-full max-w-sm bg-zinc-900 border border-zinc-800 rounded-2xl shadow-[0_32px_64px_rgba(0,0,0,0.5)] overflow-hidden">
+      <div className="relative w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-2xl shadow-[0_32px_64px_rgba(0,0,0,0.5)] overflow-hidden">
         <div className="p-8 flex flex-col items-center text-center">
 
-          <div className="mb-6 p-4 rounded-3xl bg-white/5 border border-white/10">
+          <div className="mb-6 p-4 rounded-3xl bg-[var(--bg-surface-elevated)]/5 border border-[var(--border-primary)]/10">
             {getIcon()}
           </div>
 
-          <h3 className="text-xl font-black text-white mb-2 tracking-tight">
+          <h3 className="text-xl font-black text-[var(--text-primary)] mb-2 tracking-tight">
             {title}
           </h3>
 
-          <p className="text-zinc-400 text-sm leading-relaxed mb-8">
+          <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-8">
             {message}
           </p>
 
           <Button
             title="GOT IT"
             onClick={onClose}
-            className="w-full py-3 h-auto text-[11px] font-black tracking-widest bg-zinc-100 hover:bg-white text-black border-none rounded-xl"
+            className="w-full py-3 h-auto text-[11px] font-black tracking-widest bg-[var(--text-primary)] hover:bg-[var(--text-secondary)] text-[var(--bg-app)] border-none rounded-xl"
           />
         </div>
       </div>

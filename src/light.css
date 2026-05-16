@@ -1,0 +1,64 @@
+[data-theme="light"] {
+  /* Backgrounds */
+  --bg-app: #f4f4f5;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f4f4f5;
+  --bg-surface-inset: #e4e4e7;
+  
+  /* Text */
+  --text-primary: #18181b;
+  --text-secondary: #27272a;
+  --text-tertiary: #52525b;
+  --text-muted: #71717a;
+  
+  /* Borders */
+  --border-primary: #e4e4e7;
+  --border-secondary: #d4d4d8;
+  
+  /* Specific Components */
+  --bg-sidebar: #ffffff;
+  --border-sidebar: #e4e4e7;
+}
+
+/* Class Overrides for Light Mode */
+[data-theme="light"] .text-white {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .bg-zinc-900,
+[data-theme="light"] .bg-zinc-900\/50,
+[data-theme="light"] .bg-\[\#111111\],
+[data-theme="light"] .bg-\[\#161616\],
+[data-theme="light"] .bg-\[\#0a0a0a\],
+[data-theme="light"] .bg-\[\#050505\],
+[data-theme="light"] .bg-\[\#0c0c0c\],
+[data-theme="light"] .bg-\[\#080808\] {
+  background-color: var(--bg-surface) !important;
+}
+
+[data-theme="light"] .bg-zinc-800,
+[data-theme="light"] .hover\:bg-zinc-800:hover {
+  background-color: var(--bg-surface-elevated) !important;
+}
+
+[data-theme="light"] .bg-zinc-950,
+[data-theme="light"] .bg-black {
+  background-color: var(--bg-surface-inset) !important;
+}
+
+[data-theme="light"] .border-zinc-800 {
+  border-color: var(--border-primary) !important;
+}
+
+[data-theme="light"] .border-zinc-700 {
+  border-color: var(--border-secondary) !important;
+}
+
+[data-theme="light"] .text-zinc-300,
+[data-theme="light"] .text-zinc-400 {
+  color: var(--text-tertiary) !important;
+}
+
+[data-theme="light"] .text-zinc-500 {
+  color: var(--text-muted) !important;
+}

@@ -27,7 +27,7 @@ const TitleMenuDropdown: React.FC<{ label: string; items: MenuItem[] }> = ({ lab
         onMouseDown={() => setIsOpen(!isOpen)}
         className={twMerge(
           "px-2 h-6 flex items-center text-[11px] font-medium transition-colors rounded-md",
-          isOpen ? "bg-white/10 text-white" : "text-zinc-400 hover:bg-white/5 hover:text-zinc-200"
+          isOpen ? "bg-[var(--bg-surface-elevated)] text-[var(--text-primary)]" : "text-[var(--text-muted)] hover:bg-[var(--bg-surface-inset)]/5 hover:text-[var(--text-secondary)]"
         )}
       >
         {label}
@@ -35,15 +35,15 @@ const TitleMenuDropdown: React.FC<{ label: string; items: MenuItem[] }> = ({ lab
       {isOpen && (
         <>
           <div className="fixed inset-0 z-[1001]" onMouseDown={() => setIsOpen(false)} />
-          <div className="absolute top-full left-0 mt-1 min-w-[200px] bg-zinc-900 border border-white/10 rounded-lg shadow-2xl z-[1002] py-1 backdrop-blur-xl">
+          <div className="absolute top-full left-0 mt-1 min-w-[200px] bg-[var(--bg-surface)] border border-[var(--border-primary)]/10 rounded-lg shadow-2xl z-[1002] py-1 backdrop-blur-xl">
             {items.map((item, idx) => (
               item.separator ? (
-                <div key={idx} className="h-px bg-white/5 my-1 mx-2" />
+                <div key={idx} className="h-px bg-[var(--border-primary)]/5 my-1 mx-2" />
               ) : (
                 <button
                   key={idx}
                   onClick={() => handleAction(item)}
-                  className="w-full text-left px-3 py-1.5 text-[11px] text-zinc-300 hover:bg-blue-500 hover:text-white flex items-center justify-between group transition-colors"
+                  className="w-full text-left px-3 py-1.5 text-[11px] text-[var(--text-secondary)] hover:bg-blue-500 hover:text-white flex items-center justify-between group transition-colors"
                 >
                   <span>{item.label}</span>
                 </button>
@@ -90,7 +90,7 @@ export const WinAppMenu: React.FC = () => {
         { label: 'Check for Updates', action: 'check_updates' },
         { label: 'About Network Spy', action: 'about' }
       ]} />
-      <div className="w-px h-4 bg-white/10 mx-2" />
+      <div className="w-px h-4 bg-[var(--border-primary)]/10 mx-2" />
     </div>
   );
 };

@@ -8,7 +8,7 @@ export default function WorkspacePage() {
 
     if (!isTeam) {
         return (
-            <div className="flex flex-col h-full bg-[#050505] items-center justify-center p-12 overflow-y-auto">
+            <div className="flex flex-col h-full bg-[var(--bg-app)] items-center justify-center p-12 overflow-y-auto">
                 <div className="max-w-xl w-full">
                     <div className="text-center mb-12">
                         <div className="w-20 h-20 bg-purple-600/10 border border-purple-500/20 rounded-[2rem] flex items-center justify-center text-purple-500 mx-auto mb-8 shadow-[0_0_50px_rgba(168,85,247,0.1)]">
@@ -20,7 +20,7 @@ export default function WorkspacePage() {
                         </p>
                     </div>
 
-                    <div className="bg-[#0a0a0a] border border-zinc-800 rounded-[2.5rem] p-10 relative overflow-hidden group">
+                    <div className="bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-[2.5rem] p-10 relative overflow-hidden group">
                         <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-700 pointer-events-none">
                             <FiLayout size={200} />
                         </div>
@@ -35,7 +35,7 @@ export default function WorkspacePage() {
 
                             <div className="space-y-6 mb-12">
                                 <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-purple-500 shrink-0">
+                                    <div className="w-10 h-10 rounded-xl bg-[var(--bg-surface-elevated)] border border-[var(--border-primary)] flex items-center justify-center text-purple-500 shrink-0">
                                         <FiUsers size={18} />
                                     </div>
                                     <div>
@@ -44,7 +44,7 @@ export default function WorkspacePage() {
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-blue-500 shrink-0">
+                                    <div className="w-10 h-10 rounded-xl bg-[var(--bg-surface-elevated)] border border-[var(--border-primary)] flex items-center justify-center text-blue-500 shrink-0">
                                         <FiZap size={18} />
                                     </div>
                                     <div>
@@ -71,8 +71,8 @@ export default function WorkspacePage() {
         );
     }
     return (
-        <div className="flex flex-col items-center justify-center h-full p-8 bg-[#0a0a0a]">
-            <div className="max-w-md w-full bg-[#161616] border border-zinc-800 rounded-2xl p-8 shadow-2xl relative overflow-hidden group">
+        <div className="flex flex-col items-center justify-center h-full p-8 bg-[var(--bg-app)]">
+            <div className="max-w-md w-full bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-2xl p-8 shadow-2xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-4">
                     <span className="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-[10px] font-bold text-blue-500 uppercase tracking-widest">
                         Incoming

@@ -20,7 +20,7 @@ export const ToolsTab: React.FC<ToolsTabProps> = ({
   return (
     <div className="flex-grow flex overflow-hidden">
       {/* Tool List Sidebar */}
-      <div className="w-64 border-r border-zinc-800 overflow-y-auto custom-scrollbar shrink-0 bg-black/20">
+      <div className="w-64 border-r border-[var(--border-primary)] overflow-y-auto custom-scrollbar shrink-0 bg-[var(--bg-surface-inset)]/20">
         {tools.map((tool, idx) => {
           const usageCount = toolUsageMap[tool.function.name] || 0;
           const isUsed = usageCount > 0;
@@ -30,8 +30,8 @@ export const ToolsTab: React.FC<ToolsTabProps> = ({
               key={idx}
               onClick={() => setSelectedTool(tool)}
               className={twMerge(
-                "w-full px-4 py-3 text-left border-b border-zinc-800/50 transition-all group",
-                selectedTool?.function.name === tool.function.name ? "bg-purple-600/10 border-r-2 border-r-purple-500" : "hover:bg-white/5"
+                "w-full px-4 py-3 text-left border-b border-[var(--border-primary)]/50 transition-all group",
+                selectedTool?.function.name === tool.function.name ? "bg-purple-600/10 border-r-2 border-r-purple-500" : "hover:bg-[var(--bg-surface-elevated)]/50"
               )}
             >
               <div className="flex items-center justify-between gap-2 mb-1">
@@ -39,12 +39,12 @@ export const ToolsTab: React.FC<ToolsTabProps> = ({
                   <div className={twMerge(
                     "w-1.5 h-1.5 rounded-full shrink-0",
                     selectedTool?.function.name === tool.function.name ? "bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.5)]" 
-                      : isUsed ? "bg-emerald-500/80" : "bg-zinc-700"
+                      : isUsed ? "bg-emerald-500/80" : "bg-[var(--bg-surface-elevated)]"
                   )} />
                   <span className={twMerge(
                     "text-[11px] font-bold truncate",
                     selectedTool?.function.name === tool.function.name ? "text-purple-300" 
-                      : isUsed ? "text-zinc-200" : "text-zinc-400 group-hover:text-zinc-200"
+                      : isUsed ? "text-[var(--text-secondary)]" : "text-[var(--text-tertiary)] group-hover:text-[var(--text-secondary)]"
                   )}>
                     {tool.function.name}
                   </span>
@@ -61,13 +61,13 @@ export const ToolsTab: React.FC<ToolsTabProps> = ({
       </div>
 
       {/* Tool Detail Pane */}
-      <div className="flex-grow overflow-y-auto p-8 custom-scrollbar bg-black/40">
+      <div className="flex-grow overflow-y-auto p-8 custom-scrollbar bg-[var(--bg-surface-inset)]/40">
         {selectedTool ? (
           <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-right-4 duration-300">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-black text-white tracking-tight uppercase italic">{selectedTool.function.name}</h2>
-                <span className="text-[10px] text-zinc-500 font-mono tracking-widest uppercase">TYPE: {selectedTool.type}</span>
+                <h2 className="text-xl font-black text-[var(--text-primary)] tracking-tight uppercase italic">{selectedTool.function.name}</h2>
+                <span className="text-[10px] text-[var(--text-muted)] font-mono tracking-widest uppercase">TYPE: {selectedTool.type}</span>
               </div>
               <div className="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400 shadow-xl shadow-purple-900/20">
                 <FiBox size={20} />
@@ -77,10 +77,10 @@ export const ToolsTab: React.FC<ToolsTabProps> = ({
             {selectedTool.function.description && (
               <div className="mb-8 group relative">
                 <div className="flex items-center justify-between mb-3">
-                  <div className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em]">Description</div>
+                  <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">Description</div>
                   <CopyButton text={selectedTool.function.description!} />
                 </div>
-                <div className="bg-zinc-900/50 rounded-2xl p-5 text-sm text-zinc-300 leading-relaxed italic">
+                <div className="bg-[var(--bg-surface)]/50 rounded-2xl p-5 text-sm text-[var(--text-secondary)] leading-relaxed italic">
                   {selectedTool.function.description}
                 </div>
               </div>
@@ -88,17 +88,17 @@ export const ToolsTab: React.FC<ToolsTabProps> = ({
 
             <div className="group relative">
               <div className="flex items-center justify-between mb-3">
-                <div className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em]">Parameter Schema</div>
+                <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">Parameter Schema</div>
                 <CopyButton text={JSON.stringify(selectedTool.function.parameters, null, 2)} />
               </div>
-              <div className="bg-black rounded-2xl overflow-hidden shadow-2xl">
-                <div className="flex items-center px-4 py-2 bg-zinc-900/50">
+              <div className="bg-[var(--bg-surface-inset)] rounded-2xl overflow-hidden shadow-2xl">
+                <div className="flex items-center px-4 py-2 bg-[var(--bg-surface)]/50">
                   <div className="flex gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-red-500/20" />
                     <div className="w-2 h-2 rounded-full bg-amber-500/20" />
                     <div className="w-2 h-2 rounded-full bg-emerald-500/20" />
                   </div>
-                  <span className="text-[9px] text-zinc-600 font-mono ml-4 uppercase tracking-widest">JSON SCHEMA</span>
+                  <span className="text-[9px] text-[var(--text-muted)] font-mono ml-4 uppercase tracking-widest">JSON SCHEMA</span>
                 </div>
                 <pre className="p-6 font-mono text-xs text-purple-300 leading-relaxed overflow-x-auto custom-scrollbar">
                   {JSON.stringify(selectedTool.function.parameters, null, 2)}
@@ -107,7 +107,7 @@ export const ToolsTab: React.FC<ToolsTabProps> = ({
             </div>
           </div>
         ) : (
-          <div className="h-full flex flex-col items-center justify-center text-zinc-600 opacity-50">
+          <div className="h-full flex flex-col items-center justify-center text-[var(--text-muted)] opacity-50">
             <FiBox size={48} className="mb-4" />
             <p className="text-sm">Select a tool to view its full definition</p>
           </div>

@@ -39,8 +39,8 @@ export default function Layout() {
 
   return (
     <div className={twMerge(
-      "flex flex-col w-screen h-screen overflow-hidden rounded-[12px] border border-white/5 shadow-2xl",
-      isMainWindow ? "bg-zinc-950/70 backdrop-blur-3xl" : "bg-black/90 backdrop-blur-2xl"
+      "flex flex-col w-screen h-screen overflow-hidden rounded-[12px] border border-[var(--border-primary)]/5 shadow-2xl",
+      isMainWindow ? "bg-[var(--bg-app)]/70 backdrop-blur-3xl" : "bg-[var(--bg-app)]/90 backdrop-blur-2xl"
     )}>
 
 

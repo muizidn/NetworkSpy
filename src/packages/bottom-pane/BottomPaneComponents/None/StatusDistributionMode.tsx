@@ -27,18 +27,18 @@ export const StatusDistributionMode = () => {
 
   if (filteredTraffic.length === 0) {
     return (
-      <div className="h-full flex items-center justify-center text-zinc-500 italic text-sm bg-[#1e1e1e]">
+      <div className="h-full flex items-center justify-center text-[var(--text-muted)] italic text-sm bg-[var(--bg-app)]">
         No traffic data available.
       </div>
     );
   }
 
   return (
-    <div className="min-h-full bg-[#1e1e1e] text-zinc-300 p-4 @sm:p-6 flex flex-col overflow-auto no-scrollbar">
-      <div className="mb-6 border-b border-zinc-800 pb-4 shrink-0 flex flex-col @sm:flex-row justify-between items-start @sm:items-end gap-2">
+    <div className="min-h-full bg-[var(--bg-app)] text-[var(--text-secondary)] p-4 @sm:p-6 flex flex-col overflow-auto no-scrollbar">
+      <div className="mb-6 border-b border-[var(--border-primary)] pb-4 shrink-0 flex flex-col @sm:flex-row justify-between items-start @sm:items-end gap-2">
         <div>
-          <h2 className="text-xl font-bold text-white mb-1">Status Code Distribution</h2>
-          <p className="text-zinc-500 text-xs @sm:text-sm">Visual breakdown of response status codes across all captured traffic.</p>
+          <h2 className="text-xl font-bold text-[var(--text-primary)] mb-1">Status Code Distribution</h2>
+          <p className="text-[var(--text-muted)] text-xs @sm:text-sm">Visual breakdown of response status codes across all captured traffic.</p>
         </div>
       </div>
 
@@ -61,7 +61,7 @@ export const StatusDistributionMode = () => {
                 ))}
               </Pie>
               <Tooltip
-                contentStyle={{ backgroundColor: '#18181b', border: '1px solid #3f3f46', borderRadius: '8px', fontSize: '10px' }}
+                contentStyle={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-primary)', borderRadius: '8px', fontSize: '10px' }}
               />
               <Legend layout="horizontal" align="center" verticalAlign="bottom" iconType="circle" wrapperStyle={{ fontSize: '10px', paddingTop: '20px' }} />
             </PieChart>
@@ -69,13 +69,13 @@ export const StatusDistributionMode = () => {
         </div>
 
         <div className="w-full @lg:w-64 flex flex-row @lg:flex-col justify-center gap-4 shrink-0">
-          <div className="flex-1 bg-zinc-900 border border-zinc-800 p-3 @sm:p-4 rounded-xl">
-            <span className="text-[10px] text-zinc-500 font-bold block mb-1">Most Frequent</span>
+          <div className="flex-1 bg-[var(--bg-surface)] border border-[var(--border-primary)] p-3 @sm:p-4 rounded-xl">
+            <span className="text-[10px] text-[var(--text-muted)] font-bold block mb-1">Most Frequent</span>
             <span className="text-xl @sm:text-2xl font-bold text-blue-400">{data[0]?.name}</span>
-            <span className="text-zinc-500 text-[10px] @sm:text-xs block">({data[0]?.value} occurrences)</span>
+            <span className="text-[var(--text-muted)] text-[10px] @sm:text-xs block">({data[0]?.value} occurrences)</span>
           </div>
-          <div className="flex-1 bg-zinc-900 border border-zinc-800 p-3 @sm:p-4 rounded-xl">
-            <span className="text-[10px] text-zinc-500 font-bold block mb-1">Unique Codes</span>
+          <div className="flex-1 bg-[var(--bg-surface)] border border-[var(--border-primary)] p-3 @sm:p-4 rounded-xl">
+            <span className="text-[10px] text-[var(--text-muted)] font-bold block mb-1">Unique Codes</span>
             <span className="text-xl @sm:text-2xl font-bold text-emerald-400">{data.length}</span>
           </div>
         </div>

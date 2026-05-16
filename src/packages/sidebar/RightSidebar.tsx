@@ -48,11 +48,11 @@ const RightSidebarContent = () => {
   const StatRow = ({ label, value, percentage, colorClass = "bg-blue-500" }: { label: string, value: string, percentage?: number, colorClass?: string }) => (
     <div className="flex flex-col space-y-1 mb-3 px-1">
       <div className="flex justify-between items-end">
-        <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">{label}</span>
-        <span className="text-[10px] font-mono text-zinc-300">{value}</span>
+        <span className="text-[9px] uppercase font-bold text-[var(--text-muted)] tracking-wider">{label}</span>
+        <span className="text-[10px] font-mono text-[var(--text-secondary)]">{value}</span>
       </div>
       {percentage !== undefined && (
-        <div className="h-1 w-full bg-black/40 rounded-full overflow-hidden border border-zinc-800/50">
+        <div className="h-1 w-full bg-[var(--bg-surface-inset)]/40 rounded-full overflow-hidden border border-[var(--border-primary)]/50">
           <div 
             className={twMerge("h-full transition-all duration-500 rounded-full", colorClass)} 
             style={{ width: `${percentage}%` }} 
@@ -64,12 +64,12 @@ const RightSidebarContent = () => {
 
   if (!selected) {
     return (
-      <div className='w-full h-full bg-[#1e1e1e] flex flex-col border-l border-black overflow-hidden select-none items-center justify-center p-8 text-center'>
-        <div className="w-16 h-16 rounded-3xl bg-zinc-800/50 flex items-center justify-center mb-4 border border-zinc-700/30">
-          <FiMousePointer className="text-zinc-500 animate-pulse" size={24} />
+      <div className='w-full h-full bg-[var(--bg-app)] flex flex-col border-l border-[var(--border-primary)] overflow-hidden select-none items-center justify-center p-8 text-center'>
+        <div className="w-16 h-16 rounded-3xl bg-[var(--bg-surface-elevated)]/50 flex items-center justify-center mb-4 border border-[var(--border-primary)]/30">
+          <FiMousePointer className="text-[var(--text-muted)] animate-pulse" size={24} />
         </div>
-        <h3 className="text-sm font-bold text-zinc-400 mb-2">No Selection</h3>
-        <p className="text-xs text-zinc-600 leading-relaxed">
+        <h3 className="text-sm font-bold text-[var(--text-secondary)] mb-2">No Selection</h3>
+        <p className="text-xs text-[var(--text-muted)] leading-relaxed">
           Select a network request from the list to inspect its properties and performance metrics.
         </p>
       </div>
@@ -93,11 +93,11 @@ const RightSidebarContent = () => {
   // Real Info extraction moved up
 
   return (
-    <div className='w-full h-full bg-[#1e1e1e] flex flex-col border-l border-black overflow-hidden select-none'>
+    <div className='w-full h-full bg-[var(--bg-app)] flex flex-col border-l border-[var(--border-primary)] overflow-hidden select-none'>
       {/* Sidebar Header/Navigation */}
-      <div className="flex flex-col shrink-0 bg-[#23262a] border-b border-black">
-        <div className="px-3 py-2 border-b border-black/50">
-          <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400 flex items-center gap-2">
+      <div className="flex flex-col shrink-0 bg-[var(--bg-surface)] border-b border-[var(--border-primary)]">
+        <div className="px-3 py-2 border-b border-[var(--border-primary)]/50">
+          <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] flex items-center gap-2">
             <FiActivity className="text-blue-500" size={12} />
             Inspector
           </h2>
@@ -114,8 +114,8 @@ const RightSidebarContent = () => {
                 className={twMerge(
                   "min-w-[50px] flex-1 flex flex-col items-center justify-center py-1.5 rounded-md transition-all gap-1 border border-transparent",
                   isActive 
-                    ? "bg-[#2d3035] text-blue-400 border-zinc-700/50 shadow-inner" 
-                    : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
+                    ? "bg-[var(--bg-surface-elevated)] text-blue-400 border-[var(--border-primary)]/50 shadow-inner" 
+                    : "text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-surface-elevated)]/5"
                 )}
                 title={tab.label}
               >
@@ -131,7 +131,7 @@ const RightSidebarContent = () => {
       <div className='flex-1 overflow-y-auto p-3 custom-scrollbar'>
         {activeTab === "Performance" && (
           <div className="animate-in fade-in duration-300">
-            <h3 className="text-[11px] font-bold text-zinc-400 mb-4 flex items-center gap-2 border-l-2 border-blue-500 pl-2">
+            <h3 className="text-[11px] font-bold text-[var(--text-secondary)] mb-4 flex items-center gap-2 border-l-2 border-blue-500 pl-2">
               Latency Metrics
             </h3>
             
@@ -144,8 +144,8 @@ const RightSidebarContent = () => {
             <StatRow label="Response Size" value={duration} percentage={30} colorClass="bg-indigo-500" />
             <StatRow label="Status Code" value={code} percentage={code === "200" ? 100 : 50} colorClass={code === "200" ? "bg-emerald-500" : "bg-amber-500"} />
 
-            <div className="mt-8 p-3 rounded-xl bg-black/20 border border-zinc-800/50">
-              <h4 className="text-[10px] uppercase font-bold text-zinc-500 mb-3 tracking-widest text-center">Stability Check</h4>
+            <div className="mt-8 p-3 rounded-xl bg-[var(--bg-surface-inset)]/20 border border-[var(--border-primary)]/50">
+              <h4 className="text-[10px] uppercase font-bold text-[var(--text-muted)] mb-3 tracking-widest text-center">Stability Check</h4>
               <div className="flex gap-1 h-3 mb-2">
                 {[...Array(24)].map((_, i) => (
                   <div 
@@ -157,48 +157,48 @@ const RightSidebarContent = () => {
                   />
                 ))}
               </div>
-              <p className="text-[9px] text-zinc-600 text-center italic">Service health snapshot for this endpoint</p>
+              <p className="text-[9px] text-[var(--text-muted)] text-center italic">Service health snapshot for this endpoint</p>
             </div>
           </div>
         )}
 
         {activeTab === "Path" && (
           <div className="animate-in fade-in duration-300 flex flex-col gap-3">
-             <div className="p-2.5 rounded-lg bg-black/20 border border-zinc-800/50">
-               <span className="text-[9px] uppercase font-bold text-zinc-500 mb-0.5 block">Full URL</span>
-               <p className="text-[11px] font-mono break-all text-white">{url}</p>
+             <div className="p-2.5 rounded-lg bg-[var(--bg-surface-inset)]/20 border border-[var(--border-primary)]/50">
+               <span className="text-[9px] uppercase font-bold text-[var(--text-muted)] mb-0.5 block">Full URL</span>
+               <p className="text-[11px] font-mono break-all text-[var(--text-primary)]">{url}</p>
              </div>
-             <div className="p-2.5 rounded-lg bg-black/20 border border-zinc-800/50">
-               <span className="text-[9px] uppercase font-bold text-zinc-500 mb-0.5 block">Method</span>
+             <div className="p-2.5 rounded-lg bg-[var(--bg-surface-inset)]/20 border border-[var(--border-primary)]/50">
+               <span className="text-[9px] uppercase font-bold text-[var(--text-muted)] mb-0.5 block">Method</span>
                <span className="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[9px] font-bold border border-blue-500/30 uppercase">
                  {method}
                </span>
              </div>
-             <div className="p-2.5 rounded-lg bg-black/20 border border-zinc-800/50">
-               <span className="text-[9px] uppercase font-bold text-zinc-500 mb-0.5 block">Content Type</span>
-               <p className="text-[11px] font-mono text-zinc-300">{contentType}</p>
+             <div className="p-2.5 rounded-lg bg-[var(--bg-surface-inset)]/20 border border-[var(--border-primary)]/50">
+               <span className="text-[9px] uppercase font-bold text-[var(--text-muted)] mb-0.5 block">Content Type</span>
+               <p className="text-[11px] font-mono text-[var(--text-secondary)]">{contentType}</p>
              </div>
           </div>
         )}
 
         {activeTab === "Host" && (
           <div className="animate-in fade-in duration-300 flex flex-col gap-1">
-             <div className="p-2.5 rounded-lg bg-black/20 border border-zinc-800/50 mb-1">
-                <span className="text-[9px] uppercase font-bold text-zinc-500 mb-0.5 block">Remote Host</span>
-                <span className="text-[11px] font-mono text-white break-all">{new URL(url.startsWith('http') || url.startsWith('ws') ? url : `http://${url}`).hostname}</span>
+             <div className="p-2.5 rounded-lg bg-[var(--bg-surface-inset)]/20 border border-[var(--border-primary)]/50 mb-1">
+                <span className="text-[9px] uppercase font-bold text-[var(--text-muted)] mb-0.5 block">Remote Host</span>
+                <span className="text-[11px] font-mono text-[var(--text-primary)] break-all">{new URL(url.startsWith('http') || url.startsWith('ws') ? url : `http://${url}`).hostname}</span>
              </div>
              
-             <div className="flex justify-between items-center py-1.5 border-b border-zinc-800/50">
-                <span className="text-[11px] text-zinc-500">Protocol</span>
-                <span className="text-[11px] text-zinc-300 uppercase">{url.split(':')[0]}</span>
+             <div className="flex justify-between items-center py-1.5 border-b border-[var(--border-primary)]/50">
+                <span className="text-[11px] text-[var(--text-muted)]">Protocol</span>
+                <span className="text-[11px] text-[var(--text-secondary)] uppercase">{url.split(':')[0]}</span>
              </div>
-             <div className="flex justify-between items-center py-1.5 border-b border-zinc-800/50">
-                <span className="text-[11px] text-zinc-500">HTTP Version</span>
-                <span className="text-[11px] text-zinc-300">{fullTraffic?.request?.version || 'Unknown'}</span>
+             <div className="flex justify-between items-center py-1.5 border-b border-[var(--border-primary)]/50">
+                <span className="text-[11px] text-[var(--text-muted)]">HTTP Version</span>
+                <span className="text-[11px] text-[var(--text-secondary)]">{fullTraffic?.request?.version || 'Unknown'}</span>
              </div>
-             <div className="flex justify-between items-center py-1.5 border-b border-zinc-800/50">
-                <span className="text-[11px] text-zinc-500">Server Software</span>
-                <span className="text-[11px] text-zinc-300">{server}</span>
+             <div className="flex justify-between items-center py-1.5 border-b border-[var(--border-primary)]/50">
+                <span className="text-[11px] text-[var(--text-muted)]">Server Software</span>
+                <span className="text-[11px] text-[var(--text-secondary)]">{server}</span>
              </div>
           </div>
         )}
@@ -213,7 +213,7 @@ const RightSidebarContent = () => {
                    <FiLock className={isHttps ? "text-emerald-500" : "text-rose-500"} size={14} />
                 </div>
                 <div>
-                   <h3 className="text-[11px] font-bold text-white">{isHttps ? 'Encrypted' : 'Insecure'}</h3>
+                   <h3 className="text-[11px] font-bold text-[var(--text-primary)]">{isHttps ? 'Encrypted' : 'Insecure'}</h3>
                    <p className={twMerge(
                     "text-[9px] font-bold uppercase",
                     isHttps ? "text-emerald-500/80" : "text-rose-500/80"
@@ -231,15 +231,15 @@ const RightSidebarContent = () => {
 
         {activeTab === "Network" && (
           <div className="animate-in fade-in duration-300 flex flex-col gap-2">
-             <div className="p-2.5 rounded-lg bg-black/20 border border-zinc-800/50">
-               <span className="text-[9px] uppercase font-bold text-zinc-500 mb-0.5 block">Connection Type</span>
-               <p className="text-[11px] text-zinc-300 uppercase font-bold tracking-tighter">
+             <div className="p-2.5 rounded-lg bg-[var(--bg-surface-inset)]/20 border border-[var(--border-primary)]/50">
+               <span className="text-[9px] uppercase font-bold text-[var(--text-muted)] mb-0.5 block">Connection Type</span>
+               <p className="text-[11px] text-[var(--text-secondary)] uppercase font-bold tracking-tighter">
                  {url.startsWith('ws') ? 'Bidirectional WebSocket' : 'Stateless HTTP'}
                </p>
              </div>
              
              <div className="space-y-1 mt-1">
-                <div className="flex justify-between text-[9px] uppercase font-bold text-zinc-600 px-1">
+                <div className="flex justify-between text-[9px] uppercase font-bold text-[var(--text-muted)] px-1">
                    <span>Metric</span>
                    <span>Snapshot</span>
                 </div>
@@ -248,9 +248,9 @@ const RightSidebarContent = () => {
                   { l: "Keep-Alive", v: "Enabled" },
                   { l: "Socket ID", v: fullTraffic?.id.slice(-8) || "---" }
                 ].map((m, i) => (
-                  <div key={i} className="flex justify-between items-center p-1.5 rounded bg-zinc-900/40 border border-zinc-800/30">
-                    <span className="text-[9px] text-zinc-500">{m.l}</span>
-                    <span className="text-[9px] font-mono text-zinc-300 uppercase">{m.v}</span>
+                  <div key={i} className="flex justify-between items-center p-1.5 rounded bg-[var(--bg-surface)]/40 border border-[var(--border-primary)]/30">
+                    <span className="text-[9px] text-[var(--text-muted)]">{m.l}</span>
+                    <span className="text-[9px] font-mono text-[var(--text-secondary)] uppercase">{m.v}</span>
                   </div>
                 ))}
              </div>
@@ -259,7 +259,7 @@ const RightSidebarContent = () => {
 
         {activeTab === "Raw" && (
           <div className="animate-in fade-in duration-300 h-full">
-            <div className="h-full bg-black/40 rounded border border-zinc-800 p-3 font-mono text-[10px] text-zinc-400 overflow-auto whitespace-pre select-text">
+            <div className="h-full bg-[var(--bg-surface-inset)]/40 rounded border border-[var(--border-primary)] p-3 font-mono text-[10px] text-[var(--text-secondary)] overflow-auto whitespace-pre select-text">
 {`ITEM ID: ${selected.id}
 URL: ${url}
 METHOD: ${method}

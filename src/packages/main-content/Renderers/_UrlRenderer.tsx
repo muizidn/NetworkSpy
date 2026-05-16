@@ -16,10 +16,10 @@ export class UrlRenderer implements Renderer<TrafficItemMap> {
       
       return (
         <div className='select-none text-[12px] text-nowrap px-2 truncate h-full flex items-center font-mono'>
-          <span className={isInsecure ? "text-red-500 font-bold" : "text-zinc-500"}>
+          <span className={isInsecure ? "text-red-500 font-bold" : "text-[var(--text-muted)]"}>
             {protocol}
           </span>
-          <span className="text-zinc-300">
+          <span className="text-[var(--text-secondary)]">
             {rest}
           </span>
         </div>
@@ -28,7 +28,7 @@ export class UrlRenderer implements Renderer<TrafficItemMap> {
 
     // Default or CONNECT style (no protocol prefix)
     return (
-      <div className='select-none text-[12px] text-nowrap px-2 truncate h-full flex items-center font-mono text-zinc-300'>
+      <div className='select-none text-[12px] text-nowrap px-2 truncate h-full flex items-center font-mono text-[var(--text-secondary)]'>
         {url}
       </div>
     );

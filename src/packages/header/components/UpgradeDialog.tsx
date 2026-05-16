@@ -9,16 +9,16 @@ interface UpgradeDialogProps {
 }
 
 const FeatureItem = ({ label, free, pro }: { label: string, free: string | boolean, pro: string | boolean }) => (
-    <div className="grid grid-cols-[1fr,80px,80px] py-3 border-b border-zinc-800/50 items-center">
-        <span className="text-[11px] font-bold text-zinc-400">{label}</span>
+    <div className="grid grid-cols-[1fr,80px,80px] py-3 border-b border-[var(--border-primary)]/50 items-center">
+        <span className="text-[11px] font-bold text-[var(--text-secondary)]">{label}</span>
         <div className="flex justify-center">
             {typeof free === 'boolean' ? (
-                free ? <FiCheck className="text-emerald-500" size={14} /> : <FiX className="text-zinc-700" size={14} />
-            ) : <span className="text-[10px] font-black text-zinc-600">{free}</span>}
+                free ? <FiCheck className="text-emerald-500" size={14} /> : <FiX className="text-[var(--text-muted)]" size={14} />
+            ) : <span className="text-[10px] font-black text-[var(--text-muted)]">{free}</span>}
         </div>
         <div className="flex justify-center">
             {typeof pro === 'boolean' ? (
-                pro ? <FiCheck className="text-indigo-500" size={14} /> : <FiX className="text-zinc-700" size={14} />
+                pro ? <FiCheck className="text-indigo-500" size={14} /> : <FiX className="text-[var(--text-muted)]" size={14} />
             ) : <span className="text-[10px] font-black text-indigo-400">{pro}</span>}
         </div>
     </div>
@@ -30,7 +30,7 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = ({ isOpen, onClose })
   return createPortal(
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-xl animate-in fade-in duration-300">
       <div 
-        className="w-[540px] max-h-[90vh] bg-[#080808] border border-zinc-800/80 rounded-[32px] shadow-2xl p-0 flex flex-col overflow-y-auto custom-scrollbar animate-in zoom-in-95 duration-300 relative"
+        className="w-[540px] max-h-[90vh] bg-[var(--bg-app)] border border-[var(--border-primary)]/80 rounded-[32px] shadow-2xl p-0 flex flex-col overflow-y-auto custom-scrollbar animate-in zoom-in-95 duration-300 relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Glow Effect */}
@@ -44,24 +44,24 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = ({ isOpen, onClose })
                 </div>
                 <button 
                     onClick={onClose}
-                    className="w-10 h-10 rounded-2xl flex items-center justify-center text-zinc-500 hover:text-white hover:bg-zinc-800/50 transition-all border border-transparent hover:border-zinc-800"
+                    className="w-10 h-10 rounded-2xl flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)]/50 transition-all border border-transparent hover:border-[var(--border-primary)]"
                 >
                     <FiX size={18} />
                 </button>
             </div>
-            <h2 className="text-3xl font-black text-white tracking-tight mt-2">
+            <h2 className="text-3xl font-black text-[var(--text-primary)] tracking-tight mt-2">
                 Unleash the Power of <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-500">NetworkSpy</span>
             </h2>
-            <p className="text-zinc-500 text-xs font-medium leading-relaxed max-w-[80%]">
+            <p className="text-[var(--text-muted)] text-xs font-medium leading-relaxed max-w-[80%]">
                 Upgrade to a paid plan to remove limits and unlock advanced debugging capabilities.
             </p>
         </div>
 
         {/* Comparison Table */}
         <div className="px-10 pb-8 flex flex-col">
-            <div className="grid grid-cols-[1fr,80px,80px] pb-3 border-b border-zinc-800 items-end">
-                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Capabilities</span>
-                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest text-center">Free</span>
+            <div className="grid grid-cols-[1fr,80px,80px] pb-3 border-b border-[var(--border-primary)] items-end">
+                <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Capabilities</span>
+                <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest text-center">Free</span>
                 <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest text-center">Paid</span>
             </div>
 
@@ -75,17 +75,17 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = ({ isOpen, onClose })
         </div>
 
         {/* Footer Actions */}
-        <div className="p-10 bg-[#0c0c0c] border-t border-zinc-800/50 flex flex-col gap-6">
+        <div className="p-10 bg-[var(--bg-surface)] border-t border-[var(--border-primary)]/50 flex flex-col gap-6">
             <div className="grid grid-cols-2 gap-4">
-                <div className="p-5 rounded-3xl bg-zinc-900/50 border border-zinc-800 flex flex-col gap-2 group hover:border-zinc-700 transition-all">
+                <div className="p-5 rounded-3xl bg-[var(--bg-surface)]/50 border border-[var(--border-primary)] flex flex-col gap-2 group hover:border-[var(--border-secondary)] transition-all">
                     <FiShield className="text-blue-500 mb-1" size={18} />
-                    <span className="text-xs font-black text-white">Personal</span>
-                    <p className="text-[10px] text-zinc-500 font-medium">For independent developers. All core premium features.</p>
+                    <span className="text-xs font-black text-[var(--text-primary)]">Personal</span>
+                    <p className="text-[10px] text-[var(--text-muted)] font-medium">For independent developers. All core premium features.</p>
                 </div>
                 <div className="p-5 rounded-3xl bg-indigo-600/5 border border-indigo-500/20 flex flex-col gap-2 group hover:border-indigo-500/40 transition-all shadow-[0_0_20px_-5px_rgba(79,70,229,0.1)]">
                     <FiZap className="text-indigo-500 mb-1" size={18} />
-                    <span className="text-xs font-black text-white">Pro / Team</span>
-                    <p className="text-[10px] text-zinc-500 font-medium">For teams & enterprises. Custom viewers & bulk licenses.</p>
+                    <span className="text-xs font-black text-[var(--text-primary)]">Pro / Team</span>
+                    <p className="text-[10px] text-[var(--text-muted)] font-medium">For teams & enterprises. Custom viewers & bulk licenses.</p>
                 </div>
             </div>
 
@@ -107,7 +107,7 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = ({ isOpen, onClose })
                 <FiArrowRight className="group-hover:translate-x-1 transition-transform" size={16} />
             </button>
             
-            <p className="text-[10px] text-zinc-600 text-center font-bold tracking-tight">
+            <p className="text-[10px] text-[var(--text-muted)] text-center font-bold tracking-tight">
                 One-time purchase • Lifetime updates • 30-day money-back guarantee
             </p>
         </div>

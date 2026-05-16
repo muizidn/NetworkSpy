@@ -35,7 +35,7 @@ const FindingCard = ({ finding }: { finding: SensitiveDataFinding & { isCustom?:
         "group overflow-hidden rounded-3xl border transition-all duration-300 shadow-xl",
         finding.isError
             ? "border-red-900/50 bg-red-950/10 hover:border-red-500/50"
-            : "border-zinc-800 bg-zinc-900/40 hover:border-orange-900/50"
+            : "border-[var(--border-primary)] bg-[var(--bg-surface)]/40 hover:border-orange-900/50"
     )}>
         <div className="p-4 @sm:p-6 flex flex-col @md:flex-row gap-4 @sm:p-6">
             <div className="flex-grow space-y-4">
@@ -48,14 +48,14 @@ const FindingCard = ({ finding }: { finding: SensitiveDataFinding & { isCustom?:
                             )}>
                                 {finding.type}
                             </span>
-                            <span className="px-2 py-0.5 bg-black/50 text-[9px] text-zinc-500 rounded-full border border-zinc-800 font-bold">{finding.location}</span>
+                            <span className="px-2 py-0.5 bg-[var(--bg-surface-inset)]/50 text-[var(--text-muted)] rounded-full border border-[var(--border-primary)] font-bold">{finding.location}</span>
                             {finding.isCustom && <span className="px-2 py-0.5 bg-blue-950/30 text-[9px] text-blue-500 rounded-full border border-blue-900/30 font-black tracking-tighter">Custom</span>}
                         </div>
                         <div className={twMerge(
                             "text-sm font-mono mt-2 break-all p-3 rounded-xl border",
                             finding.isError
                                 ? "text-red-400 bg-red-950/20 border-red-500/20"
-                                : "text-zinc-300 bg-black/30 border-white/5"
+                                : "text-[var(--text-secondary)] bg-[var(--bg-surface-inset)]/30 border-[var(--border-primary)]/5"
                         )}>
                             {finding.value}
                         </div>
@@ -82,7 +82,7 @@ const FindingCard = ({ finding }: { finding: SensitiveDataFinding & { isCustom?:
                             {finding.isError ? <FiAlertTriangle size={12} /> : <FiShield size={12} />}
                             {finding.isError ? "The Cause" : "The Risk"}
                         </div>
-                        <p className="text-[11px] text-zinc-400 leading-relaxed italic">{finding.risk}</p>
+                        <p className="text-[11px] text-[var(--text-tertiary)] leading-relaxed italic">{finding.risk}</p>
                     </div>
                     <div className={twMerge(
                         "border rounded-2xl p-4",
@@ -95,7 +95,7 @@ const FindingCard = ({ finding }: { finding: SensitiveDataFinding & { isCustom?:
                             {finding.isError ? <FiEdit2 size={12} /> : <FiCheckCircle size={12} />}
                             {finding.isError ? "The Fix" : "Mitigation"}
                         </div>
-                        <p className="text-[11px] text-zinc-400 leading-relaxed italic">{finding.solution}</p>
+                        <p className="text-[11px] text-[var(--text-tertiary)] leading-relaxed italic">{finding.solution}</p>
                     </div>
                 </div>
             </div>
@@ -154,27 +154,27 @@ export const SensitiveDataMode = () => {
     if (!trafficId) return <Placeholder text="Select a request to scan for leaks" />;
 
     return (
-        <div className="bg-[#0a0a0a] h-full font-sans select-none flex flex-col overflow-hidden">
-            <div className="shrink-0 bg-[#0a0a0a]/90 backdrop-blur-xl border-b border-zinc-900 px-8 py-4 flex items-center justify-between z-10">
+        <div className="bg-[var(--bg-app)] h-full font-sans select-none flex flex-col overflow-hidden">
+            <div className="shrink-0 bg-[var(--bg-app)]/90 backdrop-blur-xl border-b border-[var(--border-primary)] px-8 py-4 flex items-center justify-between z-10">
                 <div className="flex items-center gap-4">
                     <div className={twMerge(
                         "w-10 h-10 rounded-xl flex items-center justify-center border transition-colors",
-                        tab === 'results' ? "bg-orange-600/10 text-orange-500 border-orange-500/20" : "bg-zinc-900 text-zinc-500 border-zinc-800"
+                        tab === 'results' ? "bg-orange-600/10 text-orange-500 border-orange-500/20" : "bg-[var(--bg-surface-elevated)] text-[var(--text-muted)] border-[var(--border-primary)]"
                     )}>
                         <FiShield size={20} />
                     </div>
                     <div>
-                        <h2 className="text-sm font-black text-white italic tracking-tighter">Leak Detective</h2>
+                        <h2 className="text-sm font-black text-[var(--text-primary)] italic tracking-tighter">Leak Detective</h2>
                         <div className="flex gap-4 mt-1">
                             <button
                                 onClick={() => setTab('results')}
-                                className={twMerge("text-[10px] font-black tracking-widest", tab === 'results' ? "text-orange-500" : "text-zinc-500 hover:text-zinc-300")}
+                                className={twMerge("text-[10px] font-black tracking-widest", tab === 'results' ? "text-orange-500" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]")}
                             >
                                 Results
                             </button>
                             <button
                                 onClick={() => setTab('checkers')}
-                                className={twMerge("text-[10px] font-black tracking-widest", tab === 'checkers' ? "text-orange-500" : "text-zinc-500 hover:text-zinc-300")}
+                                className={twMerge("text-[10px] font-black tracking-widest", tab === 'checkers' ? "text-orange-500" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]")}
                             >
                                 Custom Scripts
                             </button>
@@ -188,12 +188,12 @@ export const SensitiveDataMode = () => {
                     {tab === 'results' && (
                         (loading || isRunning) && internalFindings.length === 0 ? <Placeholder text="Analyzing payload..." icon={<FiShield className="animate-pulse" />} /> :
                             (internalFindings.length === 0 && customFindings.length === 0) ? (
-                                <div className="bg-emerald-950/20 border border-emerald-900/30 rounded-3xl p-12 text-center shadow-xl">
+                                <div className="bg-[var(--bg-surface-elevated)]/20 border border-[var(--border-primary)]/30 rounded-3xl p-12 text-center shadow-xl">
                                     <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-500 mx-auto mb-6">
                                         <FiCheckCircle size={32} />
                                     </div>
                                     <h3 className="text-lg font-bold text-emerald-400 mb-2 font-mono tracking-widest">Safe Payload Detected</h3>
-                                    <p className="text-sm text-zinc-500 max-w-sm mx-auto italic leading-relaxed">
+                                    <p className="text-sm text-[var(--text-muted)] max-w-sm mx-auto italic leading-relaxed">
                                         No common PII (Personally Identifiable Information), raw credentials, or exposed secrets were found in the visible payload.
                                     </p>
                                 </div>
@@ -234,7 +234,7 @@ export const SensitiveDataMode = () => {
 };
 
 const Placeholder = ({ text, icon }: { text: string, icon?: React.ReactNode }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 font-sans">
+    <div className="h-full flex items-center justify-center text-[var(--text-muted)] font-sans">
         <div className="text-center">
             <div className="text-4xl font-black mb-4 flex justify-center opacity-20">{icon || <FiShield />}</div>
             <div className="text-xs tracking-widest font-black italic">{text}</div>

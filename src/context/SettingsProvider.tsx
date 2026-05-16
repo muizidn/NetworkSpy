@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 interface SettingsContextInterface {
   theme: string;
@@ -163,6 +164,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       mcp_http_enabled: boolean;
       mcp_http_port: number;
       license_key: string;
+      theme: string;
     }>("get_proxy_settings")
       .then((settings) => {
         if (settings) {
@@ -170,6 +172,9 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
           setMcpStdioEnabled(settings.mcp_stdio_enabled);
           setMcpHttpEnabled(settings.mcp_http_enabled);
           setMcpHttpPort(settings.mcp_http_port);
+          if (settings.theme) {
+            setTheme(settings.theme);
+          }
 
           // Try silent verify (uses keychain on backend)
           verifyLicense(null).catch(() => { });
@@ -182,7 +187,13 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
+    try {
+      if (theme === "dark" || theme === "light") {
+        getCurrentWindow().setTheme(theme);
+      }
+    } catch (e) {
+      console.error("Failed to set window theme:", e);
+    }
   }, [theme]);
 
   useEffect(() => {
@@ -218,10 +229,11 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         stream_certificate_logs: streamCertificateLogs,
         mcp_stdio_enabled: mcpStdioEnabled,
         mcp_http_enabled: mcpHttpEnabled,
-        mcp_http_port: mcpHttpPort
+        mcp_http_port: mcpHttpPort,
+        theme: theme
       }
     }).catch(console.error);
-  }, [streamCertificateLogs, mcpStdioEnabled, mcpHttpEnabled, mcpHttpPort, isLoaded]);
+  }, [streamCertificateLogs, mcpStdioEnabled, mcpHttpEnabled, mcpHttpPort, theme, isLoaded]);
 
   return (
     <SettingsContext.Provider

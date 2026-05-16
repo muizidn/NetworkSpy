@@ -60,32 +60,32 @@ export const JSONTransformerMode = () => {
     if (loading) return <Placeholder text="Initializing Transformer..." />;
 
     return (
-        <div className="bg-[#0a0a0a] flex flex-col min-h-full h-full font-sans">
+        <div className="bg-[var(--bg-app)] flex flex-col min-h-full h-full font-sans">
             {/* Transformer Toolbar */}
-            <div className="px-4 @sm:px-6 py-4 bg-[#111] border-b border-white/5 space-y-4">
+            <div className="px-4 @sm:px-6 py-4 bg-[var(--bg-sidebar)] border-b border-[var(--border-primary)] space-y-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]"></div>
-                        <span className="text-[10px] font-black tracking-[0.2em] text-zinc-400">JSON Transformer</span>
+                        <span className="text-[10px] font-black tracking-[0.2em] text-[var(--text-tertiary)]">JSON Transformer</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className="flex bg-black/40 rounded-lg p-1 border border-white/5 mr-2">
+                        <div className="flex bg-[var(--bg-surface-inset)]/40 rounded-lg p-1 border border-[var(--border-primary)]/5 mr-2">
                             <button
                                 onClick={() => setEngine("jmespath")}
-                                className={`px-2 py-1 text-[9px] font-bold rounded transition-all ${engine === 'jmespath' ? 'bg-purple-500 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
+                                className={`px-2 py-1 text-[9px] font-bold rounded transition-all ${engine === 'jmespath' ? 'bg-purple-500 text-[var(--text-primary)] shadow-lg' : 'text-[var(--text-muted)] hover:text-[var(--text-tertiary)]'}`}
                             >
                                 JMESPath
                             </button>
                             <button
                                 onClick={() => setEngine("dot")}
-                                className={`px-2 py-1 text-[9px] font-bold rounded transition-all ${engine === 'dot' ? 'bg-purple-500 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
+                                className={`px-2 py-1 text-[9px] font-bold rounded transition-all ${engine === 'dot' ? 'bg-purple-500 text-[var(--text-primary)] shadow-lg' : 'text-[var(--text-muted)] hover:text-[var(--text-tertiary)]'}`}
                             >
                                 Dot
                             </button>
                         </div>
                         <button
                             onClick={handleCopy}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-800/50 border border-white/5 text-[10px] font-bold text-zinc-400 hover:text-white transition-all duration-300"
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-surface-elevated)]/50 border border-[var(--border-primary)]/5 text-[10px] font-bold text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-all duration-300"
                         >
                             {copied ? <FiCheck className="text-emerald-500" size={12} /> : <FiCopy size={12} />}
                             {copied ? 'COPIED' : 'COPY RESULT'}
@@ -102,10 +102,10 @@ export const JSONTransformerMode = () => {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder={engine === 'jmespath' ? "JMESPath Expression (e.g. locations[?state == 'WA'].name)" : "Dot Path (e.g. .data.users.0.name)"}
-                        className="w-full bg-black/40 border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-xs font-mono text-zinc-300 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20 transition-all"
+                        className="w-full bg-[var(--bg-surface-inset)]/40 border border-[var(--border-primary)]/10 rounded-xl py-2.5 pl-11 pr-4 text-xs font-mono text-[var(--text-secondary)] focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20 transition-all"
                     />
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 opacity-30 group-focus-within:opacity-100 transition-opacity">
-                        <span className="text-[9px] font-bold text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded border border-white/5">{engine}</span>
+                        <span className="text-[9px] font-bold text-[var(--text-muted)] bg-[var(--bg-surface-elevated)] px-1.5 py-0.5 rounded border border-[var(--border-primary)]/5">{engine}</span>
                     </div>
                 </div>
             </div>
@@ -118,10 +118,10 @@ export const JSONTransformerMode = () => {
 };
 
 const Placeholder = ({ text }: { text: string }) => (
-    <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0a0a0a] font-sans">
+    <div className="h-full flex items-center justify-center text-zinc-500 bg-[var(--bg-app)] font-sans">
         <div className="text-center">
             <div className="text-5xl font-black opacity-5 mb-3 italic tracking-tighter">TRANSFORM</div>
-            <div className="text-[10px] font-bold tracking-widest text-zinc-600 mb-2">Query Engine Standby</div>
+            <div className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] mb-2">Query Engine Standby</div>
             <div className="text-xs italic">{text}</div>
         </div>
     </div>

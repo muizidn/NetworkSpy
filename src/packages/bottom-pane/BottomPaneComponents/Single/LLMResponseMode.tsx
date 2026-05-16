@@ -106,7 +106,7 @@ export const LLMResponseMode = () => {
             }
             if (part.type === 'image_url') {
               return (
-                <div key={idx} className="relative group overflow-hidden rounded-xl border border-white/10 bg-black/40 p-2">
+                <div key={idx} className="relative group overflow-hidden rounded-xl border border-[var(--border-primary)]/10 bg-[var(--bg-surface-inset)]/40 p-2">
                   <img
                     src={part.image_url.url}
                     alt="Response context"
@@ -115,7 +115,7 @@ export const LLMResponseMode = () => {
                 </div>
               );
             }
-            return <div key={idx} className="text-zinc-500 italic text-xs">[{part.type} content block]</div>;
+            return <div key={idx} className="text-[var(--text-muted)] italic text-xs">[{part.type} content block]</div>;
           })}
         </div>
       );
@@ -130,21 +130,21 @@ export const LLMResponseMode = () => {
   const { content, toolCalls, model, usage, finishReason, choiceCount } = responseInfo;
 
   return (
-    <div className="flex flex-col h-full bg-[#15181a] text-zinc-300 overflow-hidden select-none">
+    <div className="flex flex-col h-full bg-[var(--bg-app)] text-[var(--text-secondary)] overflow-hidden select-none">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 @sm:px-6 py-4 border-b border-zinc-800 bg-[#1e1e1e] shrink-0">
+      <div className="flex items-center justify-between px-4 @sm:px-6 py-4 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] shrink-0">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-600/10 rounded-xl border border-blue-500/20 shadow-lg shadow-blue-500/5">
             <FiMessageSquare className="text-blue-500" size={18} />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white tracking-wider">LLM Response Viewer</h2>
+            <h2 className="text-sm font-bold text-[var(--text-primary)] tracking-wider">LLM Response Viewer</h2>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-zinc-500 flex items-center gap-1 font-mono">
+              <span className="text-[10px] text-[var(--text-muted)] flex items-center gap-1 font-mono">
                 <FiCpu size={10} />
                 {model}
               </span>
-              <span className="text-[10px] text-zinc-700">•</span>
+              <span className="text-[10px] text-[var(--text-muted)]">•</span>
               <span className="text-[10px] text-emerald-500 font-bold flex items-center gap-1">
                 <FiCheckCircle size={10} />
                 {finishReason.toUpperCase()}
@@ -155,14 +155,14 @@ export const LLMResponseMode = () => {
 
         <div className="flex items-center gap-4">
           {choiceCount > 1 && (
-            <div className="flex bg-black/40 rounded-lg p-1 border border-zinc-800">
+            <div className="flex bg-[var(--bg-surface-inset)]/40 rounded-lg p-1 border border-[var(--border-primary)]">
               {Array.from({ length: choiceCount }).map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setChoiceIndex(idx)}
                   className={twMerge(
                     "px-4 py-2 rounded text-[11px] font-bold transition-all",
-                    choiceIndex === idx ? "bg-blue-600 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+                    choiceIndex === idx ? "bg-blue-600 text-[var(--text-primary)] shadow-lg" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
                   )}
                 >
                   Choice {idx + 1}
@@ -170,8 +170,8 @@ export const LLMResponseMode = () => {
               ))}
             </div>
           )}
-          <div className="flex flex-col items-end border-l border-zinc-800 pl-6">
-            <span className="text-[9px] font-bold text-zinc-500 tracking-tighter">Total Usage</span>
+          <div className="flex flex-col items-end border-l border-[var(--border-primary)] pl-6">
+            <span className="text-[9px] font-bold text-[var(--text-muted)] tracking-tighter">Total Usage</span>
             <span className="text-sm font-mono text-blue-400 font-bold">{usage.total_tokens} tokens</span>
           </div>
         </div>

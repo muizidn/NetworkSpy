@@ -20,11 +20,11 @@ export const SecurityScanMode = () => {
     };
 
     if (selectedItems.length === 0) {
-        return <div className="h-full flex items-center justify-center text-zinc-500 bg-zinc-950">Select requests to perform security scan</div>;
+        return <div className="h-full flex items-center justify-center text-[var(--text-muted)] bg-[var(--bg-surface-inset)]">Select requests to perform security scan</div>;
     }
 
     return (
-        <div className="h-full bg-zinc-950 p-4 @sm:p-6 overflow-auto">
+        <div className="h-full bg-[var(--bg-surface-inset)] p-4 @sm:p-6 overflow-auto">
             <div className="max-w-2xl mx-auto">
                 <div className="flex justify-between items-center mb-10">
                     <div>
@@ -38,7 +38,7 @@ export const SecurityScanMode = () => {
                         <button
                             onClick={handleScan}
                             disabled={scanning}
-                            className="bg-red-600 hover:bg-red-500 text-white text-xs font-bold px-6 py-2 rounded-full transition-all active:scale-95 disabled:opacity-50"
+                            className="bg-red-600 hover:bg-red-500 text-[var(--text-primary)] text-xs font-bold px-6 py-2 rounded-full transition-all active:scale-95 disabled:opacity-50"
                         >
                             {scanning ? 'Analyzing...' : 'Start Scan'}
                         </button>
@@ -55,21 +55,21 @@ export const SecurityScanMode = () => {
                 {results && (
                     <div className="space-y-4">
                         {results.map(res => (
-                            <div key={res.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 shadow-lg border-l-4" style={{ borderLeftColor: res.level === 'HIGH' ? '#ef4444' : res.level === 'MEDIUM' ? '#f59e0b' : '#3b82f6' }}>
+                            <div key={res.id} className="bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-xl p-5 shadow-lg border-l-4" style={{ borderLeftColor: res.level === 'HIGH' ? '#ef4444' : res.level === 'MEDIUM' ? '#f59e0b' : '#3b82f6' }}>
                                 <div className="flex justify-between items-start mb-2">
-                                    <span className="text-sm font-bold text-white">{res.title}</span>
-                                    <span className={`text-[10px] font-black px-2 py-0.5 rounded ${res.level === 'HIGH' ? 'bg-red-500' : res.level === 'MEDIUM' ? 'bg-orange-500' : 'bg-blue-500'} text-white`}>{res.level}</span>
+                                    <span className="text-sm font-bold text-[var(--text-primary)]">{res.title}</span>
+                                    <span className={`text-[10px] font-black px-2 py-0.5 rounded ${res.level === 'HIGH' ? 'bg-red-500' : res.level === 'MEDIUM' ? 'bg-orange-500' : 'bg-blue-500'} text-[var(--text-primary)]`}>{res.level}</span>
                                 </div>
-                                <p className="text-xs text-zinc-400 leading-relaxed mb-4">{res.desc}</p>
-                                <div className="bg-black/30 p-3 rounded-lg flex items-center gap-3">
+                                <p className="text-xs text-[var(--text-tertiary)] leading-relaxed mb-4">{res.desc}</p>
+                                <div className="bg-[var(--bg-surface-inset)]/30 p-3 rounded-lg flex items-center gap-3">
                                     <span className="text-[10px] font-bold text-green-500 tracking-widest bg-green-500/10 px-2 py-1 rounded">Recommendation</span>
-                                    <span className="text-xs text-zinc-500">{res.fix}</span>
+                                    <span className="text-xs text-[var(--text-muted)]">{res.fix}</span>
                                 </div>
                             </div>
                         ))}
                         <button
                             onClick={() => setResults(null)}
-                            className="w-full py-3 text-[10px] text-zinc-600 font-bold hover:text-zinc-400 transition-colors"
+                            className="w-full py-3 text-[10px] text-[var(--text-muted)] font-bold hover:text-[var(--text-primary)] transition-colors"
                         >
                             Clear Results
                         </button>

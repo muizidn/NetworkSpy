@@ -47,31 +47,31 @@ export const HealthTimelineMode = () => {
 
   if (filteredTraffic.length === 0) {
     return (
-      <div className="h-full flex items-center justify-center text-zinc-500 italic text-sm bg-[#1e1e1e]">
+      <div className="h-full flex items-center justify-center text-[var(--text-muted)] italic text-sm bg-[var(--bg-app)]">
         No traffic data available.
       </div>
     );
   }
 
   return (
-    <div className="min-h-full bg-[#1e1e1e] text-zinc-300 p-4 @sm:p-6 flex flex-col overflow-auto no-scrollbar">
-      <div className="mb-6 flex flex-col @sm:flex-row justify-between items-start @sm:items-end border-b border-zinc-800 pb-4 shrink-0 gap-4">
+    <div className="min-h-full bg-[var(--bg-app)] text-[var(--text-secondary)] p-4 @sm:p-6 flex flex-col overflow-auto no-scrollbar">
+      <div className="mb-6 flex flex-col @sm:flex-row justify-between items-start @sm:items-end border-b border-[var(--border-primary)] pb-4 shrink-0 gap-4">
         <div>
-          <h2 className="text-xl font-bold text-white mb-1">Health & Latency History</h2>
-          <p className="text-zinc-500 text-xs @sm:text-sm">Visualizing system stability and performance trends over time.</p>
+          <h2 className="text-xl font-bold text-[var(--text-primary)] mb-1">Health & Latency History</h2>
+          <p className="text-[var(--text-muted)] text-xs @sm:text-sm">Visualizing system stability and performance trends over time.</p>
         </div>
         <div className="text-left @sm:text-right">
-          <span className="block text-[10px] text-zinc-500 font-semibold">Sample Size</span>
+          <span className="block text-[10px] text-[var(--text-muted)] font-semibold">Sample Size</span>
           <span className="text-base @sm:text-lg font-mono text-blue-400">{filteredTraffic.length} requests</span>
         </div>
       </div>
 
-      <div className="flex-grow w-full min-h-[300px] @sm:min-h-[400px] bg-zinc-900/50 border border-zinc-800 rounded-xl p-2 @sm:p-4 shrink-0">
+      <div className="flex-grow w-full min-h-[300px] @sm:min-h-[400px] bg-[var(--bg-surface)]/50 border border-[var(--border-primary)] rounded-xl p-2 @sm:p-4 shrink-0">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" vertical={false} />
-            <XAxis dataKey="name" stroke="#52525b" fontSize={9} tickLine={false} axisLine={false} dy={5} />
-            <YAxis yAxisId="count" stroke="#52525b" fontSize={9} tickLine={false} axisLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-primary)" vertical={false} />
+            <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={9} tickLine={false} axisLine={false} dy={5} />
+            <YAxis yAxisId="count" stroke="var(--text-muted)" fontSize={9} tickLine={false} axisLine={false} />
             <YAxis
               yAxisId="latency"
               orientation="right"
@@ -82,7 +82,7 @@ export const HealthTimelineMode = () => {
               unit="ms"
             />
             <Tooltip
-              contentStyle={{ backgroundColor: '#18181b', border: '1px solid #3f3f46', borderRadius: '8px', fontSize: '10px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.5)' }}
+              contentStyle={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-primary)', borderRadius: '8px', fontSize: '10px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.5)' }}
             />
             <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '10px' }} />
             <Line yAxisId="count" type="monotone" dataKey="success" name="Success" stroke="#10b981" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />

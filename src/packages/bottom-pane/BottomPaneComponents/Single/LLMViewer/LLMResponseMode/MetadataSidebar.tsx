@@ -22,11 +22,11 @@ export const MetadataSidebar: React.FC<MetadataSidebarProps> = ({
   choiceIndex
 }) => {
   return (
-    <div className="w-[30%] border-r border-zinc-900 bg-black/5 flex flex-col overflow-y-auto custom-scrollbar">
+    <div className="w-[30%] border-r border-[var(--border-primary)] bg-[var(--bg-surface-inset)]/5 flex flex-col overflow-y-auto custom-scrollbar">
       <div className="p-4 @sm:p-6 space-y-6">
         {/* Usage Stats Card */}
         <div className="space-y-4">
-          <h3 className="text-[10px] font-bold text-zinc-500 tracking-widest flex items-center gap-2 mb-2">
+          <h3 className="text-[10px] font-bold text-[var(--text-muted)] tracking-widest flex items-center gap-2 mb-2">
             <FiBarChart2 size={12} /> Usage Analytics
           </h3>
 
@@ -47,7 +47,7 @@ export const MetadataSidebar: React.FC<MetadataSidebarProps> = ({
 
         {/* Model Details Card */}
         <div className="space-y-3">
-          <h3 className="text-[10px] font-bold text-zinc-500 tracking-widest flex items-center gap-2 mb-2">
+          <h3 className="text-[10px] font-bold text-[var(--text-muted)] tracking-widest flex items-center gap-2 mb-2">
             <FiLayers size={12} /> Model Metadata
           </h3>
           <div className="space-y-1">
@@ -65,10 +65,10 @@ export const MetadataSidebar: React.FC<MetadataSidebarProps> = ({
 const UsageRow = ({ label, value, max, color }: { label: string, value: number, max: number, color: string }) => (
   <div className="space-y-1.5">
     <div className="flex justify-between items-end">
-      <span className="text-[10px] text-zinc-600 font-bold">{label}</span>
-      <span className="text-[11px] font-mono text-zinc-400">{value} tokens</span>
+      <span className="text-[10px] text-[var(--text-muted)] font-bold">{label}</span>
+      <span className="text-[11px] font-mono text-[var(--text-tertiary)]">{value} tokens</span>
     </div>
-    <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+    <div className="h-1.5 w-full bg-[var(--bg-surface-elevated)] rounded-full overflow-hidden">
       <div
         className={twMerge("h-full rounded-full transition-all duration-1000", color)}
         style={{ width: `${(value / max) * 100}%` }}
@@ -78,8 +78,8 @@ const UsageRow = ({ label, value, max, color }: { label: string, value: number, 
 );
 
 const MetaItem = ({ label, value }: { label: string, value: string }) => (
-  <div className="flex justify-between items-center py-1.5 border-b border-zinc-800/30">
-    <span className="text-[10px] text-zinc-600">{label}</span>
-    <span className="text-[10px] font-mono text-zinc-300 truncate ml-4" title={value}>{value}</span>
+  <div className="flex justify-between items-center py-1.5 border-b border-[var(--border-primary)]/30">
+    <span className="text-[10px] text-[var(--text-muted)]">{label}</span>
+    <span className="text-[10px] font-mono text-[var(--text-secondary)] truncate ml-4" title={value}>{value}</span>
   </div>
 );

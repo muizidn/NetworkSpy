@@ -27,14 +27,14 @@ export const TokenVisualizer: React.FC<TokenVisualizerProps> = ({
   activeToolCalls
 }) => {
   return (
-    <div className="w-2/3 flex flex-col border-r border-zinc-900 bg-black/10 overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800 bg-zinc-900/40 shrink-0">
-        <span className="text-[10px] font-bold tracking-widest text-zinc-500">
+    <div className="w-2/3 flex flex-col border-r border-[var(--border-primary)] bg-[var(--bg-surface-inset)]/10 overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--border-primary)] bg-[var(--bg-surface)]/40 shrink-0">
+        <span className="text-[10px] font-bold tracking-widest text-[var(--text-muted)]">
           Visual Breakdown - {viewMode.toUpperCase()}
         </span>
         <button
           onClick={() => navigator.clipboard.writeText(tokens.join(", "))}
-          className="flex items-center gap-1.5 text-[9px] font-bold text-zinc-600 hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-[9px] font-bold text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
         >
           <FiCopy size={12} /> Copy IDs
         </button>
@@ -47,13 +47,13 @@ export const TokenVisualizer: React.FC<TokenVisualizerProps> = ({
               <h3 className="text-[10px] font-bold text-amber-500 tracking-widest flex items-center gap-2">
                 <FiZap size={12} /> Structured Tool Calls Detected
               </h3>
-              <span className="text-[9px] text-zinc-600 italic">Excluded from text token count</span>
+              <span className="text-[9px] text-[var(--text-muted)] italic">Excluded from text token count</span>
             </div>
             <div className="grid grid-cols-1 @sm:grid-cols-2 gap-2">
               {activeToolCalls.map((tc, idx) => (
-                <div key={idx} className="p-2 bg-black/40 rounded border border-zinc-800 font-mono text-[10px]">
+                <div key={idx} className="p-2 bg-[var(--bg-surface-inset)]/40 rounded border border-[var(--border-primary)] font-mono text-[10px]">
                   <div className="text-amber-400 font-bold truncate">{tc.function?.name}()</div>
-                  <div className="text-zinc-600 text-[8px] truncate mt-1">ID: {tc.id}</div>
+                  <div className="text-[var(--text-muted)] text-[8px] truncate mt-1">ID: {tc.id}</div>
                 </div>
               ))}
             </div>
@@ -76,7 +76,7 @@ export const TokenVisualizer: React.FC<TokenVisualizerProps> = ({
             ))}
           </div>
         ) : (
-          <div className="h-full flex flex-col items-center justify-center text-zinc-700 italic text-sm gap-2">
+          <div className="h-full flex flex-col items-center justify-center text-[var(--text-muted)] italic text-sm gap-2">
             <FiDatabase size={32} className="opacity-20" />
             <span>No textual content to visualize for this {viewMode}</span>
           </div>

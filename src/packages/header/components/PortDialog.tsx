@@ -34,12 +34,12 @@ export const PortDialog: React.FC<PortDialogProps> = ({ isOpen, currentPort, onC
   return createPortal(
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div 
-        className="w-80 bg-[#1a1a1a] border border-zinc-800 rounded-2xl shadow-2xl p-6 flex flex-col gap-4 animate-in zoom-in-95 duration-200"
+        className="w-80 bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-2xl shadow-2xl p-6 flex flex-col gap-4 animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col gap-1">
-          <h2 className="text-sm font-bold text-zinc-100 uppercase tracking-wider">Proxy Port Settings</h2>
-          <p className="text-xs text-zinc-500">Specify the port for the proxy server to listen on.</p>
+          <h2 className="text-sm font-bold text-[var(--text-primary)] uppercase tracking-wider">Proxy Port Settings</h2>
+          <p className="text-xs text-[var(--text-muted)]">Specify the port for the proxy server to listen on.</p>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -50,7 +50,7 @@ export const PortDialog: React.FC<PortDialogProps> = ({ isOpen, currentPort, onC
             value={port}
             onChange={(e) => setPort(e.target.value.replace(/[^0-9]/g, ''))}
             onKeyDown={(e) => e.key === 'Enter' && handleConfirm()}
-            className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-mono"
+            className="bg-[var(--bg-surface-inset)] border border-[var(--border-primary)] rounded-xl px-4 py-3 text-[var(--text-primary)] text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-mono"
             placeholder="e.g. 9090"
           />
           {error && <p className="text-[10px] text-red-500 pl-1">{error}</p>}
@@ -59,7 +59,7 @@ export const PortDialog: React.FC<PortDialogProps> = ({ isOpen, currentPort, onC
         <div className="flex items-center gap-3 mt-2">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2.5 rounded-xl text-xs font-bold text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-all"
+            className="flex-1 px-4 py-2.5 rounded-xl text-xs font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)] transition-all"
           >
             Cancel
           </button>

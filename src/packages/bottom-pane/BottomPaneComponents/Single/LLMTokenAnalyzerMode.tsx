@@ -139,22 +139,22 @@ export const LLMTokenAnalyzerMode = () => {
   if (!inputText && !outputText) return <Placeholder text="No inspectable text found in either request or response" icon={<FiInfo size={32} />} />;
 
   return (
-    <div className="flex flex-col h-full bg-[#0d0d0d] text-zinc-300 overflow-hidden select-none font-sans">
+    <div className="flex flex-col h-full bg-[var(--bg-app)] text-[var(--text-secondary)] overflow-hidden select-none font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 @sm:px-6 py-4 border-b border-zinc-800 bg-zinc-900 shrink-0">
+      <div className="flex items-center justify-between px-4 @sm:px-6 py-4 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] shrink-0">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-indigo-600/10 rounded-lg border border-indigo-500/20 shadow-lg shadow-indigo-500/5">
               <FiHash className="text-indigo-500" size={18} />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-white tracking-wider">Token Intelligence</h2>
+              <h2 className="text-sm font-bold text-[var(--text-primary)] tracking-wider">Token Intelligence</h2>
               <div className="flex items-center gap-2 font-mono">
-                <span className="text-[10px] text-zinc-500">Encoding:</span>
+                <span className="text-[10px] text-[var(--text-muted)]">Encoding:</span>
                 <select
                   value={encodingName}
                   onChange={(e) => setEncodingName(e.target.value as any)}
-                  className="bg-zinc-800 text-[10px] text-zinc-300 border-none rounded px-2 py-0.5 outline-none cursor-pointer hover:bg-zinc-700 transition-colors"
+                  className="bg-[var(--bg-surface-inset)] text-[10px] text-[var(--text-secondary)] border-none rounded px-2 py-0.5 outline-none cursor-pointer hover:bg-[var(--bg-surface-elevated)] transition-colors"
                 >
                   <option value="cl100k_base">cl100k_base (GPT-4 / 3.5)</option>
                   <option value="p50k_base">p50k_base (Codex)</option>
@@ -165,31 +165,31 @@ export const LLMTokenAnalyzerMode = () => {
           </div>
 
           {/* Input/Output Selector */}
-          <div className="flex bg-black/40 rounded-lg p-1 border border-zinc-800">
+          <div className="flex bg-[var(--bg-surface-inset)]/40 rounded-lg p-1 border border-[var(--border-primary)]">
             <button
               onClick={() => setViewMode("input")}
               className={twMerge(
                 "px-4 py-1.5 rounded-md text-[10px] font-bold transition-all flex items-center gap-2",
-                viewMode === "input" ? "bg-indigo-600 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+                viewMode === "input" ? "bg-indigo-600 text-[var(--text-primary)] shadow-lg" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
               )}
             >
-              <FiArrowRight size={12} className={viewMode === "input" ? "text-white" : "text-zinc-700"} />
+              <FiArrowRight size={12} className={viewMode === "input" ? "text-[var(--text-primary)]" : "text-[var(--text-muted)]"} />
               Input ({inputAnalysis.count})
             </button>
             <button
               onClick={() => setViewMode("output")}
               className={twMerge(
                 "px-4 py-1.5 rounded-md text-[10px] font-bold transition-all flex items-center gap-2",
-                viewMode === "output" ? "bg-indigo-600 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+                viewMode === "output" ? "bg-indigo-600 text-[var(--text-primary)] shadow-lg" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
               )}
             >
-              <FiArrowLeft size={12} className={viewMode === "output" ? "text-white" : "text-zinc-700"} />
+              <FiArrowLeft size={12} className={viewMode === "output" ? "text-[var(--text-primary)]" : "text-[var(--text-muted)]"} />
               Output ({outputAnalysis.count})
             </button>
           </div>
 
           {viewMode === "output" && (
-            <div className="flex bg-zinc-900 rounded-lg p-1 border border-zinc-800">
+            <div className="flex bg-[var(--bg-surface)] rounded-lg p-1 border border-[var(--border-primary)]">
               {(() => {
                 const choiceCount = (() => {
                   if (!outputData?.body) return 1;
@@ -207,7 +207,7 @@ export const LLMTokenAnalyzerMode = () => {
                     onClick={() => setOutputChoiceIndex(n)}
                     className={twMerge(
                       "px-4 py-2 rounded text-[11px] font-bold transition-all",
-                      outputChoiceIndex === n ? "bg-zinc-700 text-white shadow-md" : "text-zinc-600 hover:text-zinc-500"
+                      outputChoiceIndex === n ? "bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] shadow-md" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
                     )}
                   >
                     Choice {n + 1}
@@ -244,7 +244,7 @@ export const LLMTokenAnalyzerMode = () => {
 
 const StatBox = ({ label, value, icon, color }: { label: string, value: any, icon: any, color: string }) => (
   <div className="flex flex-col items-end">
-    <span className="text-[8px] font-bold text-zinc-600 tracking-tighter flex items-center gap-1">
+    <span className="text-[8px] font-bold text-[var(--text-muted)] tracking-tighter flex items-center gap-1">
       {icon} {label}
     </span>
     <span className={twMerge("text-sm font-mono font-bold leading-none mt-1", color)}>{value}</span>

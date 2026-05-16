@@ -45,7 +45,7 @@ export const CurlMode = () => {
   if (loading) return <Placeholder text="Generating..." />;
 
   return (
-    <div className="h-full bg-[#1e1e1e] flex flex-col">
+    <div className="h-full bg-[var(--bg-app)] flex flex-col">
       <div className="flex-grow relative">
         <MonacoEditor
           height="100%"
@@ -62,10 +62,10 @@ export const CurlMode = () => {
           }}
         />
       </div>
-      <div className="p-2 bg-zinc-900 border-t border-zinc-800 text-right">
+      <div className="p-2 bg-[var(--bg-surface)] border-t border-[var(--border-primary)] text-right">
         <button
           onClick={() => navigator.clipboard.writeText(curlCommand)}
-          className="text-[10px] font-bold text-zinc-400 hover:text-white transition-colors"
+          className="text-[10px] font-bold text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
         >
           Copy to Clipboard
         </button>
@@ -75,7 +75,7 @@ export const CurlMode = () => {
 };
 
 const Placeholder = ({ text }: { text: string }) => (
-  <div className="h-full flex items-center justify-center text-zinc-500 bg-[#1e1e1e]">
+  <div className="h-full flex items-center justify-center text-zinc-500 bg-[var(--bg-app)]">
     <div className="text-center">
       <div className="text-4xl font-bold opacity-10 mb-2">cURL</div>
       <div className="text-sm">{text}</div>

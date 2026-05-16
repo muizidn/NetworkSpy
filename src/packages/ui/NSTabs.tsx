@@ -21,7 +21,7 @@ const TabPanel: React.FC<TabPanelProps> = ({ tag, current, children }) => {
     <div className="absolute w-full h-full" hidden={current !== tag}>
       <ErrorBoundary>
         <Suspense fallback={
-          <div className="flex items-center justify-center h-full text-zinc-600 italic text-xs animate-pulse bg-[#1a1c1e]">
+          <div className="flex items-center justify-center h-full text-[var(--text-muted)] italic text-xs animate-pulse bg-[var(--bg-app)]">
             Loading...
           </div>
         }>
@@ -125,20 +125,20 @@ export const NSTabs: React.FC<NSTabsProps> = ({
   return (
     <div
       id={`tabs-for-${title}`}
-      className="flex flex-col h-full bg-[#23262a] text-white w-full relative overflow-hidden"
+      className="flex flex-col h-full bg-[var(--bg-app)] text-[var(--text-primary)] w-full relative overflow-hidden"
     >
       {!hideTabs && (
         <div
           data-tauri-drag-region={integratedTitlebar ? "" : undefined}
           className={twMerge(
             "flex flex-nowrap z-10 shrink-0 relative items-end overflow-y-hidden h-10",
-            designStyle === "chrome" && "bg-[#0a0a0a] pt-1.5 px-2",
-            designStyle === "opera" && "bg-[#181a1f] pt-1 px-1 border-b border-black",
-            designStyle === "basic" && "bg-transparent border-b border-zinc-800/80 px-1 h-7",
+            designStyle === "chrome" && "bg-[var(--bg-surface-inset)] pt-1.5 px-2",
+            designStyle === "opera" && "bg-[var(--bg-surface)] pt-1 px-1 border-b border-[var(--border-primary)]",
+            designStyle === "basic" && "bg-transparent border-b border-[var(--border-primary)]/80 px-1 h-7",
             integratedTitlebar && "pl-20"
           )}
         >
-          {designStyle === "chrome" && <div className="absolute bottom-0 left-0 right-0 h-px bg-[#333] z-0" />}
+          {designStyle === "chrome" && <div className="absolute bottom-0 left-0 right-0 h-px bg-[var(--border-primary)] z-0" />}
 
           {/* Fixed Left Section */}
           <div className="flex items-center shrink-0 z-20 h-full">
@@ -148,7 +148,7 @@ export const NSTabs: React.FC<NSTabsProps> = ({
               </div>
             )}
             {title && (
-              <div className="px-3 text-xs flex items-center uppercase tracking-wider text-zinc-500 font-bold">
+              <div className="px-3 text-xs flex items-center uppercase tracking-wider text-[var(--text-muted)] font-bold">
                 {title}
               </div>
             )}
@@ -175,7 +175,7 @@ export const NSTabs: React.FC<NSTabsProps> = ({
               <div className="flex justify-end sticky right-0 z-20 shrink-0">
                 <button
                   onClick={onAdd}
-                  className="flex items-center justify-center h-[28px] w-8 mb-[2px] bg-[#23262a] hover:bg-white/10 transition-colors text-zinc-400 hover:text-white rounded-md mx-1"
+                  className="flex items-center justify-center h-[28px] w-8 mb-[2px] bg-[var(--bg-surface-elevated)] hover:bg-[var(--bg-surface-inset)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-md mx-1"
                   title="Open new tab"
                 >
                   <FiPlus size={14} />
@@ -192,7 +192,7 @@ export const NSTabs: React.FC<NSTabsProps> = ({
           )}
         </div>
       )}
-      <div className="relative w-full h-full bg-[#23262a] z-0">
+      <div className="relative w-full h-full bg-[var(--bg-app)] z-0">
 
         {memoizedTabs.map((tab) => (
           <TabPanel key={tab.id} current={currentTab} tag={tab.id}>

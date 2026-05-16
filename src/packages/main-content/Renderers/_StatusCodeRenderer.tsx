@@ -23,7 +23,7 @@ const StatusCodeComponent = ({ input }: { input: TrafficItemMap }) => {
     if (code.startsWith('3')) return 'text-blue-400';
     if (code.startsWith('4')) return 'text-yellow-400';
     if (code.startsWith('5')) return 'text-red-400';
-    return 'text-zinc-400';
+    return 'text-[var(--text-muted)]';
   };
 
   return (

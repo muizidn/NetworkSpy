@@ -24,16 +24,16 @@ export const ToolBaseHeader: React.FC<ToolBaseHeaderProps> = ({
   actions,
 }) => {
   return (
-    <div className="flex flex-col gap-4 px-2 py-1.5 bg-[#0a0a0a] border-b border-zinc-800 shrink-0">
+    <div className="flex flex-col gap-4 px-2 py-1.5 bg-[var(--bg-app)] border-b border-[var(--border-primary)] shrink-0">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-blue-500 shadow-xl">
+          <div className="w-12 h-12 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-primary)] flex items-center justify-center text-blue-500 shadow-xl">
             {icon}
           </div>
           <div>
-            <h1 className="text-xl font-black text-white tracking-tight">{title}</h1>
+            <h1 className="text-xl font-black text-[var(--text-primary)] tracking-tight">{title}</h1>
             {description && (
-              <p className="text-[11px] text-zinc-500 font-medium uppercase tracking-[0.1em] mt-0.5">
+              <p className="text-[11px] text-[var(--text-muted)] font-medium uppercase tracking-[0.1em] mt-0.5">
                 {description}
               </p>
             )}
@@ -42,26 +42,26 @@ export const ToolBaseHeader: React.FC<ToolBaseHeaderProps> = ({
 
         <div className="flex items-center gap-3">
           {onSearchChange && (
-            <div className="flex items-center gap-2 px-3 py-2 bg-zinc-900/50 rounded-lg border border-zinc-800 focus-within:border-blue-500/50 transition-all group w-64">
-              <FiSearch className="text-zinc-500 group-focus-within:text-blue-500" size={14} />
+            <div className="flex items-center gap-2 px-3 py-2 bg-[var(--bg-surface-inset)]/50 rounded-lg border border-[var(--border-primary)] focus-within:border-blue-500/50 transition-all group w-64">
+              <FiSearch className="text-[var(--text-muted)] group-focus-within:text-blue-500" size={14} />
               <input
                 type="text"
                 placeholder="Search rules..."
-                className="bg-transparent border-none outline-none text-[12px] text-zinc-300 w-full placeholder:text-zinc-600"
+                className="bg-transparent border-none outline-none text-[12px] text-[var(--text-secondary)] w-full placeholder:text-[var(--text-muted)]"
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
               />
             </div>
           )}
 
-          <div className="h-8 w-px bg-zinc-800 mx-2" />
+          <div className="h-8 w-px bg-[var(--border-primary)] mx-2" />
 
           {actions}
 
           {onClear && (
             <button
               onClick={onClear}
-              className="p-2.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-all active:scale-95"
+              className="p-2.5 rounded-lg text-[var(--text-muted)] hover:text-red-400 hover:bg-red-400/10 transition-all active:scale-95"
               title="Clear All"
             >
               <FiTrash2 size={18} />

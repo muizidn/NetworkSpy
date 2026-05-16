@@ -122,17 +122,17 @@ export const CookieViewerMode = () => {
   if (allCookies.length === 0) return <Placeholder text="No cookies (request or response) found in this transaction" icon={<FiInfo size={32} />} />;
 
   return (
-    <div className="flex flex-col h-full bg-[#0d0f11] text-zinc-300 font-sans overflow-hidden select-none">
+    <div className="flex flex-col h-full bg-[var(--bg-app)] text-[var(--text-secondary)] font-sans overflow-hidden select-none">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 @sm:px-6 py-4 border-b border-zinc-800 bg-[#16191c] shrink-0">
+      <div className="flex items-center justify-between px-4 @sm:px-6 py-4 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] shrink-0">
         <div className="flex items-center gap-4">
           <div className="p-2 bg-teal-600/10 rounded-xl border border-teal-500/20 shadow-lg shadow-teal-500/5">
             <FiDatabase className="text-teal-500" size={18} />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white tracking-wider">Cookie Jar</h2>
+            <h2 className="text-sm font-bold text-[var(--text-primary)] tracking-wider">Cookie Jar</h2>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-zinc-500 font-bold tracking-tighter">
+              <span className="text-[10px] text-[var(--text-muted)] font-bold tracking-tighter">
                 {allCookies.filter(c => c.source === 'request').length} Request • {allCookies.filter(c => c.source === 'response').length} Response
               </span>
             </div>
@@ -147,7 +147,7 @@ export const CookieViewerMode = () => {
               placeholder="Search cookies..."
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="bg-black/40 border border-zinc-800 rounded-lg pl-9 pr-4 py-1.5 text-[11px] w-48 focus:w-64 focus:border-teal-500/50 outline-none transition-all placeholder:text-zinc-700"
+              className="bg-[var(--bg-surface-inset)]/40 border border-[var(--border-primary)] rounded-lg pl-9 pr-4 py-1.5 text-[11px] w-48 focus:w-64 focus:border-teal-500/50 outline-none transition-all placeholder:text-[var(--text-muted)]"
             />
           </div>
         </div>
@@ -159,10 +159,10 @@ export const CookieViewerMode = () => {
 
           <div className="grid grid-cols-1 gap-4">
             {filteredCookies.map((cookie) => (
-              <div key={cookie.id} className="group flex flex-col rounded-xl border border-zinc-800 bg-black/20 hover:bg-zinc-800/30 transition-all duration-300 overflow-hidden shadow-lg">
+              <div key={cookie.id} className="group flex flex-col rounded-xl border border-[var(--border-primary)] bg-[var(--bg-surface)]/20 hover:bg-[var(--bg-surface-elevated)]/30 transition-all duration-300 overflow-hidden shadow-lg">
 
                 {/* Cookie Header */}
-                <div className="flex items-center justify-between px-5 py-3 border-b border-zinc-800 bg-zinc-900/40">
+                <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border-primary)] bg-[var(--bg-surface)]/40">
                   <div className="flex items-center gap-3">
                     <span className={twMerge(
                       "px-2 py-0.5 rounded text-[9px] font-black tracking-widest border",
@@ -179,7 +179,7 @@ export const CookieViewerMode = () => {
                     {cookie.secure && <FiShield size={12} className="text-blue-500" title="Secure" />}
                     <button
                       onClick={() => copyToClipboard(cookie.value)}
-                      className="p-1 text-zinc-600 hover:text-white transition-colors"
+                      className="p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
                       title="Copy Raw Value"
                     >
                       <FiCopy size={13} />
@@ -190,8 +190,8 @@ export const CookieViewerMode = () => {
                 {/* Values Section */}
                 <div className="p-5 flex flex-col gap-4">
                   <div>
-                    <span className="text-[9px] font-black text-zinc-600 tracking-widest block mb-2">Decoded Value</span>
-                    <div className="p-3 bg-black/40 rounded-lg border border-zinc-900 font-mono text-[11px] text-zinc-300 break-all leading-relaxed relative">
+                    <span className="text-[9px] font-black text-[var(--text-muted)] tracking-widest block mb-2">Decoded Value</span>
+                    <div className="p-3 bg-[var(--bg-surface-inset)]/40 rounded-lg border border-[var(--border-primary)] font-mono text-[11px] text-[var(--text-secondary)] break-all leading-relaxed relative">
                       {(() => {
                         try {
                           const parsed = JSON.parse(cookie.decodedValue);
@@ -213,7 +213,7 @@ export const CookieViewerMode = () => {
                             copyToClipboard(cookie.decodedValue);
                           }
                         }}
-                        className="absolute top-2 right-2 p-1 bg-zinc-900 rounded border border-zinc-800 text-zinc-600 hover:text-teal-400 opacity-0 group-hover:opacity-100 transition-all"
+                        className="absolute top-2 right-2 p-1 bg-[var(--bg-surface-elevated)] rounded border border-[var(--border-primary)] text-[var(--text-muted)] hover:text-teal-400 opacity-0 group-hover:opacity-100 transition-all"
                         title="Copy Beautified Value"
                       >
                         <FiCopy size={10} />
@@ -244,12 +244,12 @@ export const CookieViewerMode = () => {
         </div>
       </div>
 
-      <div className="px-6 py-3 border-t border-zinc-900 bg-[#0c0e10] flex gap-4 @sm:p-6 shrink-0">
-        <div className="flex items-center gap-2 text-[10px] text-zinc-600 font-bold tracking-widest">
+      <div className="px-6 py-3 border-t border-[var(--border-primary)] bg-[var(--bg-sidebar)] flex gap-4 @sm:p-6 shrink-0">
+        <div className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] font-bold tracking-widest">
           <span className="w-2 h-2 rounded-full bg-teal-500/40" />
           Active Cookie Engine
         </div>
-        <div className="flex items-center gap-2 text-[10px] text-zinc-600 font-bold tracking-widest border-l border-zinc-800 pl-6">
+        <div className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] font-bold tracking-widest border-l border-[var(--border-primary)] pl-6">
           Parsed {filteredCookies.length} entities
         </div>
       </div>
@@ -269,10 +269,10 @@ const Attr = ({ label, value, icon }: { label: string, value?: string, icon?: an
 );
 
 const Placeholder = ({ text, icon = null }: { text: string, icon?: React.ReactNode }) => (
-  <div className="h-full flex items-center justify-center text-zinc-500 bg-[#0d0f11] p-6 @sm:p-10 text-center">
+  <div className="h-full flex items-center justify-center text-[var(--text-muted)] bg-[var(--bg-app)] p-6 @sm:p-10 text-center">
     <div className="flex flex-col items-center gap-4">
       {icon || <div className="text-4xl text-teal-950 font-bold opacity-30 tracking-tighter">Cookie Inspector</div>}
-      <div className="text-sm max-w-md mx-auto font-medium text-zinc-600">{text}</div>
+      <div className="text-sm max-w-md mx-auto font-medium text-[var(--text-muted)]">{text}</div>
     </div>
   </div>
 );

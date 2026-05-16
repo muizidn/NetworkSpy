@@ -61,8 +61,8 @@ export const SOAPViewerMode = () => {
     if (loading) return <SOAPPlaceholder text="Expanding Envelope..." subtext="Analyzing XML structure and preparing enterprise view..." />;
 
     return (
-        <div className="bg-[#0a0a0a] flex flex-col min-h-full h-full font-sans">
-            <div className="px-4 @sm:px-6 py-4 bg-[#111] border-b border-blue-500/10 flex items-center justify-between">
+        <div className="bg-[var(--bg-app)] flex flex-col min-h-full h-full font-sans">
+            <div className="px-4 @sm:px-6 py-4 bg-[var(--bg-surface)] border-b border-[var(--border-primary)]/10 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <div className="relative group">
                         <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full scale-0 group-hover:scale-100 transition-transform"></div>
@@ -71,9 +71,9 @@ export const SOAPViewerMode = () => {
                         </div>
                     </div>
                     <div>
-                        <h2 className="text-sm font-black text-white tracking-tight italic">Enterprise SOAP Inspector</h2>
+                        <h2 className="text-sm font-black text-[var(--text-primary)] tracking-tight italic">Enterprise SOAP Inspector</h2>
                         <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[9px] font-bold text-zinc-500 tracking-widest">WSDL Endpoint: </span>
+                            <span className="text-[9px] font-bold text-[var(--text-muted)] tracking-widest">WSDL Endpoint: </span>
                             <span className="text-[9px] font-mono text-blue-400/80 font-bold tracking-wider">SOAP 1.1 / 1.2</span>
                         </div>
                     </div>
@@ -81,7 +81,7 @@ export const SOAPViewerMode = () => {
                 <div className="flex items-center gap-2">
                     <button
                         onClick={handleCopy}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-800/50 border border-white/5 text-[10px] font-bold text-zinc-400 hover:text-white transition-all duration-300"
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-surface-elevated)]/50 border border-[var(--border-primary)]/5 text-[10px] font-bold text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-all duration-300"
                     >
                         {copied ? <FiCheck className="text-emerald-500" size={12} /> : <FiCopy size={12} />}
                         {copied ? 'COPIED' : 'COPY BODY'}
@@ -89,7 +89,7 @@ export const SOAPViewerMode = () => {
                 </div>
             </div>
 
-            <div className="flex-grow relative bg-[#050505]">
+            <div className="flex-grow relative bg-[var(--bg-app)]">
                 <div className="absolute top-4 left-4 z-10">
                     <span className="text-[9px] font-black text-blue-500/40 bg-black/40 px-2 py-1 rounded border border-blue-500/10 tracking-[0.2em]">XML Payload</span>
                 </div>

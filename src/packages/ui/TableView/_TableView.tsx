@@ -76,8 +76,8 @@ const HeaderCell = <T,>({
       ref={ref}
       role="columnheader"
       className={twMerge(
-        "px-3 py-1.5 relative bg-[#111111] border-b border-zinc-800 transition-colors group/header",
-        isActive ? "text-blue-400 bg-[#161616]" : "text-zinc-500 hover:bg-zinc-800/40"
+        "px-3 py-1.5 relative bg-[var(--bg-surface)] border-b border-[var(--border-primary)] transition-colors group/header",
+        isActive ? "text-blue-400 bg-[var(--bg-surface-elevated)]" : "text-[var(--text-muted)] hover:bg-[var(--bg-surface-elevated)]/40"
       )}
       onClick={() => handleSort(index)}
       style={{
@@ -100,7 +100,7 @@ const HeaderCell = <T,>({
             e.stopPropagation();
             onResizeClick(index);
           }}
-          className="absolute right-0 top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-blue-600 border border-blue-400 text-white flex items-center justify-center opacity-0 group-hover/header:opacity-100 hover:scale-110 transition-all z-40 transform translate-x-1/2 cursor-pointer shadow-lg shadow-blue-900/40"
+          className="absolute right-0 top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-[var(--text-primary)] border border-[var(--border-primary)] text-[var(--bg-app)] flex items-center justify-center opacity-0 group-hover/header:opacity-100 hover:scale-110 transition-all z-40 transform translate-x-1/2 cursor-pointer shadow-lg shadow-blue-900/40"
           title="Resize Column"
         >
           <span className="text-[10px] font-bold">↔</span>
@@ -468,9 +468,9 @@ export const TableView = <T,>({
   }).join(' ');
 
   return (
-    <div className={twMerge("w-full h-full flex flex-col bg-[#050505] overflow-x-auto custom-scrollbar", className)}>
+    <div className={twMerge("w-full h-full flex flex-col bg-[var(--bg-app)] overflow-x-auto custom-scrollbar", className)}>
       <div role="grid" className="min-w-fit w-full flex flex-col h-full overflow-hidden">
-        <div role="rowgroup" className="sticky top-0 z-30 shrink-0 border-b-2 border-zinc-900/50">
+        <div role="rowgroup" className="sticky top-0 z-30 shrink-0 border-b-2 border-[var(--border-primary)]/50">
           <div role="row" className="grid min-w-full" style={{ gridTemplateColumns: gridTemplate }}>
             {headers.map((header, index) => (
               <HeaderCell
@@ -510,7 +510,7 @@ export const TableView = <T,>({
                     <div
                       key={i}
                       role="gridcell"
-                      className="px-3 py-[7px] text-zinc-200 text-[11px] min-w-0 flex flex-col justify-center max-w-full"
+                      className="px-3 py-[7px] text-[var(--text-primary)] text-[11px] min-w-0 flex flex-col justify-center max-w-full"
                     >
                       {header.renderer.render({
                         input: item,
@@ -531,8 +531,8 @@ export const TableView = <T,>({
                   onContextMenu={showContextMenu}
                   onClick={onClickRow}
                   className={twMerge(
-                    "grid min-w-full group transition-all duration-150 border-b border-zinc-900/50 absolute top-0 left-0 items-stretch",
-                    isSelected ? "bg-blue-600/30" : "hover:bg-zinc-800/30"
+                    "grid min-w-full group transition-all duration-150 border-b border-[var(--border-primary)]/50 absolute top-0 left-0 items-stretch",
+                    isSelected ? "bg-blue-600/30" : "hover:bg-[var(--bg-surface-elevated)]/30"
                   )}
                   style={{
                     transform: `translateY(${virtualRow.start}px)`,
@@ -547,7 +547,7 @@ export const TableView = <T,>({
           </div>
 
           {sortedData.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20 bg-black/20 text-zinc-600 italic text-sm absolute inset-0">
+            <div className="flex flex-col items-center justify-center py-20 bg-[var(--bg-surface-inset)]/20 text-[var(--text-muted)] italic text-sm absolute inset-0">
               No data available
             </div>
           )}
@@ -566,7 +566,7 @@ export const TableView = <T,>({
               "relative group flex items-center gap-2 px-4 py-2.5 rounded-full border transition-all duration-300 shadow-xl cursor-default",
               autoScrollEnabled
                 ? "bg-blue-600 border-blue-400 text-white"
-                : "bg-[#18181b] border-zinc-700 text-zinc-500 hover:text-zinc-300 hover:border-zinc-500",
+                : "bg-[var(--bg-surface)] border-[var(--border-primary)] text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:border-[var(--border-secondary)]",
               isDraggingButton.current ? "scale-105 cursor-grabbing" : "hover:scale-105"
             )}
           >
@@ -604,7 +604,7 @@ export const TableView = <T,>({
             </div>
 
             {/* Tooltip */}
-            <div className="absolute bottom-full mb-3 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded text-[10px] text-zinc-400 whitespace-nowrap pointer-events-none shadow-2xl">
+            <div className="absolute bottom-full mb-3 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-[var(--bg-surface)] border border-[var(--border-primary)] px-3 py-1.5 rounded text-[10px] text-[var(--text-secondary)] whitespace-nowrap pointer-events-none shadow-2xl">
               {autoScrollEnabled ? "Disable periodic scroll (Drag to move)" : "Enable 3s periodic scroll (Drag to move)"}
             </div>
           </button>
@@ -613,15 +613,15 @@ export const TableView = <T,>({
 
       {/* Resize Dialog */}
       {resizingIndex !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[#18181b] border border-zinc-800 rounded-lg p-4 w-72 shadow-2xl animate-in zoom-in-95 duration-200">
-            <h3 className="text-[12px] font-bold text-zinc-400 mb-3 uppercase tracking-wider">Set Column Width</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--bg-app)]/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-[var(--bg-surface)] border border-[var(--border-primary)] rounded-lg p-4 w-72 shadow-2xl animate-in zoom-in-95 duration-200">
+            <h3 className="text-[12px] font-bold text-[var(--text-secondary)] mb-3 uppercase tracking-wider">Set Column Width</h3>
             <div className="flex flex-col gap-1.5 mb-4">
-              <label className="text-[10px] text-zinc-500 font-medium ml-1">Width (pixels)</label>
+              <label className="text-[10px] text-[var(--text-muted)] font-medium ml-1">Width (pixels)</label>
               <input
                 autoFocus
                 type="number"
-                className="input input-sm bg-[#111111] border-zinc-800 text-white rounded focus:border-blue-500 focus:outline-none w-full"
+                className="input input-sm bg-[var(--bg-surface-inset)] border-[var(--border-primary)] text-[var(--text-primary)] rounded focus:border-blue-500 focus:outline-none w-full"
                 value={resizeValue}
                 onChange={(e) => setResizeValue(e.target.value)}
                 onKeyDown={(e) => {
@@ -633,7 +633,7 @@ export const TableView = <T,>({
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setResizingIndex(null)}
-                className="btn btn-sm btn-ghost text-zinc-500 hover:text-white text-[11px]"
+                className="btn btn-sm btn-ghost text-[var(--text-muted)] hover:text-[var(--text-primary)] text-[11px]"
               >
                 Cancel
               </button>

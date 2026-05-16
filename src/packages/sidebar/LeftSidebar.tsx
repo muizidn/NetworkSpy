@@ -21,7 +21,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = () => {
                     location.pathname === "/account" ? "account" : "";
 
   return (
-    <div className="w-[40px] shrink-0 bg-[#161616] border-r border-[#000000] flex flex-col items-center py-4 h-full z-[100]">
+    <div className="w-[40px] shrink-0 bg-[var(--bg-sidebar)] border-r border-[var(--border-sidebar)] flex flex-col items-center py-4 h-full z-[100]">
       <div className="flex-1 flex flex-col items-center gap-3 w-full px-1.5">
         <Tooltip text="Traffic Interceptor">
           <NavButton
@@ -50,7 +50,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = () => {
                 "w-7 h-7 rounded-full bg-gradient-to-tr border flex items-center justify-center text-[10px] font-bold transition-all cursor-pointer",
                 activeTab === "account" 
                     ? "from-blue-600 to-indigo-600 border-blue-400 text-white shadow-lg shadow-blue-500/20" 
-                    : "from-zinc-800 to-zinc-700 border-white/5 text-zinc-400 hover:border-blue-500/50 hover:text-zinc-200"
+                    : "from-[var(--bg-surface-elevated)] to-[var(--bg-surface)] border-[var(--border-primary)]/5 text-[var(--text-secondary)] hover:border-blue-500/50 hover:text-[var(--text-primary)]"
             )}
           >
             M
@@ -85,7 +85,7 @@ const NavButton = ({
         "relative p-1.5 w-8 h-8 rounded-lg transition-all duration-200 flex items-center justify-center group",
         isActive
           ? "bg-blue-600 shadow-lg shadow-blue-500/20 text-white"
-          : "text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/80"
+          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)]/80"
       )}
     >
       {icon}

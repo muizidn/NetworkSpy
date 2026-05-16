@@ -169,7 +169,7 @@ export const BreakpointHitView: React.FC = () => {
     console.log(selectedData)
 
     return (
-        <div className="w-full h-screen bg-[#050505] flex overflow-hidden text-zinc-100 font-sans selection:bg-blue-500/30">
+        <div className="w-full h-screen bg-[var(--bg-app)] flex overflow-hidden text-[var(--text-primary)] font-sans selection:bg-blue-500/30">
             <BreakpointSidebar
                 pausedBreakpoints={pausedBreakpoints}
                 selectedHitId={selectedHitId}
@@ -180,7 +180,7 @@ export const BreakpointHitView: React.FC = () => {
             />
 
 
-            <div className="flex-1 flex flex-col bg-[#050505] relative overflow-hidden">
+            <div className="flex-1 flex flex-col bg-[var(--bg-app)] relative overflow-hidden">
                 {selectedHitId && selectedData ? (
                     <>
                         <BreakpointEditorHeader
@@ -190,12 +190,12 @@ export const BreakpointHitView: React.FC = () => {
                             handleResume={handleResume}
                         />
 
-                        <div className="px-8 border-b border-zinc-800 bg-[#080808] flex items-center gap-8">
+                        <div className="px-8 border-b border-[var(--border-primary)] bg-[var(--bg-surface)]/50 flex items-center gap-8">
                             <button
                                 onClick={() => setActiveTab("body")}
                                 className={twMerge(
                                     "py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative",
-                                    activeTab === "body" ? "text-blue-400" : "text-zinc-500 hover:text-zinc-300"
+                                    activeTab === "body" ? "text-blue-400" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
                                 )}
                             >
                                 Payload Body
@@ -205,7 +205,7 @@ export const BreakpointHitView: React.FC = () => {
                                 onClick={() => setActiveTab("headers")}
                                 className={twMerge(
                                     "py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative",
-                                    activeTab === "headers" ? "text-blue-400" : "text-zinc-500 hover:text-zinc-300"
+                                    activeTab === "headers" ? "text-blue-400" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
                                 )}
                             >
                                 Headers ({editedHeaders.length})
@@ -213,7 +213,7 @@ export const BreakpointHitView: React.FC = () => {
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-hidden flex flex-col p-6 bg-[#050505]">
+                        <div className="flex-1 overflow-hidden flex flex-col p-6 bg-[var(--bg-app)]">
                             {activeTab === "body" ? (
                                 <BreakpointBodyEditor editedBody={editedBody} setEditedBody={setEditedBody} />
                             ) : (

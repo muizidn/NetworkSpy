@@ -63,17 +63,17 @@ export const QueryParamsMode = () => {
   );
 
   return (
-    <div className="flex flex-col h-full bg-[#0d0f11] text-zinc-300 font-sans overflow-hidden select-none">
+    <div className="flex flex-col h-full bg-[var(--bg-app)] text-[var(--text-secondary)] font-sans overflow-hidden select-none">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 @sm:px-6 py-4 border-b border-zinc-800 bg-[#16191c] shrink-0">
+      <div className="flex items-center justify-between px-4 @sm:px-6 py-4 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] shrink-0">
         <div className="flex items-center gap-4">
           <div className="p-2 bg-orange-600/10 rounded-xl border border-orange-500/20 shadow-lg shadow-orange-500/5">
             <FiFilter className="text-orange-500" size={18} />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white tracking-wider">Query Inspector</h2>
+            <h2 className="text-sm font-bold text-[var(--text-primary)] tracking-wider">Query Inspector</h2>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-zinc-500 font-mono flex items-center gap-1">
+              <span className="text-[10px] text-[var(--text-muted)] font-mono flex items-center gap-1">
                 <FiGrid size={10} />
                 {stats.count} parameters detected
               </span>
@@ -89,12 +89,12 @@ export const QueryParamsMode = () => {
               placeholder="Filter parameters..."
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="bg-black/40 border border-zinc-800 rounded-lg pl-9 pr-4 py-1.5 text-[11px] w-48 focus:w-64 focus:border-orange-500/50 outline-none transition-all placeholder:text-zinc-700"
+              className="bg-[var(--bg-surface-inset)]/40 border border-[var(--border-primary)] rounded-lg pl-9 pr-4 py-1.5 text-[11px] w-48 focus:w-64 focus:border-orange-500/50 outline-none transition-all placeholder:text-[var(--text-muted)]"
             />
           </div>
           <button
             onClick={() => copyToClipboard(String(selected.url || ""))}
-            className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-500 hover:text-white transition-all active:scale-95"
+            className="p-2 hover:bg-[var(--bg-surface-elevated)] rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all active:scale-95"
             title="Copy Full URL"
           >
             <FiCopy size={16} />
@@ -107,31 +107,31 @@ export const QueryParamsMode = () => {
         <div className="max-w-5xl mx-auto space-y-4">
 
           {/* URL Ribbon */}
-          <div className="p-4 rounded-xl bg-gradient-to-r from-zinc-900 to-black border border-zinc-800 flex items-start gap-3 shadow-xl">
+          <div className="p-4 rounded-xl bg-gradient-to-r from-[var(--bg-surface)] to-[var(--bg-app)] border border-[var(--border-primary)] flex items-start gap-3 shadow-xl">
             <div className="mt-1 p-1 bg-blue-500/10 rounded text-blue-400">
               <FiExternalLink size={14} />
             </div>
             <div className="flex-1 min-w-0">
-              <span className="text-[10px] font-black text-zinc-600 tracking-widest block mb-1">Source Endpoint</span>
-              <p className="text-xs font-mono text-zinc-400 break-all leading-relaxed">
+              <span className="text-[10px] font-black text-[var(--text-muted)] tracking-widest block mb-1">Source Endpoint</span>
+              <p className="text-xs font-mono text-[var(--text-tertiary)] break-all leading-relaxed">
                 {selected.url}
               </p>
             </div>
           </div>
 
           {/* Parameters Table/Grid */}
-          <div className="rounded-xl border border-zinc-800 bg-black/20 overflow-hidden shadow-2xl">
+          <div className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-surface)]/20 overflow-hidden shadow-2xl">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-zinc-900/50 text-[10px] font-black text-zinc-500 tracking-widest border-b border-zinc-800">
+                <tr className="bg-[var(--bg-surface-inset)]/50 text-[10px] font-black text-[var(--text-muted)] tracking-widest border-b border-[var(--border-primary)]">
                   <th className="px-6 py-3 text-left w-[30%] font-black">Key</th>
                   <th className="px-6 py-3 text-left font-black">Value</th>
                   <th className="px-6 py-3 text-right w-20"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-900">
+              <tbody className="divide-y divide-[var(--border-primary)]">
                 {filteredParams.map((param) => (
-                  <tr key={param.id} className="group hover:bg-zinc-800/30 transition-colors">
+                  <tr key={param.id} className="group hover:bg-[var(--bg-surface-elevated)]/30 transition-colors">
                     <td className="px-4 @sm:px-6 py-4 align-top">
                       <div className="flex items-center gap-2">
                         <span className="px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 font-mono text-[11px] font-bold border border-orange-500/20">
@@ -145,26 +145,26 @@ export const QueryParamsMode = () => {
                         {param.value.includes(',') ? (
                           <div className="flex flex-wrap gap-1.5">
                             {param.value.split(',').map((val, i) => (
-                              <span key={i} className="px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 font-mono text-[11px] border border-zinc-700 hover:border-zinc-500 transition-colors cursor-pointer" onClick={() => copyToClipboard(val)}>
+                              <span key={i} className="px-2 py-0.5 rounded bg-[var(--bg-surface-elevated)] text-[var(--text-secondary)] font-mono text-[11px] border border-[var(--border-primary)] hover:border-zinc-500 transition-colors cursor-pointer" onClick={() => copyToClipboard(val)}>
                                 {val}
                               </span>
                             ))}
                           </div>
                         ) : (
                           <div className="relative">
-                            <p className="text-[11px] font-mono text-zinc-300 break-all leading-relaxed pr-8">
+                            <p className="text-[11px] font-mono text-[var(--text-secondary)] break-all leading-relaxed pr-8">
                               {param.value}
                             </p>
                             {param.value.length > 50 && (
                               <div className="mt-2 flex gap-2">
                                 <button
                                   onClick={() => copyToClipboard(param.value)}
-                                  className="text-[9px] font-bold text-zinc-600 hover:text-orange-400 flex items-center gap-1 transition-colors"
+                                  className="text-[9px] font-bold text-[var(--text-muted)] hover:text-orange-400 flex items-center gap-1 transition-colors"
                                 >
                                   <FiCopy size={10} /> COPY RAW
                                 </button>
                                 <button
-                                  className="text-[9px] font-bold text-zinc-600 hover:text-blue-400 flex items-center gap-1 transition-colors"
+                                  className="text-[9px] font-bold text-[var(--text-muted)] hover:text-blue-400 flex items-center gap-1 transition-colors"
                                 >
                                   <FiCode size={10} /> DECODE
                                 </button>
@@ -177,7 +177,7 @@ export const QueryParamsMode = () => {
                     <td className="px-4 @sm:px-6 py-4 text-right align-top">
                       <button
                         onClick={() => copyToClipboard(`${param.key}=${param.value}`)}
-                        className="p-1.5 bg-zinc-900 rounded border border-zinc-800 text-zinc-600 hover:text-orange-400 hover:border-orange-500/30 transition-all opacity-0 group-hover:opacity-100 shadow-xl"
+                        className="p-1.5 bg-[var(--bg-surface-elevated)] rounded border border-[var(--border-primary)] text-[var(--text-muted)] hover:text-orange-400 hover:border-orange-500/30 transition-all opacity-0 group-hover:opacity-100 shadow-xl"
                       >
                         <FiCopy size={12} />
                       </button>
@@ -198,12 +198,12 @@ export const QueryParamsMode = () => {
       </div>
 
       {/* Footer bar */}
-      <div className="px-6 py-3 border-t border-zinc-900 bg-[#0c0e10] flex gap-4 @sm:p-6 shrink-0">
-        <div className="flex items-center gap-2 text-[10px] text-zinc-600 font-bold tracking-widest">
+      <div className="px-6 py-3 border-t border-[var(--border-primary)] bg-[var(--bg-sidebar)] flex gap-4 @sm:p-6 shrink-0">
+        <div className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] font-bold tracking-widest">
           <span className="w-2 h-2 rounded-full bg-orange-500/40" />
           Active Analyzer V1
         </div>
-        <div className="flex items-center gap-2 text-[10px] text-zinc-600 font-bold tracking-widest border-l border-zinc-800 pl-6">
+        <div className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] font-bold tracking-widest border-l border-[var(--border-primary)] pl-6">
           Showing {stats.filteredCount} of {stats.count} parameters
         </div>
       </div>

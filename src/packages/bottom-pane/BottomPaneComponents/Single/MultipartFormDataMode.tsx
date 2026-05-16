@@ -117,21 +117,21 @@ export const MultipartFormDataMode = () => {
     }
 
     return (
-        <div className="h-full bg-[#0a0a0a] flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between p-3 border-b border-zinc-900 bg-[#0d0d0d]">
+        <div className="h-full bg-[var(--bg-app)] flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between p-3 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)]">
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-blue-600/10 rounded-lg border border-blue-500/20">
                         <FiDatabase className="text-blue-500" size={16} />
                     </div>
                     <div className="flex flex-col">
-                        <h2 className="text-sm font-black text-white tracking-widest">Multipart Inspector</h2>
+                        <h2 className="text-sm font-black text-[var(--text-primary)] tracking-widest">Multipart Inspector</h2>
                         <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-zinc-600 font-bold tracking-tighter">{parts.length} Fields</span>
-                            <span className="text-[10px] text-zinc-800">•</span>
-                            <span className="text-[10px] text-zinc-600 font-bold tracking-tighter">Total: {totalSize.toLocaleString()} B</span>
+                            <span className="text-[10px] text-[var(--text-muted)] font-bold tracking-tighter">{parts.length} Fields</span>
+                            <span className="text-[10px] text-[var(--text-muted)]">•</span>
+                            <span className="text-[10px] text-[var(--text-muted)] font-bold tracking-tighter">Total: {totalSize.toLocaleString()} B</span>
                             {boundary && (
                                 <>
-                                    <span className="text-[10px] text-zinc-800">•</span>
+                                    <span className="text-[10px] text-[var(--text-muted)]">•</span>
                                     <span className="text-[10px] text-blue-500/50 font-mono font-bold tracking-tighter">Boundary: {boundary}</span>
                                 </>
                             )}
@@ -140,11 +140,11 @@ export const MultipartFormDataMode = () => {
                 </div>
 
                 <div className="relative group max-w-xs w-full">
-                    <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-blue-500 transition-colors" size={14} />
+                    <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-blue-500 transition-colors" size={14} />
                     <input
                         type="text"
                         placeholder="Filter form fields..."
-                        className="w-full bg-[#171717] border border-zinc-800 rounded-xl py-2 pl-9 pr-4 text-xs text-zinc-300 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-medium"
+                        className="w-full bg-[var(--bg-surface-inset)] border border-[var(--border-primary)] rounded-xl py-2 pl-9 pr-4 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-medium"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -152,27 +152,27 @@ export const MultipartFormDataMode = () => {
             </div>
 
             <div className="flex-grow flex overflow-hidden">
-                <div className="w-80 border-r border-zinc-900 overflow-y-auto bg-[#0d0d0d] flex flex-col no-scrollbar">
+                <div className="w-80 border-r border-[var(--border-primary)] overflow-y-auto bg-[var(--bg-sidebar)] flex flex-col no-scrollbar">
                     {filteredParts.map((part, idx) => (
                         <button
                             key={idx}
                             onClick={() => setSelectedPartIndex(idx)}
-                            className={`flex flex-col p-4 text-left border-b border-zinc-900 transition-all relative ${selectedPartIndex === idx ? 'bg-blue-600/10' : 'hover:bg-zinc-900/40'}`}
+                            className={`flex flex-col p-4 text-left border-b border-[var(--border-primary)] transition-all relative ${selectedPartIndex === idx ? 'bg-blue-600/10' : 'hover:bg-[var(--bg-surface-elevated)]/40'}`}
                         >
                             {selectedPartIndex === idx && <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 shadow-[0_0_10px_#3b82f6]" />}
                             <div className="flex items-center justify-between mb-1">
-                                <span className={`text-xs font-black truncate max-w-[180px] ${selectedPartIndex === idx ? 'text-blue-400' : 'text-zinc-300'}`}>
+                                <span className={`text-xs font-black truncate max-w-[180px] ${selectedPartIndex === idx ? 'text-blue-400' : 'text-[var(--text-secondary)]'}`}>
                                     {part.name || "unnamed"}
                                 </span>
-                                <span className="text-[9px] font-mono text-zinc-600 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">{part.size} B</span>
+                                <span className="text-[9px] font-mono text-[var(--text-muted)] bg-[var(--bg-surface-inset)] px-1.5 py-0.5 rounded border border-[var(--border-primary)]">{part.size} B</span>
                             </div>
                             {part.filename !== "-" && (
-                                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 italic mt-0.5 mb-1 truncate">
+                                <div className="flex items-center gap-1.5 text-[10px] text-[var(--text-muted)] italic mt-0.5 mb-1 truncate">
                                     <FiFile size={10} />
                                     <span>{part.filename}</span>
                                 </div>
                             )}
-                            <div className="flex items-center gap-1.5 text-[9px] font-bold text-zinc-600 tracking-widest mt-1">
+                            <div className="flex items-center gap-1.5 text-[9px] font-bold text-[var(--text-muted)] tracking-widest mt-1">
                                 <FiTag size={10} />
                                 <span className="truncate">{part.contentType}</span>
                             </div>
@@ -180,23 +180,23 @@ export const MultipartFormDataMode = () => {
                     ))}
                     {filteredParts.length === 0 && (
                         <div className="flex flex-col items-center justify-center p-12 text-center">
-                            <FiSearch size={48} className="text-zinc-800 mb-4 opacity-50" />
-                            <p className="text-[10px] text-zinc-600 font-black tracking-[0.2em]">No fields match search</p>
+                            <FiSearch size={48} className="text-[var(--text-muted)] mb-4 opacity-50" />
+                            <p className="text-[10px] text-[var(--text-muted)] font-black tracking-[0.2em]">No fields match search</p>
                         </div>
                     )}
                 </div>
 
-                <div className="flex-grow flex flex-col bg-[#0a0a0a]">
+                <div className="flex-grow flex flex-col bg-[var(--bg-app)]">
                     {selectedPart ? (
                         <div className="flex-grow flex flex-col h-full">
-                            <div className="p-4 border-b border-zinc-900 bg-[#0d0d0d] flex items-center justify-between">
+                            <div className="p-4 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] flex items-center justify-between">
                                 <div className="flex flex-col">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <span className="text-xs font-black text-white">{selectedPart.name || "unnamed"}</span>
-                                        {selectedPart.filename !== "-" && <span className="text-[10px] text-zinc-500 font-mono">({selectedPart.filename})</span>}
+                                        <span className="text-xs font-black text-[var(--text-primary)]">{selectedPart.name || "unnamed"}</span>
+                                        {selectedPart.filename !== "-" && <span className="text-[10px] text-[var(--text-muted)] font-mono">({selectedPart.filename})</span>}
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <div className="flex items-center gap-1 text-[10px] text-zinc-600 font-medium">
+                                        <div className="flex items-center gap-1 text-[10px] text-[var(--text-muted)] font-medium">
                                             <FiTag size={12} />
                                             <span>{selectedPart.contentType}</span>
                                         </div>
@@ -206,7 +206,7 @@ export const MultipartFormDataMode = () => {
                                     {selectedPart.contentType.toLowerCase().includes("json") && (
                                         <button
                                             onClick={() => setIsBeautified(!isBeautified)}
-                                            className={`px-3 py-1.5 rounded-lg text-[10px] font-black tracking-widest transition-all border ${isBeautified ? 'bg-blue-600 text-white border-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white hover:border-zinc-700'}`}
+                                            className={`px-3 py-1.5 rounded-lg text-[10px] font-black tracking-widest transition-all border ${isBeautified ? 'bg-blue-600 text-[var(--text-primary)] border-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 'bg-[var(--bg-surface-inset)] text-[var(--text-muted)] border-[var(--border-primary)] hover:text-[var(--text-primary)] hover:border-[var(--text-tertiary)]'}`}
                                         >
                                             {isBeautified ? 'Raw' : 'Beautify'}
                                         </button>
@@ -214,13 +214,13 @@ export const MultipartFormDataMode = () => {
                                     {(selectedPart.contentType.toLowerCase().includes("octet-stream") || selectedPart.filename !== "-") && (
                                         <button
                                             onClick={() => setViewMode(viewMode === 'hex' ? 'text' : 'hex')}
-                                            className={`px-3 py-1.5 rounded-lg text-[10px] font-black tracking-widest transition-all border ${viewMode === 'hex' ? 'bg-purple-600 text-white border-purple-400 shadow-[0_0_15px_rgba(147,51,234,0.3)]' : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white hover:border-zinc-700'}`}
+                                            className={`px-3 py-1.5 rounded-lg text-[10px] font-black tracking-widest transition-all border ${viewMode === 'hex' ? 'bg-purple-600 text-[var(--text-primary)] border-purple-400 shadow-[0_0_15px_rgba(147,51,234,0.3)]' : 'bg-[var(--bg-surface-inset)] text-[var(--text-muted)] border-[var(--border-primary)] hover:text-[var(--text-primary)] hover:border-[var(--text-tertiary)]'}`}
                                         >
                                             {viewMode === 'hex' ? 'Text View' : 'Hex View'}
                                         </button>
                                     )}
                                     <button
-                                        className="flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-[10px] font-black tracking-widest text-zinc-400 hover:text-white hover:border-zinc-700 transition-all active:scale-95 shadow-xl"
+                                        className="flex items-center gap-2 px-3 py-1.5 bg-[var(--bg-surface-inset)] border border-[var(--border-primary)] rounded-lg text-[10px] font-black tracking-widest text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--text-tertiary)] transition-all active:scale-95 shadow-xl"
                                         onClick={() => {
                                             const blob = new Blob([selectedPart.value as any], { type: selectedPart.contentType });
                                             const url = URL.createObjectURL(blob);
@@ -236,7 +236,7 @@ export const MultipartFormDataMode = () => {
                                     </button>
                                 </div>
                             </div>
-                            <div className="flex-grow bg-[#1e1e1e] relative overflow-auto">
+                            <div className="flex-grow bg-[var(--bg-surface)] relative overflow-auto">
                                 {viewMode === "hex" ? (
                                     <div className="p-4">
                                         <HexView data={selectedPart.value} />
@@ -262,9 +262,9 @@ export const MultipartFormDataMode = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center h-full text-zinc-900">
+                        <div className="flex flex-col items-center justify-center h-full text-[var(--text-muted)]">
                             <FiEye size={80} className="mb-6 opacity-10" />
-                            <p className="text-xs font-black tracking-[0.4em] text-zinc-700">Select a part to analyze</p>
+                            <p className="text-xs font-black tracking-[0.4em] text-[var(--text-muted)]">Select a part to analyze</p>
                         </div>
                     )}
                 </div>

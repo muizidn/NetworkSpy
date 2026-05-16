@@ -132,19 +132,19 @@ export const LLMPromptMode = () => {
             }
             if (part.type === 'image_url') {
               return (
-                <div key={idx} className="relative group overflow-hidden rounded-lg border border-white/10 bg-black/40">
+                <div key={idx} className="relative group overflow-hidden rounded-lg border border-[var(--border-primary)]/10 bg-[var(--bg-surface-inset)]/40">
                   <img
                     src={part.image_url.url}
                     alt="Prompt context"
                     className="max-w-full h-auto max-h-64 object-contain transition-transform group-hover:scale-105"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-1 text-[8px] font-mono text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-0 left-0 right-0 bg-[var(--bg-surface-inset)]/60 px-2 py-1 text-[8px] font-mono text-[var(--text-tertiary)] opacity-0 group-hover:opacity-100 transition-opacity">
                     IMAGE: {part.image_url.url.substring(0, 50)}...
                   </div>
                 </div>
               );
             }
-            return <div key={idx} className="text-zinc-500 italic text-xs">[{part.type} content block]</div>;
+            return <div key={idx} className="text-[var(--text-muted)] italic text-xs">[{part.type} content block]</div>;
           })}
         </div>
       );
@@ -163,7 +163,7 @@ export const LLMPromptMode = () => {
 
     return (
       <Placeholder 
-        icon={<FiTerminal size={32} className="text-zinc-700" />}
+        icon={<FiTerminal size={32} className="text-[var(--text-muted)]" />}
         text={isStream 
           ? "This is an active LLM stream. Switch to the 'Events' or 'Response' tab to see the live data chunks."
           : "No valid LLM prompt pattern or messages detected in this request."
@@ -173,30 +173,30 @@ export const LLMPromptMode = () => {
   }
 
   return (
-    <div className="h-full bg-[#0d0d0d] flex flex-col font-sans overflow-hidden">
+    <div className="h-full bg-[var(--bg-app)] flex flex-col font-sans overflow-hidden">
       {/* Header */}
-      <div className="flex items-center px-4 py-3 border-b border-zinc-800 bg-zinc-900 justify-between shrink-0">
+      <div className="flex items-center px-4 py-3 border-b border-[var(--border-primary)] bg-[var(--bg-sidebar)] justify-between shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-900/20">AI</div>
+          <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-[var(--text-primary)] font-bold shadow-lg shadow-emerald-900/20">AI</div>
           <div>
-            <div className="text-sm font-bold text-zinc-200">{llmData.model}</div>
-            <div className="text-[10px] text-zinc-500 tracking-widest font-black">LLM PROMPT CONFIG</div>
+            <div className="text-sm font-bold text-[var(--text-secondary)]">{llmData.model}</div>
+            <div className="text-[10px] text-[var(--text-muted)] tracking-widest font-black">LLM PROMPT CONFIG</div>
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400">
+          <div className="w-8 h-8 rounded-lg bg-[var(--bg-surface-elevated)] flex items-center justify-center text-[var(--text-tertiary)]">
             <FiCpu size={16} />
           </div>
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex items-center px-4 bg-zinc-900/50 border-b border-zinc-800 shrink-0">
+      <div className="flex items-center px-4 bg-[var(--bg-surface)]/50 border-b border-[var(--border-primary)] shrink-0">
         <button 
           onClick={() => setActiveTab("messages")}
           className={twMerge(
             "px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative",
-            activeTab === "messages" ? "text-emerald-400" : "text-zinc-500 hover:text-zinc-300"
+            activeTab === "messages" ? "text-emerald-400" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
           )}
         >
           Conversation
@@ -207,7 +207,7 @@ export const LLMPromptMode = () => {
             onClick={() => setActiveTab("tools")}
             className={twMerge(
               "px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative",
-              activeTab === "tools" ? "text-purple-400" : "text-zinc-500 hover:text-zinc-300"
+              activeTab === "tools" ? "text-purple-400" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
             )}
           >
             Tools
@@ -218,7 +218,7 @@ export const LLMPromptMode = () => {
           onClick={() => setActiveTab("config")}
           className={twMerge(
             "px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative",
-            activeTab === "config" ? "text-amber-400" : "text-zinc-500 hover:text-zinc-300"
+            activeTab === "config" ? "text-amber-400" : "text-[var(--text-muted)] hover:text-[var(--text-tertiary)]"
           )}
         >
           Configuration
