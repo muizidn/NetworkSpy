@@ -17,7 +17,6 @@ export default function Layout() {
   useAppUpdater();
   const [customContent] = useAtom(titleBarContentAtom);
   const [isProDialogOpen, setIsProDialogOpen] = useState(false);
-  const [proDialogStatus, setProDialogStatus] = useState<'trial' | 'pro'>('pro');
   const [isMainWindow] = useState(() => {
     try {
       return getCurrentWindow().label === "main";
@@ -26,11 +25,6 @@ export default function Layout() {
     }
   });
   const [isMac] = useState(() => navigator.platform.toUpperCase().indexOf('MAC') >= 0);
-
-  const openProDialog = (status: 'trial' | 'pro') => {
-    setProDialogStatus(status);
-    setIsProDialogOpen(true);
-  };
 
 
   const location = useLocation();
@@ -66,7 +60,6 @@ export default function Layout() {
       <ProStatusDialog
         isOpen={isProDialogOpen}
         onClose={() => setIsProDialogOpen(false)}
-        status={proDialogStatus}
       />
       <StatusInfoDialog />
     </div>

@@ -1,14 +1,18 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { FiStar, FiCheck, FiZap, FiTarget, FiBox } from 'react-icons/fi';
+import { FiStar, FiZap, FiTarget, FiBox } from 'react-icons/fi';
+import { useSettingsContext } from '../../context/SettingsProvider';
+import { AppPlan } from '../../models/Plan';
 
 interface ProStatusDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  status: 'trial' | 'pro';
 }
 
-export const ProStatusDialog: React.FC<ProStatusDialogProps> = ({ isOpen, onClose, status }) => {
+export const ProStatusDialog: React.FC<ProStatusDialogProps> = ({ isOpen, onClose }) => {
+  const { plan, isVerified } = useSettingsContext();
+  const isPro = plan === AppPlan.PRO && isVerified;
+
   if (!isOpen) return null;
 
   return createPortal(
@@ -26,12 +30,12 @@ export const ProStatusDialog: React.FC<ProStatusDialogProps> = ({ isOpen, onClos
             </div>
             
             <h2 className="text-3xl font-black text-white tracking-tighter uppercase mb-2">
-                {status === 'pro' ? 'Professional Active' : 'Start Professional Trial'}
+                {isPro ? 'Professional Active' : 'Upgrade to Pro'}
             </h2>
             <p className="text-zinc-500 text-sm max-w-xs">
-                {status === 'pro' 
+                {isPro 
                     ? 'Thank you for supporting NetworkSpy! You have full access to all elite features.' 
-                    : 'Unlock the full power of NetworkSpy with an unrestricted 14-day professional trial.'}
+                    : 'Unlock the full power of NetworkSpy with a professional license.'}
             </p>
         </div>
 
@@ -47,16 +51,8 @@ export const ProStatusDialog: React.FC<ProStatusDialogProps> = ({ isOpen, onClos
                 onClick={onClose}
                 className="w-full py-4 bg-white text-black font-black text-xs tracking-widest uppercase rounded-2xl hover:bg-zinc-200 transition-all active:scale-95 shadow-lg"
             >
-                {status === 'pro' ? 'Close Panel' : 'Upgrade to Pro — $19/mo'}
+                {isPro ? 'Close Panel' : 'Upgrade to Pro — $19/mo'}
             </button>
-            {status === 'trial' && (
-                <button 
-                    onClick={onClose}
-                    className="w-full py-4 bg-transparent text-zinc-500 font-bold text-[10px] tracking-widest uppercase rounded-2xl hover:text-zinc-300 transition-all"
-                >
-                    Continue with Free Trial
-                </button>
-            )}
         </div>
       </div>
     </div>,
