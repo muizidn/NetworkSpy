@@ -46,12 +46,30 @@ jobs:
       matrix:
         platform: [macos-latest, ubuntu-22.04, windows-latest]
     runs-on: ${{ matrix.platform }}
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Check CI Resource Capability
+        shell: bash
+        run: |
+          echo "Running on: $RUNNER_OS"
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            echo "CPU Cores: $(nproc)"
+            free -h
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            echo "CPU Cores: $(sysctl -n hw.ncpu)"
+            echo "Memory: $(( $(sysctl -n hw.memsize) / 1024 / 1024 / 1024 )) GB"
+          elif [ "$RUNNER_OS" = "Windows" ]; then
+            # Using wmic or systeminfo might fail in some shells, nproc works in Git Bash
+            echo "CPU Cores (nproc): $(nproc)"
+            wmic cpu get NumberOfCores || true
+            wmic ComputerSystem get TotalPhysicalMemory || true
+          fi
 
       - name: Create .env file
         shell: bash
