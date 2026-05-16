@@ -101,6 +101,9 @@ The fastest way to install or update Network Spy is via the terminal (Stable Rel
 curl -fsSL https://raw.githubusercontent.com/muizidn/NetworkSpy/main/install.sh | sh
 ```
 
+> [!NOTE]
+> **Linux Packages**: To save CI build quota, official releases only include `.deb` packages for Linux. If you need `.rpm` or `AppImage`, you can clone this repository and run the **Release Build Linux** workflow manually in GitHub Actions.
+
 ### 🪟 Windows (PowerShell)
 ```powershell
 iwr -useb https://raw.githubusercontent.com/muizidn/NetworkSpy/main/install.ps1 | iex

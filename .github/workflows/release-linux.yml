@@ -1,17 +1,7 @@
-name: Release
+name: Release Build Linux
+
 on:
-  push:
-    branches:
-      - main
-      - develop
-    paths:
-      - 'src/**'
-      - 'src-tauri/**'
-      - 'package.json'
-      - 'bun.lock'
-      - 'vite.config.ts'
-      - 'scripts/**'
-  workflow_dispatch: 
+  workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -41,11 +31,7 @@ jobs:
     needs: get-version
     permissions:
       contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [macos-latest, ubuntu-22.04, windows-latest]
-    runs-on: ${{ matrix.platform }}
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
 
     steps:
@@ -58,18 +44,8 @@ jobs:
         shell: bash
         run: |
           echo "Running on: $RUNNER_OS"
-          if [ "$RUNNER_OS" = "Linux" ]; then
-            echo "CPU Cores: $(nproc)"
-            free -h
-          elif [ "$RUNNER_OS" = "macOS" ]; then
-            echo "CPU Cores: $(sysctl -n hw.ncpu)"
-            echo "Memory: $(( $(sysctl -n hw.memsize) / 1024 / 1024 / 1024 )) GB"
-          elif [ "$RUNNER_OS" = "Windows" ]; then
-            # Using wmic or systeminfo might fail in some shells, nproc works in Git Bash
-            echo "CPU Cores (nproc): $(nproc)"
-            wmic cpu get NumberOfCores || true
-            wmic ComputerSystem get TotalPhysicalMemory || true
-          fi
+          echo "CPU Cores: $(nproc)"
+          free -h
 
       - name: Create .env file
         shell: bash
@@ -89,8 +65,6 @@ jobs:
           echo "SENTRY_DSN=$SENTRY_DSN" >> .env
           echo "SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN" >> .env
           echo "API_BASE_URL=$API_BASE_URL" >> .env
-          
-          # Verify file contents (Secrets will stay masked by GitHub)
           cat .env
 
       - name: Setup Perl
@@ -98,8 +72,7 @@ jobs:
         with:
           perl-version: '5.34'
 
-      - name: Install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libnm-dev libappindicator3-dev librsvg2-dev build-essential curl wget file jq
@@ -135,29 +108,11 @@ jobs:
           VERSION_NUM=${NEXT_VERSION#v}
           echo "Original Version: $VERSION_NUM"
           
-          # Special handling for Windows MSI (numeric only segments < 65535)
-          if [[ "${{ matrix.platform }}" == "windows-latest" && "$VERSION_NUM" == *"-"* ]]; then
-            # Extract base version (major.minor.patch)
-            BASE_VERSION=$(echo "$VERSION_NUM" | cut -d'-' -f1)
-            # Extract last build number (e.g., from .1 or .2)
-            BUILD_NUM=$(echo "$VERSION_NUM" | grep -oE '[0-9]+$' || echo "0")
-            # Ensure build number is within MSI limits (0-65535)
-            SAFE_BUILD_NUM=$((BUILD_NUM % 65536))
-            VERSION_NUM="${BASE_VERSION}-${SAFE_BUILD_NUM}"
-            echo "Sanitized for MSI & SemVer: $VERSION_NUM"
-          fi
-          
           # Update package.json
           jq ".version = \"$VERSION_NUM\"" package.json > package.json.tmp && mv package.json.tmp package.json
           
           # Update tauri.conf.json
           jq ".version = \"$VERSION_NUM\"" src-tauri/tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp src-tauri/tauri.conf.json
-
-      - name: Limit Linux Bundle Targets to DEB
-        if: matrix.platform == 'ubuntu-22.04'
-        shell: bash
-        run: |
-          jq '.bundle.targets = ["deb"]' src-tauri/tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp src-tauri/tauri.conf.json
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
@@ -171,23 +126,5 @@ jobs:
         with:
           tagName: ${{ needs.get-version.outputs.app_version }}
           releaseName: "Network Spy ${{ needs.get-version.outputs.app_version }}"
-          releaseBody: |
-            ### Automated Build
-            This release was automatically built from the **${{ github.ref_name }}** branch.
-
-            - **Commit**: [${{ github.sha }}](${{ github.event.repository.html_url }}/commit/${{ github.sha }})
-            - **Workflow Run**: [${{ github.run_id }}](${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }})
-            - **Environment**: ${{ matrix.platform }}
-          releaseDraft: ${{ github.ref_name != 'develop' }}
-          prerelease: ${{ github.ref_name != 'main' }}
-
-      - name: Sentry Release
-        if: env.SENTRY_AUTH_TOKEN != ''
-        uses: getsentry/action-release@v3
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: "network-spy"
-          SENTRY_PROJECT: "desktop-app"
-        with:
-          release: ${{ needs.get-version.outputs.app_version }}
-          sourcemaps: "./src-tauri/target/release/"
+          releaseDraft: true
+          prerelease: false
