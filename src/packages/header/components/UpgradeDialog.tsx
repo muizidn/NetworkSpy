@@ -28,9 +28,9 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = ({ isOpen, onClose })
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-xl animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[99999] flex justify-center items-start bg-black/80 backdrop-blur-xl animate-in fade-in duration-300 overflow-y-auto py-10">
       <div 
-        className="w-[540px] max-h-[90vh] bg-[#080808] border border-zinc-800/80 rounded-[32px] shadow-2xl p-0 flex flex-col overflow-y-auto custom-scrollbar animate-in zoom-in-95 duration-300 relative"
+        className="w-[540px] bg-[#080808] border border-zinc-800/80 rounded-2xl shadow-2xl p-0 flex flex-col animate-in zoom-in-95 duration-300 relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Glow Effect */}
@@ -68,8 +68,10 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = ({ isOpen, onClose })
             <FeatureItem label="Proxy Intercept Rules" free="3 Rules" pro="Unlimited" />
             <FeatureItem label="Traffic Filters" free="3 Filters" pro="Unlimited" />
             <FeatureItem label="Multiple Tabs" free="2 Tabs" pro="Unlimited" />
-            <FeatureItem label="Breakpoints" free={false} pro={true} />
-            <FeatureItem label="Custom Scripting" free={false} pro={true} />
+            <FeatureItem label="Breakpoints" free="3 Rules" pro="Unlimited" />
+            <FeatureItem label="Custom Scripting" free="3 Scripts" pro="Unlimited" />
+            <FeatureItem label="Map Local" free="3 Rules" pro="Unlimited" />
+            <FeatureItem label="Map Remote" free="3 Rules" pro="Unlimited" />
             <FeatureItem label="MCP Support (AI Debugging)" free={false} pro={true} />
             <FeatureItem label="Custom Viewers (Pro)" free={false} pro={true} />
         </div>
@@ -77,12 +79,12 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = ({ isOpen, onClose })
         {/* Footer Actions */}
         <div className="p-10 bg-[#0c0c0c] border-t border-zinc-800/50 flex flex-col gap-6">
             <div className="grid grid-cols-2 gap-4">
-                <div className="p-5 rounded-3xl bg-zinc-900/50 border border-zinc-800 flex flex-col gap-2 group hover:border-zinc-700 transition-all">
+                <div className="p-5 rounded-xl bg-zinc-900/50 border border-zinc-800 flex flex-col gap-2 group hover:border-zinc-700 transition-all">
                     <FiShield className="text-blue-500 mb-1" size={18} />
                     <span className="text-xs font-black text-white">Personal</span>
                     <p className="text-[10px] text-zinc-500 font-medium">For independent developers. All core premium features.</p>
                 </div>
-                <div className="p-5 rounded-3xl bg-indigo-600/5 border border-indigo-500/20 flex flex-col gap-2 group hover:border-indigo-500/40 transition-all shadow-[0_0_20px_-5px_rgba(79,70,229,0.1)]">
+                <div className="p-5 rounded-xl bg-indigo-600/5 border border-indigo-500/20 flex flex-col gap-2 group hover:border-indigo-500/40 transition-all shadow-[0_0_20px_-5px_rgba(79,70,229,0.1)]">
                     <FiZap className="text-indigo-500 mb-1" size={18} />
                     <span className="text-xs font-black text-white">Pro / Team</span>
                     <p className="text-[10px] text-zinc-500 font-medium">For teams & enterprises. Custom viewers & bulk licenses.</p>
@@ -101,7 +103,7 @@ export const UpgradeDialog: React.FC<UpgradeDialogProps> = ({ isOpen, onClose })
                         onClose();
                     }
                 }}
-                className="w-full flex items-center justify-center gap-3 px-8 py-5 rounded-[22px] bg-indigo-600 text-white text-[12px] font-black uppercase tracking-widest hover:bg-indigo-500 shadow-[0_15_30px_-10px_rgba(79,70,229,0.4)] transition-all active:scale-95 group"
+                className="w-full flex items-center justify-center gap-3 px-8 py-5 rounded-xl bg-indigo-600 text-white text-[12px] font-black uppercase tracking-widest hover:bg-indigo-500 shadow-[0_15_30px_-10px_rgba(79,70,229,0.4)] transition-all active:scale-95 group"
             >
                 Get Premium Access
                 <FiArrowRight className="group-hover:translate-x-1 transition-transform" size={16} />

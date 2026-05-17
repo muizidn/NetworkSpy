@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import { twMerge } from "tailwind-merge";
 import { FiSearch, FiX, FiAlertCircle } from "react-icons/fi";
 import { invoke } from "@tauri-apps/api/core";
+import { useLicense } from "@src/hooks/useLicense";
+import { useUpgradeDialog } from "@src/context/UpgradeContext";
 
 const FilterTypeLabels: Record<FilterType, string> = {
   [FilterTypes.URL]: "URL",
@@ -171,6 +173,16 @@ const FilterNodeRenderer = ({
 import { useAtom, useAtomValue } from "jotai";
 import { mainTrafficListSearchAtom, activeTabIdAtom } from "@src/utils/trafficAtoms";
 
+const countAllRules = (nodes: FilterNode[]): number => {
+  return nodes.reduce((acc, node) => {
+    if (!node.isGroup) {
+      return acc + 1;
+    } else {
+      return acc + countAllRules(node.children);
+    }
+  }, 0);
+};
+
 export const FilterBar = () => {
   const {
     filters,
@@ -181,6 +193,9 @@ export const FilterBar = () => {
     saveCurrentFilters,
     removePredefinedFilter
   } = useFilterContext();
+
+  const { getLimit } = useLicense();
+  const { openUpgradeDialog } = useUpgradeDialog();
 
   const activeTabId = useAtomValue(activeTabIdAtom);
   const [searchTerm, setSearchTerm] = useAtom(mainTrafficListSearchAtom(activeTabId));
@@ -205,7 +220,13 @@ export const FilterBar = () => {
     };
   }, [predefinedFilters, searchTerm]);
 
-  const addRule = (parentId: string | null = null) => {
+  const addRule = async (parentId: string | null = null) => {
+    const limit = await getLimit('max_filters');
+    if (countAllRules(filters) >= limit) {
+      openUpgradeDialog();
+      return;
+    }
+
     const newRule: FilterRule = {
       isGroup: false,
       id: uuidv4(),
@@ -234,7 +255,13 @@ export const FilterBar = () => {
     setFilters(addRecursive(filters));
   };
 
-  const addGroup = (parentId: string | null = null) => {
+  const addGroup = async (parentId: string | null = null) => {
+    const limit = await getLimit('max_filters');
+    if (countAllRules(filters) >= limit) {
+      openUpgradeDialog();
+      return;
+    }
+
     const newGroup: FilterGroup = {
       isGroup: true,
       id: uuidv4(),

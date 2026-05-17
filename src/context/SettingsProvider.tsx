@@ -6,6 +6,16 @@ import React, {
   ReactNode,
 } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { AppPlan } from "@src/models/Plan";
+
+const mapPlan = (p: string | null): AppPlan | null => {
+  if (!p) return null;
+  switch (p.toLowerCase()) {
+    case 'personal': return AppPlan.PERSONAL;
+    case 'pro': return AppPlan.PRO;
+    default: return null;
+  }
+};
 
 interface SettingsContextInterface {
   theme: string;
@@ -22,7 +32,7 @@ interface SettingsContextInterface {
   setMcpHttpPort: (port: number) => void;
   smartViewerMatch: boolean;
   setSmartViewerMatch: (enabled: boolean) => void;
-  plan: string | null;
+  plan: AppPlan | null;
   isVerified: boolean;
   apiFeatures: any | null;
   isSyncing: boolean;
@@ -88,7 +98,10 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   });
   const [openRouterKey, setOpenRouterKey] = useState(() => localStorage.getItem("ns_openrouter_key") || "");
   const [openRouterModel, setOpenRouterModel] = useState(() => localStorage.getItem("ns_openrouter_model") || "anthropic/claude-sonnet-4.6");
-  const [plan, setPlan] = useState<string | null>(() => localStorage.getItem("ns_license_plan"));
+  const [plan, setPlan] = useState<AppPlan | null>(() => {
+    const saved = localStorage.getItem("ns_license_plan");
+    return saved ? (saved as AppPlan) : null;
+  });
   const [isVerified, setIsVerified] = useState(() => localStorage.getItem("ns_license_verified") === "true");
   const [apiFeatures, setApiFeatures] = useState<any | null>(() => {
     const saved = localStorage.getItem("ns_license_features");
@@ -108,13 +121,14 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     try {
       const result: any = await invoke("verify_license", { licenseKey: key });
       if (result.success) {
+        const mappedPlan = mapPlan(result.plan);
         setIsVerified(true);
-        setPlan(result.plan);
+        setPlan(mappedPlan);
         setApiFeatures(result.features || null);
 
         // Cache result
         localStorage.setItem("ns_license_verified", "true");
-        localStorage.setItem("ns_license_plan", result.plan || "");
+        localStorage.setItem("ns_license_plan", mappedPlan || "");
         localStorage.setItem("ns_license_features", JSON.stringify(result.features || null));
       } else {
         setIsVerified(false);

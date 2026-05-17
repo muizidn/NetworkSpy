@@ -14,6 +14,7 @@ import { useSettingsContext } from '@src/context/SettingsProvider';
 import { UpgradeDialog } from '../header/components/UpgradeDialog';
 import { invoke } from '@tauri-apps/api/core';
 import { WinAppMenu } from './TitleBarMenu';
+import { useLicense } from '@src/hooks/useLicense';
 
 const appWindow = getCurrentWindow();
 
@@ -22,6 +23,7 @@ export const TitleBar: React.FC = () => {
   const [isMaximized, setIsMaximized] = useState(false);
 
   const { isRun, setIsRun, clearData, provider, currentPort, pausedBreakpoints, openNewWindow } = useAppProvider();
+  const { getLimit } = useLicense();
   const { isReviewMode, reviewedSession, viewSession, saveCapture, folders } = useSessionContext();
   const { isDisplayPane, setIsDisplayPane } = usePaneContext();
 
@@ -56,7 +58,12 @@ export const TitleBar: React.FC = () => {
     });
   };
 
-  const handleAddTab = () => {
+  const handleAddTab = async () => {
+    const limit = await getLimit('max_tabs');
+    if (tabsList.length >= limit) {
+      setIsUpgradeDialogOpen(true);
+      return;
+    }
     const newId = `tab-${Date.now()}`;
     const newTab: WorkspaceTab = {
       id: newId,
@@ -191,12 +198,12 @@ export const TitleBar: React.FC = () => {
 
       {/* Windows/Linux Collapsible Menu */}
       {!isMac && (
-        <div 
+        <div
           className="flex items-center h-full group"
           onMouseEnter={() => setIsMenuExpanded(true)}
           onMouseLeave={() => setIsMenuExpanded(false)}
         >
-          <button 
+          <button
             className={twMerge(
               "w-8 h-8 flex items-center justify-center transition-colors rounded-md",
               isMenuExpanded ? "bg-white/10 text-white" : "text-zinc-500 hover:bg-white/5 hover:text-zinc-200"
@@ -218,6 +225,11 @@ export const TitleBar: React.FC = () => {
         <div className="flex items-center gap-2 h-full animate-in fade-in duration-300">
           {/* Workspace Indicator */}
           <div className="flex items-center gap-1.5 shrink-0 h-full" data-tauri-drag-region>
+            {plan === null && (
+              <span className="flex items-center px-2 h-6 rounded-md border border-amber-500/20 bg-amber-500/10 text-amber-500 text-[10px] font-bold uppercase tracking-tight">
+                Free
+              </span>
+            )}
             <button
               onClick={handleSelectWorkspace}
               className={twMerge(

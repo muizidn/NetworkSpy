@@ -354,6 +354,10 @@ pub fn license_get_limit(limit_name: String) -> i32 {
         "max_tabs" => if is_licensed { 999 } else { 2 },
         "max_filters" => if is_licensed { 999 } else { 3 },
         "max_proxy_rules" => if is_licensed { 999 } else { 3 },
+        "max_scripts" => if is_licensed { 999 } else { 3 },
+        "max_breakpoints" => if is_licensed { 999 } else { 3 },
+        "max_map_local" => if is_licensed { 999 } else { 3 },
+        "max_map_remote" => if is_licensed { 999 } else { 3 },
         _ => 0,
     }
 }

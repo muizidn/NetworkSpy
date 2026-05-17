@@ -6,6 +6,8 @@ import { BreakpointDialog, BreakpointModel as IBreakpointModel } from "./compone
 import { FiActivity, FiCheck, FiTrash2, FiEdit3 } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import { invoke } from "@tauri-apps/api/core";
+import { useLicense } from "@src/hooks/useLicense";
+import { useUpgradeDialog } from "@src/context/UpgradeContext";
 
 export class BreakpointCellRenderer implements Renderer<IBreakpointModel> {
   type: keyof IBreakpointModel;
@@ -99,6 +101,8 @@ export class BreakpointCellRenderer implements Renderer<IBreakpointModel> {
 const BreakpointList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [data, setData] = useState<IBreakpointModel[]>([]);
+  const { getLimit } = useLicense();
+  const { openUpgradeDialog } = useUpgradeDialog();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<IBreakpointModel | null>(null);
   const [isGlobalEnabled, setIsGlobalEnabled] = useState(false);
@@ -183,7 +187,12 @@ const BreakpointList: React.FC = () => {
         icon={<FiActivity size={22} />}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        onAdd={() => {
+        onAdd={async () => {
+            const limit = await getLimit('max_breakpoints');
+            if (data.length >= limit) {
+                openUpgradeDialog();
+                return;
+            }
             setEditingItem(null);
             setIsDialogOpen(true);
         }}

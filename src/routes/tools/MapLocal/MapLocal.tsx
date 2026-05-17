@@ -7,6 +7,8 @@ import { FiFolder, FiCheck, FiTrash2, FiEdit3 } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import { invoke } from "@tauri-apps/api/core";
 import { useSearchParams } from "react-router-dom";
+import { useLicense } from "@src/hooks/useLicense";
+import { useUpgradeDialog } from "@src/context/UpgradeContext";
 
 export class MapLocalCellRenderer implements Renderer<IMapLocalModel> {
   type: keyof IMapLocalModel;
@@ -102,6 +104,8 @@ const MapLocalList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [data, setData] = useState<IMapLocalModel[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { getLimit } = useLicense();
+  const { openUpgradeDialog } = useUpgradeDialog();
   const [editingItem, setEditingItem] = useState<IMapLocalModel | null>(null);
   const [isGlobalEnabled, setIsGlobalEnabled] = useState(false);
   const [searchParams] = useSearchParams();
@@ -212,7 +216,12 @@ const MapLocalList: React.FC = () => {
         icon={<FiFolder size={22} />}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        onAdd={() => {
+        onAdd={async () => {
+            const limit = await getLimit('max_map_local');
+            if (data.length >= limit) {
+                openUpgradeDialog();
+                return;
+            }
             setEditingItem(null);
             setIsDialogOpen(true);
         }}

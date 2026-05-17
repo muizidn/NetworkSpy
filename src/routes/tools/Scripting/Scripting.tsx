@@ -6,6 +6,8 @@ import { FiCode, FiCheck, FiPlus, FiTrash2, FiEdit2 } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import { invoke } from "@tauri-apps/api/core";
 import { ScriptEditor } from "./ScriptEditor";
+import { useLicense } from "@src/hooks/useLicense";
+import { useUpgradeDialog } from "@src/context/UpgradeContext";
 
 export interface ScriptingModel {
   id: string;
@@ -128,6 +130,8 @@ export class ScriptingCellRenderer implements Renderer<ScriptingModel> {
 const ScriptingList: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [data, setData] = useState<ScriptingModel[]>([]);
+    const { getLimit } = useLicense();
+    const { openUpgradeDialog } = useUpgradeDialog();
     const [isLoading, setIsLoading] = useState(true);
     const [editingScript, setEditingScript] = useState<ScriptingModel | null | "new">(null);
     const [isGlobalEnabled, setIsGlobalEnabled] = useState(true);
@@ -236,7 +240,14 @@ const ScriptingList: React.FC = () => {
         icon={<FiCode size={22} />}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        onAdd={() => setEditingScript("new")}
+        onAdd={async () => {
+          const limit = await getLimit('max_scripts');
+          if (data.length >= limit) {
+            openUpgradeDialog();
+            return;
+          }
+          setEditingScript("new");
+        }}
         onClear={() => {}}
         actions={
           <div 
