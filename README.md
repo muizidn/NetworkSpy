@@ -83,6 +83,8 @@ Network Spy is designed around a core philosophy: **Viewers are a Superpower.**
 - **🧠 LLM Token Analyzer**: The first specialized tool for AI/ML developers to track token costs and stream latency.
 - **🏷️ Intelligent Tagging**: Automatically categorize and search through thousands of requests.
 - **📦 Custom Viewer Engine**: Build your own visualizers with a drag-and-drop block builder.
+  > [!NOTE]
+  > **Deep Dive**: Learn how to maximize the Custom Viewer Engine for your workflow, including AI-powered generation (Pro Feature), in the [Custom Viewer Guide](./CUSTOM_VIEWER.md).
 
 👉 [**Explore all features in detail here**](./FEATURES.md)
 
