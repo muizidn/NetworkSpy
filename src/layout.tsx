@@ -1,21 +1,26 @@
 import { Outlet, useLocation } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LeftSidebar } from "./packages/sidebar/LeftSidebar";
 import { ProStatusDialog } from "./packages/sidebar/ProStatusDialog";
 import { StatusInfoDialog } from "./packages/ui/StatusInfoDialog";
 import { TitleBarTraffic, TitleBarViewerBuilder, TitleBarViewerList, TitleBarSetting } from "./packages/ui/TitleBar";
 
-
+import { platform } from "@tauri-apps/plugin-os";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { twMerge } from "tailwind-merge";
 import { useAppUpdater } from "./hooks/useAppUpdater";
 
 import { useAtom } from 'jotai';
-import { titleBarContentAtom } from '@src/utils/trafficAtoms';
+import { titleBarContentAtom, osAtom } from '@src/utils/trafficAtoms';
 
 export default function Layout() {
   useAppUpdater();
   const [customContent] = useAtom(titleBarContentAtom);
+  const [, setOs] = useAtom(osAtom);
+
+  useEffect(() => {
+    setOs(platform());
+  }, []);
   const [isProDialogOpen, setIsProDialogOpen] = useState(false);
   const [isMainWindow] = useState(() => {
     try {

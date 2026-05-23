@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
-import { platform } from '@tauri-apps/plugin-os';
 import { FiX, FiMinus, FiSquare } from 'react-icons/fi';
+import { useAtom } from 'jotai';
+import { osAtom } from '@src/utils/trafficAtoms';
 
 const appWindow = getCurrentWindow();
 
 const TitleBarSetting: React.FC = () => {
-  const [os, setOs] = useState<string>('macos');
-
-  useEffect(() => {
-    setOs(platform());
-  }, []);
-
+  const [os] = useAtom(osAtom);
   const isMac = os === 'macos';
 
   return (
@@ -23,7 +19,6 @@ const TitleBarSetting: React.FC = () => {
         <div className="w-20 shrink-0 h-full" data-tauri-drag-region />
       )}
 
-      {/* Platform Controls for non-Mac */}
       {!isMac && (
         <div className="flex items-center h-full ml-auto">
           <button className="h-8 w-10 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors" onClick={() => appWindow.minimize()}><FiMinus size={14} /></button>

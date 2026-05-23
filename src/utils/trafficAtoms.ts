@@ -36,3 +36,5 @@ export const statusInfoDialogAtom = atom<{
 } | null>(null);
 
 export const titleBarContentAtom = atom<React.ReactNode | null>(null);
+
+export const osAtom = atom<string>('macos');

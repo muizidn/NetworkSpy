@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
-import { platform } from '@tauri-apps/plugin-os';
 import { FiX, FiMinus, FiSquare, FiCopy, FiPlay, FiPause, FiTrash2, FiSave, FiMonitor, FiLayout, FiSidebar, FiColumns, FiPlus, FiMenu, FiChevronRight } from 'react-icons/fi';
 import { useAppProvider } from '../app-env';
 import { useSessionContext } from '@src/context/SessionContext';
@@ -9,7 +8,7 @@ import { PortDialog } from '../header/components/PortDialog';
 import { SaveSessionDialog } from '../header/components/SaveSessionDialog';
 import { twMerge } from 'tailwind-merge';
 import { useAtom } from 'jotai';
-import { workspaceTabsAtom, activeTabIdAtom, WorkspaceTab } from '@src/utils/trafficAtoms';
+import { workspaceTabsAtom, activeTabIdAtom, WorkspaceTab, osAtom } from '@src/utils/trafficAtoms';
 import { useSettingsContext } from '@src/context/SettingsProvider';
 import { UpgradeDialog } from '../header/components/UpgradeDialog';
 import { invoke } from '@tauri-apps/api/core';
@@ -19,7 +18,7 @@ import { useLicense } from '@src/hooks/useLicense';
 const appWindow = getCurrentWindow();
 
 const TitleBarTraffic: React.FC = () => {
-  const [os, setOs] = useState<string>('macos');
+  const [os] = useAtom(osAtom);
   const [isMaximized, setIsMaximized] = useState(false);
 
   const { isRun, setIsRun, clearData, provider, currentPort, pausedBreakpoints, openNewWindow } = useAppProvider();
@@ -34,7 +33,6 @@ const TitleBarTraffic: React.FC = () => {
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
 
   useEffect(() => {
-    setOs(platform());
     const unlisten = appWindow.onResized(async () => {
       setIsMaximized(await appWindow.isMaximized());
     });
@@ -160,6 +158,7 @@ const TitleBarTraffic: React.FC = () => {
   return (
     <div
       data-tauri-drag-region
+      id="title-bar-traffic"
       className="flex items-center h-8 bg-black border-b border-white/5 select-none shrink-0 z-[1000] px-2 gap-2"
     >
       {isMac && (

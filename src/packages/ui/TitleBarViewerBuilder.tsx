@@ -1,19 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
-import { platform } from '@tauri-apps/plugin-os';
 import { FiX, FiMinus, FiSquare } from 'react-icons/fi';
 import { useAtom } from 'jotai';
-import { titleBarContentAtom } from '@src/utils/trafficAtoms';
+import { titleBarContentAtom, osAtom } from '@src/utils/trafficAtoms';
 
 const appWindow = getCurrentWindow();
 
 const TitleBarViewerBuilder: React.FC = () => {
-  const [os, setOs] = useState<string>('macos');
-
-  useEffect(() => {
-    setOs(platform());
-  }, []);
-
+  const [os] = useAtom(osAtom);
   const isMac = os === 'macos';
   const [customContent] = useAtom(titleBarContentAtom);
 
@@ -21,6 +15,7 @@ const TitleBarViewerBuilder: React.FC = () => {
 
   return (
     <div
+      id="title-bar-viewer-builder"
       data-tauri-drag-region
       className="flex items-center h-8 bg-black border-b border-white/5 select-none shrink-0 z-[1000] px-2 gap-2"
     >
