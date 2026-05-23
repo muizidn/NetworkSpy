@@ -7,6 +7,10 @@ const root = resolve(__dirname, 'src');
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  test: {
+    name: "unit",
+    include: ["src/**/*.test.{ts,tsx}"],
+  },
   plugins: [
     react(),
     sentryVitePlugin({

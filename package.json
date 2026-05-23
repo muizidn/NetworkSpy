@@ -8,6 +8,8 @@
     "build": "tsc && NODE_OPTIONS='--max-old-space-size=4096' vite build",
     "preview": "vite preview",
     "tauri": "tauri",
+    "test": "vitest run --project unit",
+    "test:watch": "vitest --project unit",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
