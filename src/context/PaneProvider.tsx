@@ -37,7 +37,7 @@ export const PaneProvider: React.FC<{ children: React.ReactNode }> = ({
     return {
       left: true,
       bottom: true,
-      right: true,
+      right: false,
       centerLayout: "vertical",
     };
   });

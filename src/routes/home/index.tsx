@@ -31,7 +31,7 @@ const Content = () => {
   };
   const [sizes, setSizes] = useState<any[]>(() => {
     const saved = localStorage.getItem("ns_main_window_sizes");
-    return saved ? JSON.parse(saved) : ["70%", "15%"];
+    return saved ? JSON.parse(saved) : ["70%", "0%"];
   });
 
   useEffect(() => {
