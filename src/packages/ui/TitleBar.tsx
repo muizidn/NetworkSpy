@@ -132,6 +132,15 @@ export const TitleBar: React.FC = () => {
 
   const [customContent] = useAtom(titleBarContentAtom);
 
+  const [currentWorkspace, setCurrentWorkspace] = useState<string | null>(null);
+
+  useEffect(() => {
+    invoke<string | null>('get_current_workspace').then(setCurrentWorkspace);
+  }, []);
+
+  const { plan, isVerified } = useSettingsContext();
+  const [isUpgradeDialogOpen, setIsUpgradeDialogOpen] = useState(false);
+
   if (customContent) {
     return (
       <div
@@ -156,15 +165,6 @@ export const TitleBar: React.FC = () => {
       </div>
     );
   }
-
-  const [currentWorkspace, setCurrentWorkspace] = useState<string | null>(null);
-
-  useEffect(() => {
-    invoke<string | null>('get_current_workspace').then(setCurrentWorkspace);
-  }, []);
-
-  const { plan, isVerified } = useSettingsContext();
-  const [isUpgradeDialogOpen, setIsUpgradeDialogOpen] = useState(false);
 
   const handleSelectWorkspace = async () => {
     if (!isVerified) {
