@@ -19,10 +19,23 @@ pub struct ProxySettings {
     pub autosave: bool,
     #[serde(default)]
     pub pinned_bottom_pane_modes: Vec<String>,
+    #[serde(default = "default_true")]
+    pub pane_left_visible: bool,
+    #[serde(default = "default_true")]
+    pub pane_bottom_visible: bool,
+    #[serde(default)]
+    pub pane_right_visible: bool,
+    #[serde(default = "default_center_layout")]
+    pub pane_center_layout: String,
+    #[serde(default = "default_window_sizes")]
+    pub main_window_sizes: Vec<String>,
 }
 
 fn default_port() -> u16 { 3001 }
 fn default_autosave() -> bool { true }
+fn default_true() -> bool { true }
+fn default_center_layout() -> String { "vertical".to_string() }
+fn default_window_sizes() -> Vec<String> { vec!["70%".to_string(), "0%".to_string()] }
 
 impl Default for ProxySettings {
     fn default() -> Self {
@@ -34,6 +47,11 @@ impl Default for ProxySettings {
             device_id: "".to_string(),
             autosave: true,
             pinned_bottom_pane_modes: vec![],
+            pane_left_visible: true,
+            pane_bottom_visible: true,
+            pane_right_visible: false,
+            pane_center_layout: "vertical".to_string(),
+            main_window_sizes: vec!["70%".to_string(), "0%".to_string()],
         }
     }
 }

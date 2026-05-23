@@ -45,6 +45,16 @@ interface SettingsContextInterface {
   setAutosave: (enabled: boolean) => void;
   pinnedBottomPaneModes: string[];
   setPinnedBottomPaneModes: (modes: string[]) => void;
+  paneLeftVisible: boolean;
+  setPaneLeftVisible: (visible: boolean) => void;
+  paneBottomVisible: boolean;
+  setPaneBottomVisible: (visible: boolean) => void;
+  paneRightVisible: boolean;
+  setPaneRightVisible: (visible: boolean) => void;
+  paneCenterLayout: 'horizontal' | 'vertical';
+  setPaneCenterLayout: (layout: 'horizontal' | 'vertical') => void;
+  mainWindowSizes: string[];
+  setMainWindowSizes: (sizes: string[]) => void;
 }
 
 
@@ -82,7 +92,17 @@ export const SettingsContext = createContext<SettingsContextInterface>({
   autosave: true,
   setAutosave: () => { },
   pinnedBottomPaneModes: [],
-  setPinnedBottomPaneModes: () => { }
+  setPinnedBottomPaneModes: () => { },
+  paneLeftVisible: true,
+  setPaneLeftVisible: () => { },
+  paneBottomVisible: true,
+  setPaneBottomVisible: () => { },
+  paneRightVisible: false,
+  setPaneRightVisible: () => { },
+  paneCenterLayout: 'vertical',
+  setPaneCenterLayout: () => { },
+  mainWindowSizes: ["70%", "0%"],
+  setMainWindowSizes: () => { }
 });
 
 
@@ -119,6 +139,11 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   });
   const [autosave, setAutosave] = useState(true);
   const [pinnedBottomPaneModes, setPinnedBottomPaneModes] = useState<string[]>([]);
+  const [paneLeftVisible, setPaneLeftVisible] = useState(true);
+  const [paneBottomVisible, setPaneBottomVisible] = useState(true);
+  const [paneRightVisible, setPaneRightVisible] = useState(false);
+  const [paneCenterLayout, setPaneCenterLayout] = useState<'horizontal' | 'vertical'>('vertical');
+  const [mainWindowSizes, setMainWindowSizes] = useState<string[]>(["70%", "0%"]);
   const [bottomPaneTabPosition, setBottomPaneTabPosition] = useState<'top' | 'bottom'>(() => {
     return (localStorage.getItem("ns_bottom_pane_tab_position") as 'top' | 'bottom') || "top";
   });
@@ -187,6 +212,11 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       license_key: string;
       autosave: boolean;
       pinned_bottom_pane_modes: string[];
+      pane_left_visible: boolean;
+      pane_bottom_visible: boolean;
+      pane_right_visible: boolean;
+      pane_center_layout: string;
+      main_window_sizes: string[];
     }>("get_proxy_settings")
       .then((settings) => {
         if (settings) {
@@ -210,6 +240,50 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             }
           } else {
             setPinnedBottomPaneModes(modes);
+          }
+
+          // Migrate pane state from localStorage
+          if (settings.pane_left_visible === undefined) {
+            try {
+              const legacy = JSON.parse(localStorage.getItem("ns_pane_state") || "{}");
+              if (Object.keys(legacy).length > 0) {
+                setPaneLeftVisible(legacy.left ?? true);
+                setPaneBottomVisible(legacy.bottom ?? true);
+                setPaneRightVisible(legacy.right ?? false);
+                setPaneCenterLayout(legacy.centerLayout || 'vertical');
+              } else {
+                setPaneLeftVisible(true);
+                setPaneBottomVisible(true);
+                setPaneRightVisible(false);
+                setPaneCenterLayout('vertical');
+              }
+            } catch {
+              setPaneLeftVisible(true);
+              setPaneBottomVisible(true);
+              setPaneRightVisible(false);
+              setPaneCenterLayout('vertical');
+            }
+          } else {
+            setPaneLeftVisible(settings.pane_left_visible);
+            setPaneBottomVisible(settings.pane_bottom_visible);
+            setPaneRightVisible(settings.pane_right_visible);
+            setPaneCenterLayout((settings.pane_center_layout as 'horizontal' | 'vertical') || 'vertical');
+          }
+          const sizes = settings.main_window_sizes || [];
+          if (sizes.length === 0) {
+            try {
+              const legacy = JSON.parse(localStorage.getItem("ns_main_window_sizes") || "[]");
+              if (legacy.length > 0) {
+                setMainWindowSizes(legacy);
+                localStorage.removeItem("ns_main_window_sizes");
+              } else {
+                setMainWindowSizes(["70%", "0%"]);
+              }
+            } catch {
+              setMainWindowSizes(["70%", "0%"]);
+            }
+          } else {
+            setMainWindowSizes(sizes);
           }
 
           // Try silent verify (uses keychain on backend)
@@ -265,10 +339,15 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         mcp_http_enabled: mcpHttpEnabled,
         mcp_http_port: mcpHttpPort,
         autosave: autosave,
-        pinned_bottom_pane_modes: pinnedBottomPaneModes
+        pinned_bottom_pane_modes: pinnedBottomPaneModes,
+        pane_left_visible: paneLeftVisible,
+        pane_bottom_visible: paneBottomVisible,
+        pane_right_visible: paneRightVisible,
+        pane_center_layout: paneCenterLayout,
+        main_window_sizes: mainWindowSizes
       }
     }).catch(console.error);
-  }, [streamCertificateLogs, mcpStdioEnabled, mcpHttpEnabled, mcpHttpPort, autosave, pinnedBottomPaneModes, isLoaded]);
+  }, [streamCertificateLogs, mcpStdioEnabled, mcpHttpEnabled, mcpHttpPort, autosave, pinnedBottomPaneModes, paneLeftVisible, paneBottomVisible, paneRightVisible, paneCenterLayout, mainWindowSizes, isLoaded]);
 
   return (
     <SettingsContext.Provider
@@ -307,6 +386,16 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         setAutosave,
         pinnedBottomPaneModes,
         setPinnedBottomPaneModes,
+        paneLeftVisible,
+        setPaneLeftVisible,
+        paneBottomVisible,
+        setPaneBottomVisible,
+        paneRightVisible,
+        setPaneRightVisible,
+        paneCenterLayout,
+        setPaneCenterLayout,
+        mainWindowSizes,
+        setMainWindowSizes,
       }}>
 
       {children}

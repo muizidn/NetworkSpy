@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext } from "react";
+import { useSettingsContext } from "./SettingsProvider";
 
 export interface PaneState {
   left: boolean;
@@ -25,26 +26,31 @@ export const usePaneContext = () => {
 export const PaneProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isDisplayPane, setIsDisplayPane] = useState<PaneState>(() => {
-    const saved = localStorage.getItem("ns_pane_state");
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Failed to parse saved pane state", e);
-      }
-    }
-    return {
-      left: true,
-      bottom: true,
-      right: false,
-      centerLayout: "vertical",
-    };
-  });
+  const {
+    paneLeftVisible,
+    setPaneLeftVisible,
+    paneBottomVisible,
+    setPaneBottomVisible,
+    paneRightVisible,
+    setPaneRightVisible,
+    paneCenterLayout,
+    setPaneCenterLayout,
+  } = useSettingsContext();
 
-  useEffect(() => {
-    localStorage.setItem("ns_pane_state", JSON.stringify(isDisplayPane));
-  }, [isDisplayPane]);
+  const isDisplayPane: PaneState = {
+    left: paneLeftVisible,
+    bottom: paneBottomVisible,
+    right: paneRightVisible,
+    centerLayout: paneCenterLayout,
+  };
+
+  const setIsDisplayPane = (action: React.SetStateAction<PaneState>) => {
+    const next = typeof action === "function" ? action(isDisplayPane) : action;
+    setPaneLeftVisible(next.left);
+    setPaneBottomVisible(next.bottom);
+    setPaneRightVisible(next.right);
+    setPaneCenterLayout(next.centerLayout);
+  };
 
   return (
     <PaneContext.Provider value={{ isDisplayPane, setIsDisplayPane }}>

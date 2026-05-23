@@ -16,6 +16,7 @@ import { NSTabs } from "@src/packages/ui/NSTabs";
 import { WelcomeDialog } from "@src/packages/ui/WelcomeDialog";
 import { usePaneContext } from "../../context/PaneProvider";
 import { useSessionContext } from "../../context/SessionContext";
+import { useSettingsContext } from "@src/context/SettingsProvider";
 import { CenterPane } from "./CenterPane";
 
 const Content = () => {
@@ -29,23 +30,16 @@ const Content = () => {
       max: "80%",
     },
   };
-  const [sizes, setSizes] = useState<any[]>(() => {
-    const saved = localStorage.getItem("ns_main_window_sizes");
-    return saved ? JSON.parse(saved) : ["70%", "0%"];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("ns_main_window_sizes", JSON.stringify(sizes));
-  }, [sizes]);
+  const { mainWindowSizes: sizes, setMainWindowSizes: setSizes } = useSettingsContext();
 
   const { setTrafficList, trafficSet, setTrafficSet } = useTrafficListContext();
   const { isDisplayPane, setIsDisplayPane } = usePaneContext();
 
   useEffect(() => {
     if (isDisplayPane.right) {
-      setSizes(prev => prev[1] === "0%" ? ["70%", "25%"] : prev);
+      if (sizes[1] === "0%") setSizes(["70%", "25%"]);
     } else {
-      setSizes(prev => prev[1] !== "0%" ? [prev[0], "0%"] : prev);
+      if (sizes[1] !== "0%") setSizes([sizes[0], "0%"]);
     }
   }, [isDisplayPane.right]);
 
@@ -257,7 +251,7 @@ const Content = () => {
           split='vertical'
           sashRender={() => <SashContent type='vscode' />}
           sizes={sizes}
-          onChange={setSizes}>
+          onChange={(newSizes: number[]) => setSizes(newSizes.map(s => s + "%"))}>
           <Pane>
             <div className='flex items-center justify-center h-full relative'>
               <NSTabs
