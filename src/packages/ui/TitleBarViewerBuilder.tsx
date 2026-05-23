@@ -22,7 +22,7 @@ const TitleBarViewerBuilder: React.FC = () => {
   return (
     <div
       data-tauri-drag-region
-      className="flex items-center h-8 bg-black/40 backdrop-blur-xl border-b border-white/5 select-none shrink-0 z-[1000] px-2 gap-2"
+      className="flex items-center h-8 bg-black border-b border-white/5 select-none shrink-0 z-[1000] px-2 gap-2"
     >
       {isMac && (
         <div className="w-20 shrink-0 h-full" data-tauri-drag-region />
