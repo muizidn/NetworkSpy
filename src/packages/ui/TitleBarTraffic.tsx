@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
-import { FiX, FiMinus, FiSquare, FiPlay, FiPause, FiTrash2, FiSave, FiMonitor, FiLayout, FiSidebar, FiColumns, FiPlus } from 'react-icons/fi';
+import { FiX, FiPlay, FiPause, FiTrash2, FiSave, FiMonitor, FiLayout, FiSidebar, FiColumns, FiPlus } from 'react-icons/fi';
 import { useAppProvider } from '../app-env';
 import { useSessionContext } from '@src/context/SessionContext';
 import { usePaneContext } from '@src/context/PaneProvider';
@@ -13,6 +13,7 @@ import { useSettingsContext } from '@src/context/SettingsProvider';
 import { UpgradeDialog } from '../header/components/UpgradeDialog';
 import { invoke } from '@tauri-apps/api/core';
 import { TitleBarCustomMenuTool } from './TitleBarCustomMenuTool';
+import { TitleBarPlatformControls } from './TitleBarPlatformControls';
 import { useLicense } from '@src/hooks/useLicense';
 
 const appWindow = getCurrentWindow();
@@ -328,14 +329,7 @@ const TitleBarTraffic: React.FC = () => {
           />
         </div>
 
-        {/* Platform Controls (Right for Win/Linux) */}
-        {!isMac && (
-          <div className="flex items-center h-full ml-2">
-            <button className="h-8 w-10 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors" onClick={() => appWindow.minimize()}><FiMinus size={14} /></button>
-            <button className="h-8 w-10 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors" onClick={() => appWindow.toggleMaximize()}><FiSquare size={14} /></button>
-            <button className="h-8 w-10 flex items-center justify-center hover:bg-red-500 hover:text-white text-zinc-500 transition-colors" onClick={() => appWindow.close()}><FiX size={14} /></button>
-          </div>
-        )}
+        <TitleBarPlatformControls />
       </div>
 
       {/* Dialogs */}
