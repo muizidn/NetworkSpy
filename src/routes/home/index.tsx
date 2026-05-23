@@ -37,8 +37,18 @@ const Content = () => {
   useEffect(() => {
     localStorage.setItem("ns_main_window_sizes", JSON.stringify(sizes));
   }, [sizes]);
+
   const { setTrafficList, trafficSet, setTrafficSet } = useTrafficListContext();
   const { isDisplayPane, setIsDisplayPane } = usePaneContext();
+
+  useEffect(() => {
+    if (isDisplayPane.right) {
+      setSizes(prev => prev[1] === "0%" ? ["70%", "25%"] : prev);
+    } else {
+      setSizes(prev => prev[1] !== "0%" ? [prev[0], "0%"] : prev);
+    }
+  }, [isDisplayPane.right]);
+
   const { provider, isRun, setIsRun, clearData } = useAppProvider();
   const { isReviewMode } = useSessionContext();
   const { getLimit } = useLicense();
@@ -238,18 +248,6 @@ const Content = () => {
     return sizes.map((size, idx) =>
       idx === index ? (params ? "0%" : "15%") : size
     );
-  };
-
-
-
-  const toggleBottomPane = () => {
-    setIsDisplayPane((prev: any) => ({ ...prev, bottom: !prev.bottom }));
-  };
-
-  const toggleRightPane = () => {
-    const isVisible = isDisplayPane.right;
-    setIsDisplayPane((prev: any) => ({ ...prev, right: !isVisible }));
-    setSizes((prev) => [prev[0], isVisible ? "0%" : "25%"]);
   };
 
   return (
