@@ -337,6 +337,78 @@ pub fn open_new_window(app_handle: tauri::AppHandle, context: String, title: Str
 }
 
 #[tauri::command]
+pub fn trigger_menu_action(app_handle: tauri::AppHandle, action: String) {
+    match action.as_str() {
+        "install_cert" | "cert-installer" => {
+            open_new_window_internal(&app_handle, "certificate-installer".into(), "Certificate Installer".into());
+        }
+        "saved_sessions" => {
+            open_new_window_internal(&app_handle, "sessions".into(), "Saved Sessions".into());
+        }
+        "traffic_filters" => {
+            open_new_window_internal(&app_handle, "filters".into(), "Traffic Filters".into());
+        }
+        "tools_tag" => {
+            open_new_window_internal(&app_handle, "tag".into(), "Tag Tools".into());
+        }
+        "proxylist" => {
+            open_new_window_internal(&app_handle, "proxylist".into(), "Proxy Intercept Rules".into());
+        }
+        "breakpoints" => {
+            open_new_window_internal(&app_handle, "breakpoint".into(), "Traffic Breakpoints".into());
+        }
+        "map_local" => {
+            open_new_window_internal(&app_handle, "map-local".into(), "Map Local Rules".into());
+        }
+        "map_remote" => {
+            open_new_window_internal(&app_handle, "map-remote".into(), "Map Remote Rules".into());
+        }
+        "scripting" => {
+            open_new_window_internal(&app_handle, "scripting".into(), "Custom Scripting".into());
+        }
+        "check_updates" => {
+            let _ = app_handle.emit("check-for-updates", ());
+        }
+        "toggle_capture" => {
+            if let Some(toggle) = PROXY_TOGGLE.get() {
+                if toggle.is_on() {
+                    toggle.turn_off();
+                    let _ = app_handle.emit("proxy-status", false);
+                } else {
+                    let port = ACTUAL_PORT.load(Ordering::SeqCst) as u64;
+                    toggle.turn_on(port);
+                    let _ = app_handle.emit("proxy-status", true);
+                }
+            }
+        }
+        "clear_traffic" => {
+            let _ = app_handle.emit("menu-clear-traffic", ());
+        }
+        "save_capture" => {
+            let _ = app_handle.emit("menu-save-capture", ());
+        }
+        "show" => {
+            if let Some(window) = app_handle.get_webview_window("main") {
+                let _ = window.show();
+                let _ = window.set_focus();
+            }
+        }
+        "reload" => {
+            if let Some(window) = app_handle.get_webview_window("main") {
+                let _ = window.eval("window.location.reload()");
+            }
+        }
+        "quit" => {
+            if let Some(toggle) = PROXY_TOGGLE.get() {
+                toggle.turn_off();
+            }
+            app_handle.exit(0);
+        }
+        _ => {}
+    }
+}
+
+#[tauri::command]
 pub fn get_recent_traffic(
     db: tauri::State<'_, Arc<TrafficDb>>,
     limit: usize,

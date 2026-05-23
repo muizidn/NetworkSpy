@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import { invoke } from '@tauri-apps/api/core';
 import { twMerge } from 'tailwind-merge';
 
 const appWindow = getCurrentWindow();
@@ -49,11 +50,8 @@ const TitleMenuDropdown: React.FC<{ label: string; items: MenuItem[] }> = ({ lab
       case '__close':
         await appWindow.close();
         break;
-      case '__about':
-        await appWindow.emit('tauri://menu', { id: 'about' });
-        break;
       default:
-        await appWindow.emit('tauri://menu', { id: item.action });
+        await invoke('trigger_menu_action', { action: item.action });
     }
     setIsOpen(false);
   };

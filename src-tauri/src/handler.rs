@@ -9,6 +9,7 @@ macro_rules! generate_handler {
             crate::commands::auto_install_certificate,
             crate::commands::uninstall_certificate,
             crate::commands::open_new_window,
+            crate::commands::trigger_menu_action,
             crate::commands::repeat_request,
             crate::commands::repeat_request_with_data,
             crate::traffic::request_pair::get_request_pair_data,
