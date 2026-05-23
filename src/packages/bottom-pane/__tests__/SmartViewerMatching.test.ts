@@ -1,13 +1,40 @@
+/**
+ * SmartViewerMatching Unit Tests
+ *
+ * SmartViewerMatching is responsible for scoring viewer modes against
+ * intercepted traffic. It evaluates two kinds of matchers:
+ *
+ *  1. Glob matchers — URL pattern strings with wildcard support.
+ *   Example: "*\/graphql" matches /anything/graphql.
+ *     Substring matching is also supported (url.includes(pattern)).
+ *
+ *  2. JS matchers — async JavaScript functions evaluated at runtime
+ *     with access to traffic metadata, request/response headers, and
+ *     request/response bodies. They return true/false.
+ *
+ * Each built-in or custom viewer can declare multiple matchers.
+ * A viewer's score is the count of its matchers that return true.
+ * Only viewers with score > 0 appear in the result map.
+ */
+
 import { describe, it, expect, vi } from "vitest";
 import { SmartViewerMatching, TrafficDataProvider } from "../SmartViewerMatching";
 import { ViewerMatcher, Viewer } from "@src/context/ViewerContext";
 
+/**
+ * Creates a mock TrafficDataProvider with stubbed request/response data.
+ * By default returns empty headers and body to keep glob-only tests simple.
+ */
 const makeProvider = (overrides?: Partial<TrafficDataProvider>): TrafficDataProvider => ({
   getRequestPairData: vi.fn().mockResolvedValue({ headers: [], body: "" }),
   getResponsePairData: vi.fn().mockResolvedValue({ headers: [], body: "" }),
   ...overrides,
 });
 
+/**
+ * Creates a mock Viewer with empty blocks/matchers. Override `content`
+ * or other fields as needed for specific test cases.
+ */
 const makeViewer = (overrides?: Partial<Viewer>): Viewer => ({
   id: "v1",
   name: "Test Viewer",
@@ -17,6 +44,12 @@ const makeViewer = (overrides?: Partial<Viewer>): Viewer => ({
 });
 
 describe("SmartViewerMatching", () => {
+  /**
+   * Glob matchers use wildcard patterns to match against the
+   * traffic URL. The `*` character matches any sequence of
+   * characters (converted to `.*` in regex). Non-wildcard
+   * globs fall back to substring matching via `url.includes()`.
+   */
   describe("glob matching", () => {
     it("matches exact URL path", async () => {
       const builtin: Record<string, ViewerMatcher[]> = {
@@ -64,6 +97,18 @@ describe("SmartViewerMatching", () => {
     });
   });
 
+  /**
+   * JS matchers are evaluated as async functions with access to:
+   *   - traffic   — the traffic metadata object
+   *   - readRequestHeaders()  — return type dictionary of request headers
+   *   - readRequestBody()     — returns the decoded request body string
+   *   - readResponseHeaders() — returns a normalized dictionary of response headers
+   *   - readResponseBody()    — returns the decoded response body string
+   *   - getHeader(headers, name) — case-insensitive header lookup helper
+   *
+   * They return a boolean indicating whether the traffic matches.
+   * Thrown errors are caught and treated as "no match".
+   */
   describe("JS matcher", () => {
     it("evaluates JS matcher returning true", async () => {
       const builtin: Record<string, ViewerMatcher[]> = {
@@ -110,6 +155,13 @@ describe("SmartViewerMatching", () => {
     });
   });
 
+  /**
+   * When a viewer declares multiple matchers (both glob and JS),
+   * each one contributes to its final score. The score equals the
+   * total number of matchers that return true. This allows viewers
+   * with highly-specific criteria (e.g. URL + header + body checks)
+   * to rank higher than generic matchers.
+   */
   describe("combined matchers", () => {
     it("scores higher when multiple matchers match", async () => {
       const builtin: Record<string, ViewerMatcher[]> = {
@@ -140,6 +192,12 @@ describe("SmartViewerMatching", () => {
     });
   });
 
+  /**
+   * Custom viewers are user-created viewers stored in the app's
+   * YAML config. Each viewer's content is a JSON string containing
+   * a `matchers` array. Invalid JSON or missing matchers are
+   * silently skipped (score 0).
+   */
   describe("custom viewer matchers", () => {
     it("scores custom viewers with matchers", async () => {
       const viewers: Viewer[] = [
@@ -170,6 +228,11 @@ describe("SmartViewerMatching", () => {
     });
   });
 
+  /**
+   * When no built-in matchers are registered and no custom viewers
+   * exist, matchTraffic should return an empty record without
+   * errors.
+   */
   describe("empty inputs", () => {
     it("returns empty scores for empty builtin matchers and no viewers", async () => {
       const matcher = new SmartViewerMatching(makeProvider(), {}, []);
