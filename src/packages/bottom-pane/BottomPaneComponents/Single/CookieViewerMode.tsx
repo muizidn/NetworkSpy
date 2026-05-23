@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { FiDatabase, FiCopy, FiInfo, FiSearch, FiLock, FiShield, FiCalendar } from "react-icons/fi";
+import { FiDatabase, FiCopy, FiInfo, FiSearch, FiLock, FiShield, FiCalendar, FiGrid, FiList } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import { useTrafficListContext } from "@src/packages/main-content/context/TrafficList";
 import { useAppProvider } from "@src/packages/app-env";
@@ -23,6 +23,7 @@ export const CookieViewerMode = () => {
   const { selections } = useTrafficListContext();
   const selected = selections.firstSelected;
   const [filter, setFilter] = useState("");
+  const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
   const [requestHeaders, setRequestHeaders] = useState<{ key: string; value: string }[]>([]);
   const [responseHeaders, setResponseHeaders] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState(false);
@@ -140,6 +141,28 @@ export const CookieViewerMode = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          <div className="flex items-center bg-zinc-900/50 p-0.5 rounded-lg border border-white/5">
+            <button
+              onClick={() => setViewMode('card')}
+              className={twMerge(
+                "p-1.5 rounded-md transition-all",
+                viewMode === 'card' ? "bg-white/10 text-white" : "text-zinc-500 hover:text-zinc-300"
+              )}
+              title="Card View"
+            >
+              <FiGrid size={13} />
+            </button>
+            <button
+              onClick={() => setViewMode('table')}
+              className={twMerge(
+                "p-1.5 rounded-md transition-all",
+                viewMode === 'table' ? "bg-white/10 text-white" : "text-zinc-500 hover:text-zinc-300"
+              )}
+              title="Table View"
+            >
+              <FiList size={13} />
+            </button>
+          </div>
           <div className="relative group">
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-teal-500 transition-colors" size={12} />
             <input
@@ -157,90 +180,93 @@ export const CookieViewerMode = () => {
       <div className="flex-1 overflow-y-auto custom-scrollbar p-4 @sm:p-6">
         <div className="max-w-6xl mx-auto space-y-6">
 
-          <div className="grid grid-cols-1 gap-4">
-            {filteredCookies.map((cookie) => (
-              <div key={cookie.id} className="group flex flex-col rounded-xl border border-zinc-800 bg-black/20 hover:bg-zinc-800/30 transition-all duration-300 overflow-hidden shadow-lg">
+          {viewMode === 'table' ? (
+            <TableView cookies={filteredCookies} copyToClipboard={copyToClipboard} />
+          ) : (
+            <div className="grid grid-cols-1 gap-4">
+              {filteredCookies.map((cookie) => (
+                <div key={cookie.id} className="group flex flex-col rounded-xl border border-zinc-800 bg-black/20 hover:bg-zinc-800/30 transition-all duration-300 overflow-hidden shadow-lg">
 
-                {/* Cookie Header */}
-                <div className="flex items-center justify-between px-5 py-3 border-b border-zinc-800 bg-zinc-900/40">
-                  <div className="flex items-center gap-3">
-                    <span className={twMerge(
-                      "px-2 py-0.5 rounded text-[9px] font-black tracking-widest border",
-                      cookie.source === 'request' ? "bg-blue-600/10 border-blue-500/20 text-blue-400" : "bg-emerald-600/10 border-emerald-500/20 text-emerald-400"
-                    )}>
-                      {cookie.source}
-                    </span>
-                    <span className="text-xs font-bold text-teal-400 font-mono tracking-tight group-hover:text-teal-300 transition-colors">
-                      {cookie.name}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {cookie.httpOnly && <FiLock size={12} className="text-amber-500" title="HttpOnly" />}
-                    {cookie.secure && <FiShield size={12} className="text-blue-500" title="Secure" />}
-                    <button
-                      onClick={() => copyToClipboard(cookie.value)}
-                      className="p-1 text-zinc-600 hover:text-white transition-colors"
-                      title="Copy Raw Value"
-                    >
-                      <FiCopy size={13} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Values Section */}
-                <div className="p-5 flex flex-col gap-4">
-                  <div>
-                    <span className="text-[9px] font-black text-zinc-600 tracking-widest block mb-2">Decoded Value</span>
-                    <div className="p-3 bg-black/40 rounded-lg border border-zinc-900 font-mono text-[11px] text-zinc-300 break-all leading-relaxed relative">
-                      {(() => {
-                        try {
-                          const parsed = JSON.parse(cookie.decodedValue);
-                          return (
-                            <pre className="whitespace-pre-wrap break-all">
-                              {JSON.stringify(parsed, null, 2)}
-                            </pre>
-                          );
-                        } catch {
-                          return cookie.decodedValue;
-                        }
-                      })()}
+                  {/* Cookie Header */}
+                  <div className="flex items-center justify-between px-5 py-3 border-b border-zinc-800 bg-zinc-900/40">
+                    <div className="flex items-center gap-3">
+                      <span className={twMerge(
+                        "px-2 py-0.5 rounded text-[9px] font-black tracking-widest border",
+                        cookie.source === 'request' ? "bg-blue-600/10 border-blue-500/20 text-blue-400" : "bg-emerald-600/10 border-emerald-500/20 text-emerald-400"
+                      )}>
+                        {cookie.source}
+                      </span>
+                      <span className="text-xs font-bold text-teal-400 font-mono tracking-tight group-hover:text-teal-300 transition-colors">
+                        {cookie.name}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {cookie.httpOnly && <FiLock size={12} className="text-amber-500" title="HttpOnly" />}
+                      {cookie.secure && <FiShield size={12} className="text-blue-500" title="Secure" />}
                       <button
-                        onClick={() => {
-                          try {
-                            const parsed = JSON.parse(cookie.decodedValue);
-                            copyToClipboard(JSON.stringify(parsed, null, 2));
-                          } catch {
-                            copyToClipboard(cookie.decodedValue);
-                          }
-                        }}
-                        className="absolute top-2 right-2 p-1 bg-zinc-900 rounded border border-zinc-800 text-zinc-600 hover:text-teal-400 opacity-0 group-hover:opacity-100 transition-all"
-                        title="Copy Beautified Value"
+                        onClick={() => copyToClipboard(cookie.value)}
+                        className="p-1 text-zinc-600 hover:text-white transition-colors"
+                        title="Copy Raw Value"
                       >
-                        <FiCopy size={10} />
+                        <FiCopy size={13} />
                       </button>
                     </div>
                   </div>
 
-                  {cookie.source === 'response' && (
-                    <div className="grid grid-cols-2 @md:grid-cols-4 gap-4 mt-2">
-                      <Attr label="Domain" value={cookie.domain} />
-                      <Attr label="Path" value={cookie.path} />
-                      <Attr label="SameSite" value={cookie.sameSite} />
-                      <Attr label="Expires" value={cookie.expires} icon={<FiCalendar size={10} />} />
+                  {/* Values Section */}
+                  <div className="p-5 flex flex-col gap-4">
+                    <div>
+                      <span className="text-[9px] font-black text-zinc-600 tracking-widest block mb-2">Decoded Value</span>
+                      <div className="p-3 bg-black/40 rounded-lg border border-zinc-900 font-mono text-[11px] text-zinc-300 break-all leading-relaxed relative">
+                        {(() => {
+                          try {
+                            const parsed = JSON.parse(cookie.decodedValue);
+                            return (
+                              <pre className="whitespace-pre-wrap break-all">
+                                {JSON.stringify(parsed, null, 2)}
+                              </pre>
+                            );
+                          } catch {
+                            return cookie.decodedValue;
+                          }
+                        })()}
+                        <button
+                          onClick={() => {
+                            try {
+                              const parsed = JSON.parse(cookie.decodedValue);
+                              copyToClipboard(JSON.stringify(parsed, null, 2));
+                            } catch {
+                              copyToClipboard(cookie.decodedValue);
+                            }
+                          }}
+                          className="absolute top-2 right-2 p-1 bg-zinc-900 rounded border border-zinc-800 text-zinc-600 hover:text-teal-400 opacity-0 group-hover:opacity-100 transition-all"
+                          title="Copy Beautified Value"
+                        >
+                          <FiCopy size={10} />
+                        </button>
+                      </div>
                     </div>
-                  )}
-                </div>
-              </div>
-            ))}
 
-            {filteredCookies.length === 0 && (
-              <div className="py-20 text-center space-y-2">
-                <FiDatabase size={40} className="mx-auto text-zinc-800 mb-4" />
-                <p className="text-zinc-600 font-bold text-xs tracking-widest">No matching cookies</p>
-                <p className="text-zinc-700 text-[11px] italic">Try searching for key names or content</p>
-              </div>
-            )}
-          </div>
+                    {cookie.source === 'response' && (
+                      <div className="grid grid-cols-2 @md:grid-cols-4 gap-4 mt-2">
+                        <Attr label="Domain" value={cookie.domain} />
+                        <Attr label="Path" value={cookie.path} />
+                        <Attr label="SameSite" value={cookie.sameSite} />
+                        <Attr label="Expires" value={cookie.expires} icon={<FiCalendar size={10} />} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {filteredCookies.length === 0 && (
+                <div className="py-20 text-center space-y-2">
+                  <FiDatabase size={40} className="mx-auto text-zinc-800 mb-4" />
+                  <p className="text-zinc-600 font-bold text-xs tracking-widest">No matching cookies</p>
+                  <p className="text-zinc-700 text-[11px] italic">Try searching for key names or content</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -265,6 +291,62 @@ const Attr = ({ label, value, icon }: { label: string, value?: string, icon?: an
     <span className="text-[10px] font-mono text-zinc-500 mt-0.5 truncate" title={value}>
       {value || '-'}
     </span>
+  </div>
+);
+
+const TableView = ({ cookies, copyToClipboard }: { cookies: CookieData[]; copyToClipboard: (text: string) => void }) => (
+  <div className="overflow-auto custom-scrollbar">
+    <table className="w-full text-[11px] text-zinc-300">
+      <thead>
+        <tr className="border-b border-zinc-800 bg-zinc-900/60 text-zinc-500 text-[9px] font-black uppercase tracking-widest">
+          <th className="text-left p-3 pl-5 sticky top-0 bg-zinc-900/80 backdrop-blur-sm">Source</th>
+          <th className="text-left p-3 sticky top-0 bg-zinc-900/80 backdrop-blur-sm">Name</th>
+          <th className="text-left p-3 sticky top-0 bg-zinc-900/80 backdrop-blur-sm">Value</th>
+          <th className="text-left p-3 sticky top-0 bg-zinc-900/80 backdrop-blur-sm">Domain</th>
+          <th className="text-left p-3 sticky top-0 bg-zinc-900/80 backdrop-blur-sm">Path</th>
+          <th className="text-center p-3 sticky top-0 bg-zinc-900/80 backdrop-blur-sm">Secure</th>
+          <th className="text-center p-3 sticky top-0 bg-zinc-900/80 backdrop-blur-sm">HttpOnly</th>
+          <th className="text-left p-3 sticky top-0 bg-zinc-900/80 backdrop-blur-sm">SameSite</th>
+          <th className="text-left p-3 pr-5 sticky top-0 bg-zinc-900/80 backdrop-blur-sm">Expires</th>
+        </tr>
+      </thead>
+      <tbody>
+        {cookies.map((cookie) => (
+          <tr key={cookie.id} className="border-b border-zinc-800/50 hover:bg-white/5 transition-colors group">
+            <td className="p-3 pl-5">
+              <span className={twMerge(
+                "px-1.5 py-0.5 rounded text-[8px] font-black tracking-widest border",
+                cookie.source === 'request' ? "bg-blue-600/10 border-blue-500/20 text-blue-400" : "bg-emerald-600/10 border-emerald-500/20 text-emerald-400"
+              )}>
+                {cookie.source}
+              </span>
+            </td>
+            <td className="p-3 font-mono font-bold text-teal-400 text-[10px]">{cookie.name}</td>
+            <td className="p-3 font-mono text-[10px] max-w-[250px] truncate" title={cookie.decodedValue}>
+              {cookie.decodedValue}
+            </td>
+            <td className="p-3 text-[10px] text-zinc-500">{cookie.domain || '-'}</td>
+            <td className="p-3 text-[10px] text-zinc-500 font-mono">{cookie.path || '-'}</td>
+            <td className="p-3 text-center">
+              {cookie.secure ? <FiShield size={12} className="text-blue-500 mx-auto" /> : <span className="text-zinc-700">-</span>}
+            </td>
+            <td className="p-3 text-center">
+              {cookie.httpOnly ? <FiLock size={12} className="text-amber-500 mx-auto" /> : <span className="text-zinc-700">-</span>}
+            </td>
+            <td className="p-3 text-[10px] text-zinc-500">{cookie.sameSite || '-'}</td>
+            <td className="p-3 pr-5 text-[10px] text-zinc-500 font-mono whitespace-nowrap">{cookie.expires || '-'}</td>
+          </tr>
+        ))}
+        {cookies.length === 0 && (
+          <tr>
+            <td colSpan={9} className="p-20 text-center">
+              <FiDatabase size={32} className="mx-auto text-zinc-800 mb-3" />
+              <p className="text-zinc-600 font-bold text-xs tracking-widest">No matching cookies</p>
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
   </div>
 );
 
