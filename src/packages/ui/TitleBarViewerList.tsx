@@ -3,6 +3,7 @@ import { getCurrentWindow } from '@tauri-apps/api/window';
 import { FiX, FiMinus, FiSquare } from 'react-icons/fi';
 import { useAtom } from 'jotai';
 import { osAtom } from '@src/utils/trafficAtoms';
+import { TitleBarCustomMenuTool } from './TitleBarCustomMenuTool';
 
 const appWindow = getCurrentWindow();
 
@@ -18,6 +19,8 @@ const TitleBarViewerList: React.FC = () => {
       {isMac && (
         <div className="w-20 shrink-0 h-full" data-tauri-drag-region />
       )}
+
+      <TitleBarCustomMenuTool />
 
       {!isMac && (
         <div className="flex items-center h-full ml-auto">

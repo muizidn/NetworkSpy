@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
-import { FiX, FiMinus, FiSquare, FiCopy, FiPlay, FiPause, FiTrash2, FiSave, FiMonitor, FiLayout, FiSidebar, FiColumns, FiPlus, FiMenu, FiChevronRight } from 'react-icons/fi';
+import { FiX, FiMinus, FiSquare, FiPlay, FiPause, FiTrash2, FiSave, FiMonitor, FiLayout, FiSidebar, FiColumns, FiPlus } from 'react-icons/fi';
 import { useAppProvider } from '../app-env';
 import { useSessionContext } from '@src/context/SessionContext';
 import { usePaneContext } from '@src/context/PaneProvider';
@@ -12,7 +12,7 @@ import { workspaceTabsAtom, activeTabIdAtom, WorkspaceTab, osAtom } from '@src/u
 import { useSettingsContext } from '@src/context/SettingsProvider';
 import { UpgradeDialog } from '../header/components/UpgradeDialog';
 import { invoke } from '@tauri-apps/api/core';
-import { WinAppMenu } from './TitleBarMenu';
+import { TitleBarCustomMenuTool } from './TitleBarCustomMenuTool';
 import { useLicense } from '@src/hooks/useLicense';
 
 const appWindow = getCurrentWindow();
@@ -71,7 +71,6 @@ const TitleBarTraffic: React.FC = () => {
     setActiveTabId(newId);
   };
 
-  const [isMenuExpanded, setIsMenuExpanded] = useState(false);
   const isMac = os === 'macos';
 
   const ActionButton = ({
@@ -165,31 +164,9 @@ const TitleBarTraffic: React.FC = () => {
         <div className="w-20 shrink-0 h-full" data-tauri-drag-region />
       )}
 
-      {/* Windows/Linux Collapsible Menu */}
-      {!isMac && (
-        <div
-          className="flex items-center h-full group"
-          onMouseEnter={() => setIsMenuExpanded(true)}
-          onMouseLeave={() => setIsMenuExpanded(false)}
-        >
-          <button
-            className={twMerge(
-              "w-8 h-8 flex items-center justify-center transition-colors rounded-md",
-              isMenuExpanded ? "bg-white/10 text-white" : "text-zinc-500 hover:bg-white/5 hover:text-zinc-200"
-            )}
-            onClick={() => setIsMenuExpanded(!isMenuExpanded)}
-          >
-            <FiMenu size={16} />
-          </button>
-
-          {isMenuExpanded && (
-            <WinAppMenu />
-          )}
-        </div>
-      )}
-
-      {/* Workspace Indicator & Main Actions (Hidden when menu is expanded on Win/Linux) */}
-      {(!isMenuExpanded || isMac) && (
+      <TitleBarCustomMenuTool />
+      {/* Workspace Indicator & Main Actions */}
+      {(
         <div className="flex items-center gap-2 h-full animate-in fade-in duration-300">
           {/* Workspace Indicator */}
           <div className="flex items-center gap-1.5 shrink-0 h-full" data-tauri-drag-region>
