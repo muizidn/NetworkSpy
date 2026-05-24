@@ -26,4 +26,3 @@ dist-ssr
 *.sw?
 
 *storybook.log
-.env.enc
