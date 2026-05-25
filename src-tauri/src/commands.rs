@@ -63,7 +63,6 @@ pub async fn update_intercept_proxy_intercept_list(
     // the browser will reconnect and traffic will be captured immediately
     for rule in &*list {
         if !old_list.contains(&rule.pattern) {
-            println!("[ALLOW_LIST_UPDATE] New rule: '{}' (was not in old list, closing tunnels)", rule.pattern);
             close_tunnels_for_host(&tunnel_state, &rule.pattern);
         }
     }
@@ -232,9 +231,6 @@ pub async fn save_proxy_rule(
     config.save_proxy_rule(rule.clone()).map_err(|e| e.to_string())?;
     refresh_active_proxy_intercept_list(&state, &config).await?;
 
-    // Close existing connections for this host so the browser reconnects
-    // with the updated rule (enabled->intercept, disabled->tunnel)
-    println!("[SAVE_RULE] Closing connections for rule: {} (enabled={}, action={})", rule.pattern, rule.enabled, rule.action);
     close_tunnels_for_host(&tunnel_state, &rule.pattern);
 
     Ok(())
@@ -247,10 +243,8 @@ pub async fn delete_proxy_rule(
     state: tauri::State<'_, InterceptAllowList>,
     tunnel_state: tauri::State<'_, ManagedTunnelCloseMap>,
 ) -> Result<(), String> {
-    // Get the rule before deleting so we can close its tunnels
     let rules = config.get_proxy_rules();
     if let Some(rule) = rules.iter().find(|r| r.id == id) {
-        println!("[DELETE_RULE] Closing connections for rule: {}", rule.pattern);
         close_tunnels_for_host(&tunnel_state, &rule.pattern);
     }
     config.delete_proxy_rule(id).map_err(|e| e.to_string())?;
