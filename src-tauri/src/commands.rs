@@ -40,37 +40,6 @@ pub async fn update_proxy_settings(
 }
 
 #[tauri::command]
-pub async fn update_intercept_proxy_intercept_list(
-    state: tauri::State<'_, InterceptAllowList>,
-    tunnel_state: tauri::State<'_, ManagedTunnelCloseMap>,
-    new_list: Vec<String>,
-) -> Result<(), String> {
-    let old_list: Vec<String> = {
-        let list = state.0.read().await;
-        list.iter().map(|r| r.pattern.clone()).collect()
-    };
-
-    let new_rules: Vec<network_spy_proxy::ProxyRule> = new_list.iter().map(|pattern| network_spy_proxy::ProxyRule {
-        pattern: pattern.clone(),
-        client: None,
-        action: "INTERCEPT".to_string(),
-    }).collect();
-
-    let mut list = state.0.write().await;
-    *list = new_rules;
-
-    // Close existing CONNECT tunnels for newly added hosts so that
-    // the browser will reconnect and traffic will be captured immediately
-    for rule in &*list {
-        if !old_list.contains(&rule.pattern) {
-            close_tunnels_for_host(&tunnel_state, &rule.pattern);
-        }
-    }
-
-    Ok(())
-}
-
-#[tauri::command]
 pub fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }

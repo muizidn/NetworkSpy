@@ -49,7 +49,6 @@ export interface IAppProvider {
   setListenStatus(isRun: boolean): Promise<number | void>;
   changeProxyPort(port: number): Promise<number>;
   listenTagsUpdated(callback: (event: { id: string, tags: string[] }) => void): Promise<() => void>;
-  updateInterceptAllowList(newList: string[]): Promise<void>;
   message(message: string, options?: { title?: string, type?: 'info' | 'error' | 'warning' }): Promise<void>;
   saveSession(): Promise<void>;
   loadSession(): Promise<void>;
@@ -105,10 +104,6 @@ export class TauriAppProvider implements IAppProvider {
       }
     }
     return data;
-  }
-
-  async updateInterceptAllowList(newList: string[]): Promise<void> {
-    return tauriInvoke("update_intercept_proxy_intercept_list", { newList });
   }
 
   async message(messageText: string, options?: { title?: string, type?: 'info' | 'error' | 'warning' }): Promise<void> {
@@ -461,11 +456,6 @@ export class MockAppProvider implements IAppProvider {
       }
     }, 300);
     return () => clearInterval(interval);
-  }
-
-  async updateInterceptAllowList(newList: string[]): Promise<void> {
-    newList.forEach(d => this.allowList.add(d));
-    console.log(`[Mock] Allow List Updated:`, Array.from(this.allowList));
   }
 
   async message(messageText: string, options?: { title?: string, type?: 'info' | 'error' | 'warning' }): Promise<void> {
