@@ -58,3 +58,6 @@ impl Default for ProxySettings {
 
 pub struct ManagedProxySettings(pub Arc<StdRwLock<ProxySettings>>);
 pub struct InterceptAllowList(pub Arc<AsyncRwLock<Vec<network_spy_proxy::ProxyRule>>>);
+
+pub use network_spy_proxy::proxy::close_tunnels_for_host;
+pub type ManagedTunnelCloseMap = network_spy_proxy::proxy::TunnelShutdownMap;

@@ -42,10 +42,32 @@ pub async fn update_proxy_settings(
 #[tauri::command]
 pub async fn update_intercept_proxy_intercept_list(
     state: tauri::State<'_, InterceptAllowList>,
-    new_list: Vec<network_spy_proxy::ProxyRule>,
+    tunnel_state: tauri::State<'_, ManagedTunnelCloseMap>,
+    new_list: Vec<String>,
 ) -> Result<(), String> {
+    let old_list: Vec<String> = {
+        let list = state.0.read().await;
+        list.iter().map(|r| r.pattern.clone()).collect()
+    };
+
+    let new_rules: Vec<network_spy_proxy::ProxyRule> = new_list.iter().map(|pattern| network_spy_proxy::ProxyRule {
+        pattern: pattern.clone(),
+        client: None,
+        action: "INTERCEPT".to_string(),
+    }).collect();
+
     let mut list = state.0.write().await;
-    *list = new_list;
+    *list = new_rules;
+
+    // Close existing CONNECT tunnels for newly added hosts so that
+    // the browser will reconnect and traffic will be captured immediately
+    for rule in &*list {
+        if !old_list.contains(&rule.pattern) {
+            println!("[ALLOW_LIST_UPDATE] New rule: '{}' (was not in old list, closing tunnels)", rule.pattern);
+            close_tunnels_for_host(&tunnel_state, &rule.pattern);
+        }
+    }
+
     Ok(())
 }
 
@@ -204,10 +226,17 @@ pub fn get_proxy_rules(config: tauri::State<'_, Arc<crate::config::ConfigManager
 pub async fn save_proxy_rule(
     rule: traffic::db::ProxyRule, 
     config: tauri::State<'_, Arc<crate::config::ConfigManager>>,
-    state: tauri::State<'_, InterceptAllowList>
+    state: tauri::State<'_, InterceptAllowList>,
+    tunnel_state: tauri::State<'_, ManagedTunnelCloseMap>,
 ) -> Result<(), String> {
-    config.save_proxy_rule(rule).map_err(|e| e.to_string())?;
+    config.save_proxy_rule(rule.clone()).map_err(|e| e.to_string())?;
     refresh_active_proxy_intercept_list(&state, &config).await?;
+
+    if rule.enabled && rule.action == "INTERCEPT" {
+        println!("[SAVE_RULE] Closing tunnels for newly added rule: {}", rule.pattern);
+        close_tunnels_for_host(&tunnel_state, &rule.pattern);
+    }
+
     Ok(())
 }
 
@@ -215,7 +244,7 @@ pub async fn save_proxy_rule(
 pub async fn delete_proxy_rule(
     id: String, 
     config: tauri::State<'_, Arc<crate::config::ConfigManager>>,
-    state: tauri::State<'_, InterceptAllowList>
+    state: tauri::State<'_, InterceptAllowList>,
 ) -> Result<(), String> {
     config.delete_proxy_rule(id).map_err(|e| e.to_string())?;
     refresh_active_proxy_intercept_list(&state, &config).await?;

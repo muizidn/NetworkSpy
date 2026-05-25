@@ -268,6 +268,11 @@ fn main() {
             let map_remote_manager_outer = Arc::clone(&map_remote_manager);
             let config_manager_outer = Arc::clone(&config_manager);
 
+            // Create tunnel close map and manage it so commands can close tunnels
+            let tunnel_close_map: ManagedTunnelCloseMap = Arc::new(tokio::sync::Mutex::new(HashMap::new()));
+            app_handle.manage(tunnel_close_map.clone());
+            let tunnel_close_map_outer = tunnel_close_map.clone();
+
             tauri::async_runtime::spawn(async move {
                 let mut current_port = actual_port;
                 loop {
@@ -280,6 +285,7 @@ fn main() {
                     let tray_stats_deep = tray_stats_for_proxy.clone();
 
                     let mut proxy = Proxy::new(key_pair, ca_cert, current_port.into());
+                    proxy.set_tunnel_shutdown_map(tunnel_close_map_outer.clone());
                         let listener = Arc::new(MyTrafficListener {
                             app_handle: app_handle_inner,
                             traffic_db: traffic_db_inner,
