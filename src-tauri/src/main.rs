@@ -80,7 +80,7 @@ fn main() {
     let app_name = env!("APP_NAME");
 
     let _guard = if let Some(dsn) = option_env!("SENTRY_DSN") {
-        if !dsn.is_empty() {
+        if dsn.starts_with("http") {
             Some(sentry::init((dsn, sentry::ClientOptions {
                 release: sentry::release_name!(),
                 ..Default::default()
