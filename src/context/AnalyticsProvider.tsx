@@ -27,7 +27,7 @@ const DevIdentifier: React.FC = () => {
 export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }) => {
   const apiKey = import.meta.env.VITE_PUBLIC_POSTHOG_KEY;
 
-  if (!apiKey) {
+  if (!apiKey || apiKey.startsWith('your_')) {
     return <>{children}</>;
   }
 
