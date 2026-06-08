@@ -14,7 +14,8 @@ import { SettingsProvider } from "./context/SettingsProvider";
 import CertificateInstaller from "./routes/certificate-installer";
 import * as Sentry from "@sentry/react";
 
-if (import.meta.env.VITE_SENTRY_DSN) {
+const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
+if (sentryDsn && sentryDsn.startsWith('http')) {
   Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
     integrations: [

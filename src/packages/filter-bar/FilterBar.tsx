@@ -91,7 +91,7 @@ const FilterNodeRenderer = ({
 
           <input
             type='text'
-            className='filter-value-input input input-xs flex-grow rounded bg-[#2a2d2c] border border-zinc-800 text-[11px] focus:outline-none focus:border-blue-500 py-0 h-6'
+            className='filter-value-input input input-xs flex-grow rounded bg-[#2a2d2c] border border-zinc-800 text-[11px] focus:outline-none focus:border-blue-500 py-0 h-6 px-2'
             placeholder={`Search ${node.type}...`}
             value={node.value}
             onChange={(e) => updateNode(node.id, { value: e.target.value })}
@@ -171,7 +171,7 @@ const FilterNodeRenderer = ({
 };
 
 import { useAtom, useAtomValue } from "jotai";
-import { mainTrafficListSearchAtom, activeTabIdAtom } from "@src/utils/trafficAtoms";
+import { mainTrafficListSearchAtom, activeTabIdAtom, isLicensedAtom } from "@src/utils/trafficAtoms";
 
 const countAllRules = (nodes: FilterNode[]): number => {
   return nodes.reduce((acc, node) => {
@@ -200,6 +200,7 @@ export const FilterBar = () => {
   const activeTabId = useAtomValue(activeTabIdAtom);
   const [searchTerm, setSearchTerm] = useAtom(mainTrafficListSearchAtom(activeTabId));
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const isLicensed = useAtomValue(isLicensedAtom);
 
   React.useEffect(() => {
     if (errorMsg) {
@@ -207,8 +208,6 @@ export const FilterBar = () => {
       return () => clearTimeout(timer);
     }
   }, [errorMsg]);
-
-
 
   const { appPredefined, userPredefined } = React.useMemo(() => {
     const filtered = predefinedFilters.filter(f =>
@@ -221,10 +220,12 @@ export const FilterBar = () => {
   }, [predefinedFilters, searchTerm]);
 
   const addRule = async (parentId: string | null = null) => {
-    const limit = await getLimit('max_filters');
-    if (countAllRules(filters) >= limit) {
-      openUpgradeDialog();
-      return;
+    if (!isLicensed) {
+      const limit = await getLimit('max_filters');
+      if (countAllRules(filters) >= limit) {
+        openUpgradeDialog();
+        return;
+      }
     }
 
     const newRule: FilterRule = {
@@ -256,10 +257,12 @@ export const FilterBar = () => {
   };
 
   const addGroup = async (parentId: string | null = null) => {
-    const limit = await getLimit('max_filters');
-    if (countAllRules(filters) >= limit) {
-      openUpgradeDialog();
-      return;
+    if (!isLicensed) {
+      const limit = await getLimit('max_filters');
+      if (countAllRules(filters) >= limit) {
+        openUpgradeDialog();
+        return;
+      }
     }
 
     const newGroup: FilterGroup = {
@@ -398,7 +401,7 @@ export const FilterBar = () => {
           <input
             type="text"
             placeholder="Search filters..."
-            className="bg-transparent border-none outline-none text-[11px] text-zinc-300 ml-2 w-20 focus:w-32 transition-all duration-300"
+            className="bg-transparent border-none outline-none text-[11px] text-zinc-300 ml-2 px-1 w-20 focus:w-32 transition-all duration-300"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
