@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { invoke } from '@tauri-apps/api/core';
-import { open } from '@tauri-apps/plugin-shell';
 import { useAtom } from 'jotai';
 import { commandPaletteOpenAtom } from '@src/utils/trafficAtoms';
 import { useAppProvider } from '../app-env';
@@ -31,11 +30,8 @@ export const CommandPalette: React.FC = () => {
   const navigate = useNavigate();
   const { openNewWindow } = useAppProvider();
 
-  const launchBrowser = useCallback((path: string, name: string) => {
-    open(path).catch(() => {
-      // Fallback: try open with -a flag using shell invoke
-      invoke('plugin:shell|open', { path: `/Applications/${name}.app` }).catch(() => {});
-    });
+  const launchBrowser = useCallback((path: string) => {
+    invoke('launch_browser', { path }).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -77,7 +73,7 @@ export const CommandPalette: React.FC = () => {
         close();
         const chrome = browsers.find(b => b.name === 'Google Chrome');
         const target = chrome || browsers[0];
-        if (target) launchBrowser(target.path, target.name);
+        if (target) launchBrowser(target.path);
       },
     },
     ...browsers.map((b, i) => ({
@@ -88,7 +84,7 @@ export const CommandPalette: React.FC = () => {
       keywords: [b.name.toLowerCase(), 'browser', 'launch', 'open'],
       action: () => {
         close();
-        launchBrowser(b.path, b.name);
+        launchBrowser(b.path);
       },
     })),
     {

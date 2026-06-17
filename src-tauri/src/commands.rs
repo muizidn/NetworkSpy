@@ -876,6 +876,15 @@ pub struct BrowserInfo {
 }
 
 #[tauri::command]
+pub fn launch_browser(path: String) -> Result<(), String> {
+    std::process::Command::new("open")
+        .arg(&path)
+        .spawn()
+        .map_err(|e| format!("Failed to launch browser: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
 pub fn get_installed_browsers() -> Vec<BrowserInfo> {
     let mut browsers = Vec::new();
 

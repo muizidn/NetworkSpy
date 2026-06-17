@@ -103,6 +103,7 @@ macro_rules! generate_handler {
             crate::commands::select_workspace_dir,
             crate::commands::get_current_workspace,
             crate::commands::get_installed_browsers,
+            crate::commands::launch_browser,
         ]
     };
 }
