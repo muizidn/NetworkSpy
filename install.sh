@@ -10,12 +10,7 @@ set -e
 GITHUB_REPO="muizidn/NetworkSpy"
 SCRIPT_BRANCH="main"
 
-# Fetch latest commit ID for transparency (silently)
-COMMIT_ID=$(curl -s -H "Cache-Control: no-cache" "https://api.github.com/repos/$GITHUB_REPO/commits/$SCRIPT_BRANCH" | grep '"sha":' | head -n 1 | sed -E 's/.*"([^"]+)".*/\1/' | cut -c1-7)
-COMMIT_ID=${COMMIT_ID:-"unknown"}
-
 REPO_URL="https://github.com/$GITHUB_REPO"
-API_URL="https://api.github.com/repos/$GITHUB_REPO/releases"
 
 # Configuration
 VERSION=""
@@ -34,7 +29,7 @@ done
 TEMP_DIR=$(mktemp -d)
 
 echo "🚀 Starting Network Spy Installation..."
-echo "📂 Script Source: github.com/$GITHUB_REPO ($SCRIPT_BRANCH#$COMMIT_ID)"
+echo "📂 Script Source: github.com/$GITHUB_REPO"
 
 # 1. Platform Detection
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -54,11 +49,7 @@ fi
 # 2. Version Detection
 if [ -z "$VERSION" ] || [ "$VERSION" = "latest" ]; then
     echo "🔍 Fetching latest version info..."
-    VERSION=$(curl -s -H "Cache-Control: no-cache" $API_URL/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-    if [ -z "$VERSION" ]; then
-        # Fallback if no 'latest' release exists (common for develop builds)
-        VERSION=$(curl -s -H "Cache-Control: no-cache" $API_URL | grep '"tag_name":' | head -n 1 | sed -E 's/.*"([^"]+)".*/\1/')
-    fi
+    VERSION=$(curl -s "https://networkspy.app/latest" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
 fi
 
 if [ -z "$VERSION" ]; then
