@@ -68,23 +68,11 @@ cd "$TEMP_DIR"
 
 if [ "$OS" = "darwin" ]; then
     # macOS Installation (.dmg)
-    echo "🔍 Discovering macOS assets..."
+    VERSION_NUM=${VERSION#v}
+    FILENAME="Network.Spy_${VERSION_NUM}_${ARCH_NAME_MAC}.dmg"
+    DOWNLOAD_URL="https://github.com/$GITHUB_REPO/releases/download/${VERSION}/${FILENAME}"
     
-    # Discovery based on extension and architecture
-    ASSET_DATA=$(curl -s "https://api.github.com/repos/$GITHUB_REPO/releases/tags/$VERSION" | grep "browser_download_url" | grep ".dmg" | grep "$ARCH_NAME_MAC" | head -n 1) || true
-    
-    if [ -z "$ASSET_DATA" ]; then
-        # Fallback for universal or differently named builds
-        ASSET_DATA=$(curl -s "https://api.github.com/repos/$GITHUB_REPO/releases/tags/$VERSION" | grep "browser_download_url" | grep ".dmg" | head -n 1)
-    fi
-
-    DOWNLOAD_URL=$(echo "$ASSET_DATA" | sed -E 's/.*"([^"]+)".*/\1/')
-    FILENAME=$(basename "$DOWNLOAD_URL")
-
-    if [ -z "$DOWNLOAD_URL" ]; then
-        echo "❌ Could not find a suitable .dmg asset in release $VERSION."
-        exit 1
-    fi
+    echo "🔍 Using asset: $FILENAME"
     
     echo "⬇️ Downloading $FILENAME..."
     if ! curl -L -O "$DOWNLOAD_URL"; then
@@ -121,16 +109,11 @@ if [ "$OS" = "darwin" ]; then
 
 elif [ "$OS" = "linux" ]; then
     # Linux Installation (.deb)
-    echo "🔍 Discovering Linux assets..."
+    VERSION_NUM=${VERSION#v}
+    FILENAME="Network.Spy_${VERSION_NUM}_${ARCH_NAME}.deb"
+    DOWNLOAD_URL="https://github.com/$GITHUB_REPO/releases/download/${VERSION}/${FILENAME}"
     
-    ASSET_DATA=$(curl -s "https://api.github.com/repos/$GITHUB_REPO/releases/tags/$VERSION" | grep "browser_download_url" | grep ".deb" | grep "$ARCH_NAME" | head -n 1) || true
-    DOWNLOAD_URL=$(echo "$ASSET_DATA" | sed -E 's/.*"([^"]+)".*/\1/')
-    FILENAME=$(basename "$DOWNLOAD_URL")
-
-    if [ -z "$DOWNLOAD_URL" ]; then
-        echo "❌ Could not find a suitable .deb asset."
-        exit 1
-    fi
+    echo "🔍 Using asset: $FILENAME"
     
     echo "⬇️ Downloading $FILENAME..."
     if ! curl -L -O "$DOWNLOAD_URL"; then
