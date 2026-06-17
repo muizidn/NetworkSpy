@@ -201,7 +201,7 @@ jobs:
               BODY=$(cat <<EOF
             {
               "version": "${VERSION_TAG}",
-              "mac": { "${ARCH_KEY}": "${URL}" }
+              "macos": { "${ARCH_KEY}": "${URL}" }
             }
             EOF
               )
