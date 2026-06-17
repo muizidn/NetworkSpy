@@ -12,6 +12,7 @@ use std::fs;
 use rusqlite::params;
 use std::sync::atomic::Ordering;
 use arboard::Clipboard;
+use serde::Serialize;
 
 #[tauri::command]
 pub fn write_to_clipboard(text: String) -> Result<(), String> {
@@ -866,4 +867,89 @@ pub async fn select_workspace_dir(
 pub fn get_current_workspace() -> Option<String> {
     let state = crate::workspace::load_workspace_state();
     state.current_workspace_path.map(|p| p.to_string_lossy().to_string())
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct BrowserInfo {
+    pub name: String,
+    pub path: String,
+}
+
+#[tauri::command]
+pub fn get_installed_browsers() -> Vec<BrowserInfo> {
+    let mut browsers = Vec::new();
+
+    #[cfg(target_os = "macos")]
+    {
+        let candidates: &[(&str, &str)] = &[
+            ("Google Chrome", "/Applications/Google Chrome.app"),
+            ("Google Chrome Canary", "/Applications/Google Chrome Canary.app"),
+            ("Firefox", "/Applications/Firefox.app"),
+            ("Safari", "/Applications/Safari.app"),
+            ("Brave Browser", "/Applications/Brave Browser.app"),
+            ("Microsoft Edge", "/Applications/Microsoft Edge.app"),
+            ("Opera", "/Applications/Opera.app"),
+            ("Arc", "/Applications/Arc.app"),
+            ("Orion", "/Applications/Orion.app"),
+            ("Vivaldi", "/Applications/Vivaldi.app"),
+            ("Tor Browser", "/Applications/Tor Browser.app"),
+        ];
+
+        for (name, path) in candidates {
+            if std::path::Path::new(path).exists() {
+                browsers.push(BrowserInfo {
+                    name: name.to_string(),
+                    path: path.to_string(),
+                });
+            }
+        }
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        let candidates: &[(&str, &str)] = &[
+            ("Chrome", r"C:\Program Files\Google\Chrome\Application\chrome.exe"),
+            ("Chrome (x86)", r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"),
+            ("Firefox", r"C:\Program Files\Mozilla Firefox\firefox.exe"),
+            ("Firefox (x86)", r"C:\Program Files (x86)\Mozilla Firefox\firefox.exe"),
+            ("Edge", r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"),
+            ("Brave", r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"),
+            ("Opera", r"C:\Program Files\Opera\launcher.exe"),
+            ("Vivaldi", r"C:\Program Files\Vivaldi\Application\vivaldi.exe"),
+        ];
+
+        for (name, path) in candidates {
+            if std::path::Path::new(path).exists() {
+                browsers.push(BrowserInfo {
+                    name: name.to_string(),
+                    path: path.to_string(),
+                });
+            }
+        }
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        // On Linux, check common browser executables in PATH
+        let candidates = &[
+            "google-chrome", "google-chrome-stable", "chromium", "chromium-browser",
+            "firefox", "brave-browser", "microsoft-edge", "opera", "vivaldi",
+        ];
+
+        for name in candidates {
+            if let Ok(path) = std::process::Command::new("which").arg(name).output() {
+                if path.status.success() {
+                    let path_str = String::from_utf8_lossy(&path.stdout).trim().to_string();
+                    if !path_str.is_empty() {
+                        browsers.push(BrowserInfo {
+                            name: name.to_string(),
+                            path: path_str,
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    browsers
 }

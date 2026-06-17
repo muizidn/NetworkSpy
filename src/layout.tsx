@@ -4,6 +4,7 @@ import { LeftSidebar } from "./packages/sidebar/LeftSidebar";
 import { ProStatusDialog } from "./packages/sidebar/ProStatusDialog";
 import { StatusInfoDialog } from "./packages/ui/StatusInfoDialog";
 import { TitleBarTraffic, TitleBarViewerBuilder, TitleBarViewerList, TitleBarSetting } from "./packages/ui/TitleBar";
+import { CommandPalette } from "./packages/ui/CommandPalette";
 
 import { platform } from "@tauri-apps/plugin-os";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -72,6 +73,7 @@ export default function Layout() {
         onClose={() => setIsProDialogOpen(false)}
       />
       <StatusInfoDialog />
+      <CommandPalette />
     </div>
 
 

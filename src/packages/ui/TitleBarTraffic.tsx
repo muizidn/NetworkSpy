@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
-import { FiX, FiPlay, FiPause, FiTrash2, FiSave, FiMonitor, FiLayout, FiSidebar, FiColumns, FiPlus } from 'react-icons/fi';
+import { FiX, FiPlay, FiPause, FiTrash2, FiSave, FiMonitor, FiLayout, FiSidebar, FiColumns, FiPlus, FiCommand } from 'react-icons/fi';
 import { useAppProvider } from '../app-env';
 import { useSessionContext } from '@src/context/SessionContext';
 import { usePaneContext } from '@src/context/PaneProvider';
@@ -8,7 +8,7 @@ import { PortDialog } from '../header/components/PortDialog';
 import { SaveSessionDialog } from '../header/components/SaveSessionDialog';
 import { twMerge } from 'tailwind-merge';
 import { useAtom } from 'jotai';
-import { workspaceTabsAtom, activeTabIdAtom, WorkspaceTab, osAtom } from '@src/utils/trafficAtoms';
+import { workspaceTabsAtom, activeTabIdAtom, WorkspaceTab, osAtom, commandPaletteOpenAtom } from '@src/utils/trafficAtoms';
 import { useSettingsContext } from '@src/context/SettingsProvider';
 import { UpgradeDialog } from '../header/components/UpgradeDialog';
 import { invoke } from '@tauri-apps/api/core';
@@ -29,6 +29,7 @@ const TitleBarTraffic: React.FC = () => {
 
   const [tabsList, setTabsList] = useAtom(workspaceTabsAtom);
   const [activeTabId, setActiveTabId] = useAtom(activeTabIdAtom);
+  const [, setCommandPaletteOpen] = useAtom(commandPaletteOpenAtom);
 
   const [isPortDialogOpen, setIsPortDialogOpen] = useState(false);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
@@ -302,6 +303,11 @@ const TitleBarTraffic: React.FC = () => {
       {/* Right Side Tools */}
       <div className="flex items-center gap-2 shrink-0 h-full" data-tauri-drag-region>
         <div className="flex items-center gap-0.5 bg-white/5 p-0.5 rounded-md border border-white/5 shadow-inner">
+          <ActionButton
+            icon={FiCommand}
+            label="Open Command Palette (⌘P)"
+            onClick={() => setCommandPaletteOpen(true)}
+          />
           <ActionButton
             icon={FiColumns}
             active={isDisplayPane.centerLayout === "horizontal"}
