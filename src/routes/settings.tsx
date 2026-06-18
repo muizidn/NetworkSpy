@@ -288,29 +288,14 @@ export default function Settings() {
                                     <div>
                                         <h3 className="text-sm font-bold text-white mb-0.5">Theme</h3>
                                         <p className="text-xs text-zinc-500 max-w-md leading-relaxed">
-                                            Choose between Light and Dark themes.
+                                            Dark mode is enabled by default.
                                         </p>
                                     </div>
                                 </div>
                                 <div className="flex bg-zinc-950 p-1 rounded-xl border border-zinc-800">
-                                    <button
-                                        onClick={() => setTheme('light')}
-                                        className={twMerge(
-                                            "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
-                                            theme === 'light' ? "bg-zinc-800 text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
-                                        )}
-                                    >
-                                        Light
-                                    </button>
-                                    <button
-                                        onClick={() => setTheme('dark')}
-                                        className={twMerge(
-                                            "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
-                                            theme === 'dark' ? "bg-zinc-800 text-white shadow-lg" : "text-zinc-600 hover:text-zinc-400"
-                                        )}
-                                    >
+                                    <div className="px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-zinc-800 text-white shadow-lg">
                                         Dark
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
