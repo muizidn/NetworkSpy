@@ -4,6 +4,7 @@
   "local": true,
   "windows": [
     "main",
+    "composer",
     "tag",
     "certificate-installer",
     "breakpoint-hit",
