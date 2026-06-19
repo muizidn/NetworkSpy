@@ -1,6 +1,7 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
-import MonacoEditor from "@monaco-editor/react";
+import { MonacoEditor } from "@src/packages/ui/MonacoEditor";
+import { Tabs } from "./Tabs";
 
 export interface ComposerResponse {
   status: number;
@@ -34,6 +35,47 @@ const bodyToHexString = (body: number[]): string => {
   return hex;
 };
 
+const ResponseHeadersView: React.FC<{ headers: { key: string; value: string }[] }> = ({ headers }) => (
+  <div className="p-3 space-y-1">
+    {headers.map((h, i) => (
+      <div key={i} className="flex gap-2 text-[11px] font-mono">
+        <span className="text-blue-400 whitespace-nowrap">{h.key}:</span>
+        <span className="text-zinc-400 break-all">{h.value}</span>
+      </div>
+    ))}
+  </div>
+);
+
+const ResponseBodyView: React.FC<{
+  isJSON: boolean;
+  bodyString: string;
+}> = ({ isJSON, bodyString }) => (
+  <div className="h-full border-t border-zinc-800" style={{ minHeight: "100px" }}>
+    <MonacoEditor
+      height="100%"
+      language={isJSON ? "json" : "plaintext"}
+      theme="vs-dark"
+      value={bodyString}
+      options={{
+        minimap: { enabled: false },
+        fontSize: 11,
+        lineNumbers: "off",
+        scrollBeyondLastLine: false,
+        readOnly: true,
+              padding: { top: 6, bottom: 12 },
+      }}
+    />
+  </div>
+);
+
+const ResponseHexView: React.FC<{ body: number[] }> = ({ body }) => (
+  <div className="p-3">
+    <pre className="text-[11px] font-mono text-zinc-400 leading-relaxed">
+      {bodyToHexString(body)}
+    </pre>
+  </div>
+);
+
 interface ResponseViewProps {
   response: ComposerResponse | null;
   error: string | null;
@@ -54,16 +96,16 @@ export const ResponseView: React.FC<ResponseViewProps> = ({
   return (
     <div className="flex flex-col h-full">
       {error && (
-        <div className="flex-shrink-0 mb-3 p-3 bg-red-950/30 border border-red-900/50 rounded-lg">
-          <p className="text-red-400 text-xs font-mono">{error}</p>
+        <div className="flex-shrink-0 mb-2 p-2 bg-red-950/30 border border-red-900/50 rounded-lg">
+          <p className="text-red-400 text-[11px] font-mono">{error}</p>
         </div>
       )}
 
       {response ? (
         <div className="flex flex-col flex-1 min-h-0">
-          <div className="flex items-center gap-3 flex-shrink-0 mb-3">
+          <div className="flex items-center gap-2 flex-shrink-0 mb-2">
             <div className={twMerge(
-              "px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider",
+              "px-2 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider",
               response.status >= 200 && response.status < 300
                 ? "bg-emerald-950/30 text-emerald-400 border border-emerald-900/50"
                 : response.status >= 300 && response.status < 400
@@ -74,68 +116,35 @@ export const ResponseView: React.FC<ResponseViewProps> = ({
             )}>
               {response.status} {response.status_text}
             </div>
-            <span className="text-zinc-500 text-xs font-mono">{response.timing_ms}ms</span>
-            <span className="text-zinc-500 text-xs font-mono">{formatSize(response.size_bytes)}</span>
+            <span className="text-zinc-500 text-[11px] font-mono">{response.timing_ms}ms</span>
+            <span className="text-zinc-500 text-[11px] font-mono">{formatSize(response.size_bytes)}</span>
           </div>
 
-          <div className="flex items-center gap-1 border-b border-zinc-800 flex-shrink-0">
-            {(["headers", "body", "hex"] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => onResponseTabChange(tab)}
-                className={twMerge(
-                  "px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all rounded-t-lg",
-                  activeResponseTab === tab
-                    ? "text-blue-400 border-b-2 border-blue-500 bg-blue-500/5"
-                    : "text-zinc-500 hover:text-zinc-300"
-                )}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+          <Tabs
+            tabs={[
+              { key: "headers", label: "Headers" },
+              { key: "body", label: "Body" },
+              { key: "hex", label: "Hex" },
+            ]}
+            activeKey={activeResponseTab}
+            onChange={onResponseTabChange}
+          />
 
           <div className="flex-1 min-h-0 overflow-y-auto">
             {activeResponseTab === "headers" && (
-              <div className="p-4 space-y-1">
-                {response.headers.map((h, i) => (
-                  <div key={i} className="flex gap-2 text-xs font-mono">
-                    <span className="text-blue-400 whitespace-nowrap">{h.key}:</span>
-                    <span className="text-zinc-400 break-all">{h.value}</span>
-                  </div>
-                ))}
-              </div>
+              <ResponseHeadersView headers={response.headers} />
             )}
             {activeResponseTab === "body" && (
-              <div className="h-full border-t border-zinc-800" style={{ minHeight: "150px" }}>
-                <MonacoEditor
-                  height="100%"
-                  language={isJSONResponse ? "json" : "plaintext"}
-                  theme="vs-dark"
-                  value={responseBodyString}
-                  options={{
-                    minimap: { enabled: false },
-                    fontSize: 12,
-                    lineNumbers: "off",
-                    scrollBeyondLastLine: false,
-                    readOnly: true,
-                    padding: { top: 8 },
-                  }}
-                />
-              </div>
+              <ResponseBodyView isJSON={isJSONResponse} bodyString={responseBodyString} />
             )}
             {activeResponseTab === "hex" && (
-              <div className="p-4">
-                <pre className="text-[11px] font-mono text-zinc-400 leading-relaxed">
-                  {bodyToHexString(response.body)}
-                </pre>
-              </div>
+              <ResponseHexView body={response.body} />
             )}
           </div>
         </div>
       ) : (
         <div className="flex-1 flex items-center justify-center">
-          <p className="text-zinc-600 text-xs font-mono">Send a request to see the response</p>
+          <p className="text-zinc-600 text-[11px] font-mono">Send a request to see the response</p>
         </div>
       )}
     </div>

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { ToolBaseHeader } from "@src/packages/ui/ToolBaseHeader";
 import { FiSend, FiMaximize2 } from "react-icons/fi";
-import { twMerge } from "tailwind-merge";
 import { invoke } from "@tauri-apps/api/core";
+import { Tabs } from "./components/Tabs";
 import { UrlBar } from "./components/UrlBar";
 import type { HttpMethod } from "./components/UrlBar";
 import { RequestView } from "./components/RequestView";
@@ -109,7 +109,7 @@ const Composer: React.FC = () => {
         actions={
           <button
             onClick={() => window.open("/composer", "_blank")}
-            className="p-2.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50 transition-all active:scale-95"
+            className="p-2 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50 transition-all active:scale-95"
             title="Open in new window"
           >
             <FiMaximize2 size={16} />
@@ -129,34 +129,19 @@ const Composer: React.FC = () => {
           isSending={isSending}
         />
 
-        <div className="flex-shrink-0 px-4 pt-4">
-          <div className="flex items-center gap-1 border-b border-zinc-800">
-            <button
-              onClick={() => setActiveMainTab("request")}
-              className={twMerge(
-                "px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all rounded-t-lg",
-                activeMainTab === "request"
-                  ? "text-blue-400 border-b-2 border-blue-500 bg-blue-500/5"
-                  : "text-zinc-500 hover:text-zinc-300"
-              )}
-            >
-              Request
-            </button>
-            <button
-              onClick={() => setActiveMainTab("response")}
-              className={twMerge(
-                "px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all rounded-t-lg",
-                activeMainTab === "response"
-                  ? "text-blue-400 border-b-2 border-blue-500 bg-blue-500/5"
-                  : "text-zinc-500 hover:text-zinc-300"
-              )}
-            >
-              Response
-            </button>
-          </div>
+        <div className="flex-shrink-0 px-3 pt-2">
+          <Tabs
+            tabs={[
+              { key: "request", label: "Request" },
+              { key: "response", label: "Response" },
+            ]}
+            activeKey={activeMainTab}
+            onChange={setActiveMainTab}
+            size="md"
+          />
         </div>
 
-        <div className="flex-1 min-h-0 px-4 py-3">
+        <div className="flex-1 min-h-0 px-3 py-2">
           {activeMainTab === "request" && (
             <RequestView
               activeRequestTab={activeRequestTab}
@@ -186,8 +171,8 @@ const Composer: React.FC = () => {
       </div>
 
       {urlError && (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[9999] px-4 py-2.5 bg-red-950/40 backdrop-blur-md border border-red-500/30 rounded-lg shadow-[0_0_30px_-6px_rgba(239,68,68,0.15)] animate-in fade-in slide-in-from-bottom-2 duration-200">
-          <p className="text-red-400 text-xs font-mono">{urlError}</p>
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[9999] px-3 py-2 bg-red-950/40 backdrop-blur-md border border-red-500/30 rounded-lg shadow-[0_0_30px_-6px_rgba(239,68,68,0.15)] animate-in fade-in slide-in-from-bottom-2 duration-200">
+          <p className="text-red-400 text-[11px] font-mono">{urlError}</p>
         </div>
       )}
     </div>

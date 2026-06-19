@@ -38,13 +38,13 @@ export const UrlBar: React.FC<UrlBarProps> = ({
   isSending,
 }) => {
   return (
-    <div className="flex-shrink-0 p-4 pb-0">
+    <div className="flex-shrink-0 p-3 pb-0">
       <div className="flex items-center gap-2">
         <select
           value={method}
           onChange={(e) => onMethodChange(e.target.value as HttpMethod)}
           className={twMerge(
-            "px-3 py-2 rounded-lg border text-xs font-bold uppercase tracking-wider outline-none appearance-none cursor-pointer min-w-[90px]",
+            "px-2.5 py-1.5 rounded-lg border text-xs font-bold uppercase tracking-wider outline-none appearance-none cursor-pointer min-w-[90px]",
             METHOD_COLORS[method]
           )}
         >
@@ -60,8 +60,11 @@ export const UrlBar: React.FC<UrlBarProps> = ({
             onChange={(e) => onUrlChange(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder="https://api.example.com/endpoint"
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
             className={twMerge(
-              "w-full px-4 py-2 bg-zinc-900/80 border rounded-lg text-zinc-200 text-sm font-mono outline-none transition-all placeholder:text-zinc-700",
+              "w-full px-3 py-1.5 bg-zinc-900/80 border rounded-lg text-zinc-200 text-xs font-mono outline-none transition-all placeholder:text-zinc-700",
               urlError ? "border-red-500/50 focus:border-red-500" : "border-zinc-800 focus:border-blue-500/50"
             )}
           />
@@ -72,7 +75,7 @@ export const UrlBar: React.FC<UrlBarProps> = ({
           onClick={onSend}
           disabled={isSending || !url.trim() || !!urlError}
           className={twMerge(
-            "flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-bold transition-all active:scale-95",
+            "flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95",
             isSending || !url.trim() || !!urlError
               ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20"
