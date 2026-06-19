@@ -63,6 +63,7 @@ const bodyToHexString = (body: number[]): string => {
 const Composer: React.FC = () => {
   const [method, setMethod] = useState<HttpMethod>("GET");
   const [url, setUrl] = useState("");
+  const [urlError, setUrlError] = useState<string | null>(null);
   const [headers, setHeaders] = useState<Header[]>([{ id: newHeaderId(), key: "", value: "" }]);
   const [bodyType, setBodyType] = useState<"none" | "text" | "json">("none");
   const [bodyText, setBodyText] = useState("");
@@ -85,8 +86,27 @@ const Composer: React.FC = () => {
     setHeaders(prev => prev.map(h => h.id === id ? { ...h, [field]: val } : h));
   };
 
+  const validateUrl = (value: string): string | null => {
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+    if (!/^https?:\/\//i.test(trimmed)) {
+      return "URL must start with http:// or https://";
+    }
+    try {
+      new URL(trimmed);
+      return null;
+    } catch {
+      return "Invalid URL format";
+    }
+  };
+
+  const handleUrlChange = (value: string) => {
+    setUrl(value);
+    setUrlError(validateUrl(value));
+  };
+
   const handleSend = async () => {
-    if (!url.trim()) return;
+    if (!url.trim() || urlError) return;
     setIsSending(true);
     setError(null);
     setResponse(null);
@@ -111,7 +131,7 @@ const Composer: React.FC = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && url.trim() && !urlError) {
       e.preventDefault();
       handleSend();
     }
@@ -162,25 +182,29 @@ const Composer: React.FC = () => {
               <input
                 type="text"
                 value={url}
-                onChange={(e) => setUrl(e.target.value)}
+                onChange={(e) => handleUrlChange(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="https://api.example.com/endpoint"
-                className="w-full px-4 py-2 bg-zinc-900/80 border border-zinc-800 rounded-lg text-zinc-200 text-sm font-mono outline-none focus:border-blue-500/50 transition-all placeholder:text-zinc-700"
+                className={twMerge(
+                  "w-full px-4 py-2 bg-zinc-900/80 border rounded-lg text-zinc-200 text-sm font-mono outline-none transition-all placeholder:text-zinc-700",
+                  urlError ? "border-red-500/50 focus:border-red-500" : "border-zinc-800 focus:border-blue-500/50"
+                )}
               />
+
             </div>
 
             <button
               onClick={handleSend}
-              disabled={isSending || !url.trim()}
+              disabled={isSending || !url.trim() || !!urlError}
               className={twMerge(
                 "flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-bold transition-all active:scale-95",
-                isSending
+                isSending || !url.trim() || !!urlError
                   ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20"
               )}
             >
               <FiSend size={14} className={isSending ? "animate-pulse" : ""} />
-              {isSending ? "Sending..." : "Send"}
+              {isSending ? "Sending..." : !!urlError ? "Invalid URL" : "Send"}
             </button>
           </div>
         </div>
@@ -385,6 +409,12 @@ const Composer: React.FC = () => {
           </div>
         )}
       </div>
+
+      {urlError && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[9999] px-4 py-2.5 bg-red-950/40 backdrop-blur-md border border-red-500/30 rounded-lg shadow-[0_0_30px_-6px_rgba(239,68,68,0.15)] animate-in fade-in slide-in-from-bottom-2 duration-200">
+          <p className="text-red-400 text-xs font-mono">{urlError}</p>
+        </div>
+      )}
     </div>
   );
 };
