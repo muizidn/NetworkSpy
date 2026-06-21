@@ -1,6 +1,7 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
 import { MonacoEditor } from "@src/packages/ui/MonacoEditor";
+import { HexView } from "@src/packages/bottom-pane/TabRenderer/HexView";
 import { Tabs } from "./Tabs";
 
 export interface ComposerResponse {
@@ -18,21 +19,6 @@ const formatSize = (bytes: number): string => {
   const units = ["B", "KB", "MB", "GB"];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   return `${(bytes / Math.pow(1024, i)).toFixed(i > 0 ? 1 : 0)} ${units[i]}`;
-};
-
-const vscToHex = (v: number) => {
-  const h = v.toString(16);
-  return h.length === 1 ? "0" + h : h;
-};
-
-const bodyToHexString = (body: number[]): string => {
-  let hex = "";
-  for (let i = 0; i < body.length; i++) {
-    if (i > 0 && i % 16 === 0) hex += "\n";
-    else if (i > 0) hex += " ";
-    hex += vscToHex(body[i]);
-  }
-  return hex;
 };
 
 const ResponseHeadersView: React.FC<{ headers: { key: string; value: string }[] }> = ({ headers }) => (
@@ -69,10 +55,8 @@ const ResponseBodyView: React.FC<{
 );
 
 const ResponseHexView: React.FC<{ body: number[] }> = ({ body }) => (
-  <div className="p-3">
-    <pre className="text-[11px] font-mono text-zinc-400 leading-relaxed">
-      {bodyToHexString(body)}
-    </pre>
+  <div className="p-3 h-full">
+    <HexView data={new Uint8Array(body)} />
   </div>
 );
 
