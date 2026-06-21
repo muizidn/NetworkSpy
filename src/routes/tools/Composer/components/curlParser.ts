@@ -27,38 +27,72 @@ export function parseCurl(input: string): ParsedCurl {
   while (i < tokens.length) {
     const token = tokens[i];
 
-    if (token === "-X" || token === "--request") {
-      i++;
-      if (i < tokens.length) {
-        result.method = tokens[i].toUpperCase();
+    // --request / -X
+    if (token.startsWith("-X") && token.length > 2) {
+      result.method = token.substring(2).toUpperCase();
+    } else if (headerMatches(token, "-X", "--request")) {
+      const val = flagValue(token, "-X", "--request");
+      if (val !== undefined) {
+        result.method = val.toUpperCase();
+      } else {
+        i++;
+        if (i < tokens.length) {
+          result.method = tokens[i].toUpperCase();
+        }
       }
-    } else if (token === "-H" || token === "--header") {
-      i++;
-      if (i < tokens.length) {
-        const header = parseHeader(tokens[i]);
+    } else if (headerMatches(token, "-H", "--header")) {
+      // --header / -H
+      const val = flagValue(token, "-H", "--header");
+      if (val !== undefined) {
+        const header = parseHeader(val);
         if (header) result.headers.push(header);
+      } else {
+        i++;
+        if (i < tokens.length) {
+          const header = parseHeader(tokens[i]);
+          if (header) result.headers.push(header);
+        }
       }
-    } else if (
-      token === "-d" ||
-      token === "--data" ||
-      token === "--data-raw" ||
-      token === "--data-binary"
-    ) {
-      i++;
-      if (i < tokens.length) {
-        result.body = stripQuotes(tokens[i]);
+    } else if (headerMatches(token, "-d", "--data", "--data-raw", "--data-binary")) {
+      // --data / -d / --data-raw / --data-binary
+      const val = flagValue(token, "-d", "--data", "--data-raw", "--data-binary");
+      if (val !== undefined) {
+        result.body = stripQuotes(val);
         hasData = true;
+      } else {
+        i++;
+        if (i < tokens.length) {
+          result.body = stripQuotes(tokens[i]);
+          hasData = true;
+        }
+      }
+    } else if (headerMatches(token, "--url")) {
+      const val = flagValue(token, "--url");
+      if (val !== undefined) {
+        result.url = stripQuotes(val);
+      } else {
+        i++;
+        if (i < tokens.length) {
+          result.url = stripQuotes(tokens[i]);
+        }
+      }
+    } else if (headerMatches(token, "--cookie", "-b")) {
+      const val = flagValue(token, "--cookie", "-b");
+      if (val !== undefined) {
+        result.headers.push({ key: "Cookie", value: stripQuotes(val) });
+      } else {
+        i++;
+        if (i < tokens.length) {
+          result.headers.push({ key: "Cookie", value: stripQuotes(tokens[i]) });
+        }
       }
     } else if (token.startsWith("-") || token.startsWith("--")) {
       // skip unknown flags and their values
-      if (i + 1 < tokens.length && !tokens[i + 1].startsWith("-")) {
-        // check if next token looks like a value (not a flag)
-        const parts = token.split("=");
-        if (parts.length === 2) {
-          // --flag=value form, skip
-        } else {
-          i++; // skip value
-        }
+      const parts = token.split("=");
+      if (parts.length === 2) {
+        // --flag=value form, already consumed
+      } else if (i + 1 < tokens.length && !tokens[i + 1].startsWith("-") && !looksLikeUrl(tokens[i + 1])) {
+        i++; // skip value
       }
     } else if (!result.url) {
       result.url = stripQuotes(token);
@@ -113,15 +147,8 @@ function tokenize(input: string): string[] {
         val += input[i];
         i++;
       }
-      // handle --flag=value
-      const eqIdx = val.indexOf("=");
-      if (eqIdx > 0 && !val.startsWith("-")) {
-        tokens.push(val.substring(0, eqIdx));
-        tokens.push("=");
-        tokens.push(val.substring(eqIdx + 1));
-      } else {
-        tokens.push(val);
-      }
+      // push token as-is; --flag=value splitting is handled by the parser
+      tokens.push(val);
     }
   }
 
@@ -146,4 +173,23 @@ function stripQuotes(s: string): string {
     }
   }
   return s;
+}
+
+function looksLikeUrl(s: string): boolean {
+  return /^https?:\/\//i.test(s);
+}
+
+function headerMatches(token: string, ...names: string[]): boolean {
+  return names.some(n => token === n || token.startsWith(n + "="));
+}
+
+function flagValue(token: string, ...names: string[]): string | undefined {
+  for (const name of names) {
+    if (token.startsWith(name + "=")) {
+      const val = token.substring(name.length + 1);
+      if (val.length > 0) return val;
+      return undefined;
+    }
+  }
+  return undefined;
 }
