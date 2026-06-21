@@ -4,123 +4,150 @@ import Guide, { GuideStep } from "../Guide";
 export function MacOSInstaller() {
   const macOSSteps: GuideStep[] = [
     {
-      title: "Download and Install NetworkSpy",
+      title: "What This Does",
       description: (
-        <div>
+        <div className="space-y-3">
           <p>
-            Visit the NetworkSpy website and download the installer for macOS:{" "}
-            <a
-              href="https://NetworkSpy.io"
-              className="text-blue-400 hover:underline"
-            >
-              https://NetworkSpy.io
-            </a>
+            NetworkSpy intercepts HTTPS traffic by acting as a <b>man-in-the-middle proxy</b>.
+            To decrypt TLS-encrypted connections without browser warnings, it generates a
+            <b> root Certificate Authority (CA)</b> and uses it to sign temporary certificates
+            for every domain you visit.
           </p>
-          <p className="mt-2">
-            Open the downloaded file and drag the NetworkSpy app to your
-            Applications folder.
+          <p>
+            This step installs that CA into your macOS <b>Login Keychain</b> and marks it
+            as trusted, so your system and browsers accept these temporary certificates
+            without showing security errors.
+          </p>
+          <div className="bg-zinc-900/60 border border-zinc-800 rounded-lg p-4 mt-3">
+            <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-2 font-bold">Certificate Location</p>
+            <code className="text-[11px] text-blue-400 break-all">
+              ~/.network-spy/ca/network-spy.crt
+            </code>
+          </div>
+          <p className="text-[11px] text-zinc-500">
+            The private key never leaves your machine. The CA is unique — generated from your
+            hostname, username, and a random ID.
           </p>
         </div>
       ),
     },
     {
-      title: "Install Root NetworkSpy Certificate",
+      title: "One-Click Install (Recommended)",
       description: (
-        <div>
-          <p>Open NetworkSpy and go to:</p>
-          <p className="mt-2 font-medium">
-            Preferences &gt; Certificates &gt; Install Certificate
+        <div className="space-y-3">
+          <p>
+            Click the <b>"One-Click Install CA"</b> button above. It runs this command:
           </p>
-          <p className="mt-2">
-            Follow the prompts to install the root certificate and ensure it is
-            trusted by your system.
+          <div className="bg-[#0c0c0c] border border-zinc-800 rounded-xl overflow-hidden">
+            <div className="flex items-center px-4 py-2 bg-zinc-900/50 border-b border-zinc-800">
+              <span className="text-[10px] font-mono text-zinc-500 uppercase">Terminal equivalent</span>
+            </div>
+            <pre className="p-4 text-[11px] font-mono text-green-400/80 overflow-x-auto">
+              <code>security add-trusted-cert -d -r trustRoot \{"\n"}  -k ~/Library/Keychains/login.keychain-db \{"\n"}  ~/.network-spy/ca/network-spy.crt</code>
+            </pre>
+          </div>
+          <p className="text-[11px] text-zinc-500">
+            macOS may prompt for your login password or ask you to confirm "Always Trust"
+            — this is normal. The <code className="text-zinc-400">-d</code> flag adds the cert
+            to the default keychain, and <code className="text-zinc-400">-r trustRoot</code>
+            marks it as a trusted root CA.
           </p>
-          <div className="bg-zinc-900/50 p-4 rounded-md mt-2 flex items-center space-x-2 border border-zinc-800/50">
-            <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
-            <span className="text-sm font-bold text-green-500">Installed & Trusted!</span>
+          <p className="text-[11px] text-zinc-500">
+            Click <b>"View Logs"</b> after installation to see exactly what happened.
+          </p>
+        </div>
+      ),
+    },
+    {
+      title: "Manual Install (Alternative)",
+      description: (
+        <div className="space-y-4">
+          <p>
+            If the one-click install fails (e.g., due to permissions), install manually:
+          </p>
+
+          <div>
+            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Option A: Finder + Keychain Access</p>
+            <ol className="list-decimal list-inside space-y-2 text-[12px] text-zinc-400">
+              <li>
+                In Finder, press <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded text-[10px]">⌘⇧G</kbd> and
+                go to <code className="text-blue-400 text-[11px]">~/.network-spy/ca/</code>
+              </li>
+              <li>Double-click <code className="text-blue-400 text-[11px]">network-spy.crt</code></li>
+              <li>Keychain Access opens — the cert appears under <b>"login"</b> or <b>"System"</b></li>
+              <li>Double-click the <b>"NetworkSpy CA"</b> entry</li>
+              <li>Expand <b>Trust</b> → set <b>"When using this certificate"</b> to <b>"Always Trust"</b></li>
+              <li>Close the window and enter your password to confirm</li>
+            </ol>
+          </div>
+
+          <div>
+            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Option B: Terminal</p>
+            <div className="bg-[#0c0c0c] border border-zinc-800 rounded-xl overflow-hidden">
+              <pre className="p-4 text-[11px] font-mono text-green-400/80 overflow-x-auto">
+                <code>security add-trusted-cert -d -r trustRoot \{"\n"}  ~/.network-spy/ca/network-spy.crt</code>
+              </pre>
+            </div>
           </div>
         </div>
       ),
     },
     {
-      title: "Config Wifi Proxy on macOS",
+      title: "Verify Installation",
       description: (
-        <div>
-          <p>
-            Open <span className="font-bold text-zinc-200">System Preferences</span> &gt;{" "}
-            <span className="font-bold text-zinc-200">Network</span>.
-          </p>
-          <p className="mt-4">
-            Select your active network connection (Wi-Fi or Ethernet) and click
-            <span className="font-bold text-zinc-200"> Advanced</span>.
-          </p>
-          <p className="mt-4 text-zinc-500">Go to the <span className="font-bold text-zinc-300">Proxies</span> tab and configure the following:</p>
-          <div className="bg-zinc-900/50 p-6 rounded-xl mt-3 border border-zinc-800/50 space-y-3">
-             <p className="flex justify-between items-center border-b border-zinc-800/50 pb-2">
-               <span className="text-zinc-500 text-xs">Web Proxy (HTTP):</span>
-               <span className="font-mono text-xs text-blue-400">192.168.1.4 : 9090</span>
-             </p>
-             <p className="flex justify-between items-center">
-               <span className="text-zinc-500 text-xs">Secure Web Proxy (HTTPS):</span>
-               <span className="font-mono text-xs text-blue-400">192.168.1.4 : 9090</span>
-             </p>
+        <div className="space-y-4">
+          <p>Confirm the certificate is installed and trusted:</p>
+
+          <div>
+            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Method 1: Keychain Access (GUI)</p>
+            <ol className="list-decimal list-inside space-y-1 text-[12px] text-zinc-400">
+              <li>Open <b>Keychain Access</b> (from Spotlight: <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded text-[10px]">⌘Space</kbd> → "Keychain")</li>
+              <li>Select <b>"login"</b> keychain and <b>"Certificates"</b> category</li>
+              <li>Search for <b>"NetworkSpy CA"</b></li>
+              <li>You should see it with a blue <b>+</b> icon and <b>"This certificate is marked as trusted"</b></li>
+            </ol>
           </div>
-          <p className="mt-4 text-[11px] text-zinc-500 italic leading-relaxed">
-            Ensure <span className="font-bold text-zinc-400">Use Passive FTP Mode (PASV)</span> is unchecked. Click <span className="font-bold text-zinc-400">OK</span> and then <span className="font-bold text-zinc-400">Apply</span> to save.
-          </p>
-        </div>
-      ),
-    },
-    {
-      title: "Open Google Web Browser on macOS",
-      description: (
-        <div>
-          <p>
-            Visit Website:{" "}
-            <a
-              href="http://cert.NetworkSpy.io"
-              className="text-blue-400 hover:text-blue-300 underline underline-offset-4 decoration-blue-500/30"
-            >
-              http://cert.NetworkSpy.io
-            </a>
-          </p>
-          <p className="mt-4 text-zinc-400">
-            Let it install the 'NetworkSpy CA' certificate and follow the prompts.
-          </p>
-        </div>
-      ),
-    },
-    {
-      title: "Trust NetworkSpy Certificate in Keychain Access",
-      description: (
-        <div>
-          <p className="leading-relaxed">
-            Open <span className="text-zinc-200 font-bold italic underline">Keychain Access</span> and locate the <span className="text-blue-400 font-bold">NetworkSpy CA</span> certificate.
-          </p>
-          <div className="bg-blue-600/10 border border-blue-500/20 p-5 rounded-xl mt-4">
-              <p className="text-[12px] leading-relaxed text-zinc-300">
-                Right-click &gt; <span className="font-black text-white">Get Info</span>. Expand <span className="font-black text-white">Trust</span> and set <span className="text-green-400 font-black">"Always Trust"</span>.
-              </p>
+
+          <div>
+            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Method 2: Terminal</p>
+            <div className="bg-[#0c0c0c] border border-zinc-800 rounded-xl overflow-hidden">
+              <pre className="p-4 text-[11px] font-mono text-green-400/80 overflow-x-auto">
+                <code>security find-certificate -c "NetworkSpy CA"</code>
+              </pre>
+            </div>
+            <p className="text-[11px] text-zinc-500 mt-2">
+              If installed, this prints the certificate details. If not found, it shows nothing.
+            </p>
+          </div>
+
+          <div>
+            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Method 3: Browser Test</p>
+            <p className="text-[12px] text-zinc-400">
+              Visit <b>any HTTPS website</b> (e.g. <code className="text-blue-400">https://example.com</code>).
+              If the certificate is trusted, the page loads normally with no security warning.
+              Open the padlock in the address bar — you should see the certificate chain includes
+              <b> "NetworkSpy CA"</b> as the root.
+            </p>
           </div>
         </div>
       ),
     },
     {
-      title: "Verify Proxy Configuration",
+      title: "Uninstalling",
       description: (
-        <div>
+        <div className="space-y-3">
           <p>
-            Open your web browser and navigate to{" "}
-            <a
-              href="http://example.com"
-              className="text-blue-400 hover:underline"
-            >
-              http://example.com
-            </a>{" "}
-            to ensure the proxy settings are correctly configured.
+            Use the <b>"Uninstall CA"</b> button above, or run:
           </p>
-          <p className="mt-2">
-            You should see the traffic being captured by NetworkSpy.
+          <div className="bg-[#0c0c0c] border border-zinc-800 rounded-xl overflow-hidden">
+            <pre className="p-4 text-[11px] font-mono text-green-400/80 overflow-x-auto">
+              <code>security delete-certificate -c "NetworkSpy CA"</code>
+            </pre>
+          </div>
+          <p className="text-[11px] text-zinc-500">
+            This removes the cert from both your login keychain and the system keychain
+            (if present). The cert file at <code className="text-zinc-400">~/.network-spy/ca/network-spy.crt</code>
+            remains — delete it manually if you no longer need NetworkSpy.
           </p>
         </div>
       ),
