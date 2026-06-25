@@ -35,7 +35,7 @@ use hyper::{Request, Response, Version};
 use network_spy_proxy::{proxy::Proxy, traffic::TrafficListener};
 use tauri::menu::{Menu, MenuItem};
 use async_trait::async_trait;
-use once_cell::sync::OnceCell;
+
 use proxy_toggle::ProxyToggle;
 use std::collections::HashMap;
 use std::fs;
@@ -57,7 +57,7 @@ pub mod utils;
 pub use utils::*;
 pub mod menu;
 pub use menu::*;
-use crate::traffic::db::{is_text_content_type, body_to_string};
+
 
 
 

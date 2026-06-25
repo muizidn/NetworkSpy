@@ -1,0 +1,38 @@
+pub mod clipboard;
+pub mod proxy;
+pub mod breakpoint;
+pub mod script;
+pub mod map_local;
+pub mod map_remote;
+pub mod proxy_rules;
+pub mod certificate;
+pub mod traffic;
+pub mod export;
+pub mod repeat;
+pub mod composer;
+pub mod browser;
+pub mod workspace;
+pub mod window;
+
+pub use clipboard::*;
+pub use proxy::*;
+pub use breakpoint::*;
+pub use script::*;
+pub use map_local::*;
+pub use map_remote::*;
+pub use proxy_rules::*;
+pub use certificate::*;
+pub use traffic::*;
+pub use export::*;
+pub use repeat::*;
+pub use composer::*;
+pub use browser::*;
+pub use workspace::*;
+pub use window::*;
+
+use once_cell::sync::OnceCell;
+use crate::proxy_toggle::ProxyToggle;
+use crate::certificate_installer::CertificateInstaller;
+
+pub static PROXY_TOGGLE: OnceCell<ProxyToggle> = OnceCell::new();
+pub static CERTIFICATE_INSTALLER: OnceCell<CertificateInstaller> = OnceCell::new();
