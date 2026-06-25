@@ -126,7 +126,7 @@ const BodyEditor: React.FC<{
           options={{
             minimap: { enabled: false },
             fontSize: 11,
-            lineNumbers: "off",
+            lineNumbers: "on",
             scrollBeyondLastLine: false,
             padding: { top: 6, bottom: 12 },
           }}
