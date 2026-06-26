@@ -69,7 +69,7 @@ const EditableTitle: React.FC<{
       }}
       onBlur={commit}
       onClick={e => e.stopPropagation()}
-      className="bg-zinc-900 border border-blue-500/50 rounded px-1.5 py-0.5 text-[11px] text-zinc-200 outline-none font-mono w-full"
+      className="bg-transparent border-none rounded px-1.5 py-0.5 text-[11px] text-zinc-200 outline-none font-mono w-full"
     />
   ) : (
     <span
