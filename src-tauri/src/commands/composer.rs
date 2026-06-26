@@ -1,4 +1,5 @@
 use serde::{Serialize, Deserialize};
+use std::sync::Arc;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ComposerHeader {
@@ -23,6 +24,49 @@ pub struct ComposerResponse {
     pub content_type: String,
     pub timing_ms: u64,
     pub size_bytes: usize,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct ComposerSavedRequest {
+    pub id: String,
+    pub name: String,
+    pub method: String,
+    pub url: String,
+    pub headers: Vec<ComposerHeader>,
+    pub body: Option<String>,
+    pub body_type: String,
+    pub timestamp: i64,
+}
+
+#[tauri::command]
+pub async fn get_composer_requests(
+    config: tauri::State<'_, Arc<crate::config::ConfigManager>>,
+) -> Result<Vec<ComposerSavedRequest>, String> {
+    Ok(config.get_composer_requests())
+}
+
+#[tauri::command]
+pub async fn save_all_composer_requests(
+    requests: Vec<ComposerSavedRequest>,
+    config: tauri::State<'_, Arc<crate::config::ConfigManager>>,
+) -> Result<(), String> {
+    config.save_all_composer_requests(requests).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn delete_composer_request(
+    id: String,
+    config: tauri::State<'_, Arc<crate::config::ConfigManager>>,
+) -> Result<(), String> {
+    config.delete_composer_request(id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn save_composer_request(
+    request: ComposerSavedRequest,
+    config: tauri::State<'_, Arc<crate::config::ConfigManager>>,
+) -> Result<(), String> {
+    config.save_composer_request(request).map_err(|e| e.to_string())
 }
 
 #[tauri::command]

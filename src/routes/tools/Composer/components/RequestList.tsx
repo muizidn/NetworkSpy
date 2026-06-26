@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FiPlus, FiTrash2, FiSend } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import type { HttpMethod } from "./UrlBar";
@@ -19,6 +19,7 @@ interface RequestListProps {
   activeRequestId: string | null;
   onSelect: (request: SavedRequest) => void;
   onDelete: (id: string) => void;
+  onRename: (id: string, name: string) => void;
   onNewRequest: () => void;
   isCompact: boolean;
   onToggleCompact: () => void;
@@ -34,11 +35,59 @@ const methodColors: Record<string, string> = {
   OPTIONS: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
 };
 
+const EditableTitle: React.FC<{
+  value: string;
+  onSave: (name: string) => void;
+}> = ({ value, onSave }) => {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(value);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }
+  }, [editing]);
+
+  const commit = () => {
+    setEditing(false);
+    if (draft.trim() !== value) {
+      onSave(draft.trim());
+    }
+  };
+
+  return editing ? (
+    <input
+      ref={inputRef}
+      type="text"
+      value={draft}
+      onChange={e => setDraft(e.target.value)}
+      onKeyDown={e => {
+        if (e.key === "Enter") commit();
+        if (e.key === "Escape") { setEditing(false); setDraft(value); }
+      }}
+      onBlur={commit}
+      onClick={e => e.stopPropagation()}
+      className="bg-zinc-900 border border-blue-500/50 rounded px-1.5 py-0.5 text-[11px] text-zinc-200 outline-none font-mono w-full"
+    />
+  ) : (
+    <span
+      className="text-[11px] font-mono truncate cursor-text"
+      onClick={e => { e.stopPropagation(); setEditing(true); setDraft(value); }}
+      title="Click to edit"
+    >
+      {value || "Untitled"}
+    </span>
+  );
+};
+
 const RequestList: React.FC<RequestListProps> = ({
   requests,
   activeRequestId,
   onSelect,
   onDelete,
+  onRename,
   onNewRequest,
   isCompact,
   onToggleCompact,
@@ -98,24 +147,29 @@ const RequestList: React.FC<RequestListProps> = ({
                 : "hover:bg-zinc-900/50 text-zinc-400 hover:text-zinc-200"
             )}
           >
-            <div className={twMerge("flex items-center gap-2 truncate", isCompact && "justify-center overflow-visible")}>
+            <div className={twMerge("flex items-center gap-2 truncate flex-1 min-w-0", isCompact && "justify-center overflow-visible")}>
               <span
                 className={twMerge(
-                  "text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded border",
+                  "text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded border shrink-0",
                   methodColors[req.method] || "bg-zinc-800/50 text-zinc-500 border-zinc-700/50"
                 )}
               >
                 {isCompact ? req.method.charAt(0) : req.method}
               </span>
               {!isCompact && (
-                <span className="text-[11px] font-mono truncate">{req.name || req.url || "Untitled"}</span>
+                <div className="truncate flex-1 min-w-0">
+                  <EditableTitle
+                    value={req.name}
+                    onSave={(name) => onRename(req.id, name)}
+                  />
+                </div>
               )}
             </div>
 
             {!isCompact && (
               <button
                 onClick={(e) => { e.stopPropagation(); onDelete(req.id); }}
-                className="p-1 hover:bg-rose-500/10 text-zinc-700 hover:text-rose-500 rounded transition-all opacity-0 group-hover:opacity-100"
+                className="p-1 hover:bg-rose-500/10 text-zinc-700 hover:text-rose-500 rounded transition-all opacity-0 group-hover:opacity-100 shrink-0"
               >
                 <FiTrash2 size={12} />
               </button>

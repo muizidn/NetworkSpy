@@ -32,6 +32,39 @@ const createEmptyRequest = (): SavedRequest => ({
   timestamp: Date.now(),
 });
 
+interface BackendRequest {
+  id: string;
+  name: string;
+  method: string;
+  url: string;
+  headers: { key: string; value: string }[];
+  body: string | null;
+  body_type: string;
+  timestamp: number;
+}
+
+const toBackend = (r: SavedRequest): BackendRequest => ({
+  id: r.id,
+  name: r.name,
+  method: r.method,
+  url: r.url,
+  headers: r.headers,
+  body: r.body,
+  body_type: r.bodyType,
+  timestamp: r.timestamp,
+});
+
+const fromBackend = (r: BackendRequest): SavedRequest => ({
+  id: r.id,
+  name: r.name,
+  method: r.method as HttpMethod,
+  url: r.url,
+  headers: r.headers,
+  body: r.body,
+  bodyType: (r.body_type as "none" | "text" | "json") || "none",
+  timestamp: r.timestamp,
+});
+
 const Composer: React.FC = () => {
   const [method, setMethod] = useState<HttpMethod>("GET");
   const [url, setUrl] = useState("");
@@ -48,26 +81,76 @@ const Composer: React.FC = () => {
   const [curlToast, setCurlToast] = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [savedRequests, setSavedRequests] = useState<SavedRequest[]>(() => {
-    const initial = createEmptyRequest();
-    return [initial];
-  });
-  const [activeRequestId, setActiveRequestId] = useState<string>(savedRequests[0].id);
+  const [savedRequests, setSavedRequests] = useState<SavedRequest[]>([]);
+  const [activeRequestId, setActiveRequestId] = useState<string>("");
   const [isSidebarCompact, setIsSidebarCompact] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeRequestRef = useRef(activeRequestId);
   activeRequestRef.current = activeRequestId;
 
-  const updateActiveRequest = useCallback((updater: (req: SavedRequest) => SavedRequest) => {
-    setSavedRequests(prev =>
-      prev.map(r => r.id === activeRequestRef.current ? updater(r) : r)
-    );
+  const savedRequestsRef = useRef(savedRequests);
+  savedRequestsRef.current = savedRequests;
+
+  const debouncedSave = useCallback(() => {
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(async () => {
+      try {
+        await invoke("save_all_composer_requests", {
+          requests: savedRequestsRef.current.map(toBackend),
+        });
+      } catch (e) {
+        console.error("Failed to save composer requests:", e);
+      }
+    }, 500);
   }, []);
+
+  const scheduleSave = useCallback(() => {
+    debouncedSave();
+  }, [debouncedSave]);
+
+  const updateActiveRequest = useCallback((updater: (req: SavedRequest) => SavedRequest) => {
+    setSavedRequests(prev => {
+      const next = prev.map(r => r.id === activeRequestRef.current ? updater(r) : r);
+      return next;
+    });
+    scheduleSave();
+  }, [scheduleSave]);
+
+  useEffect(() => {
+    if (isLoaded) scheduleSave();
+  }, [savedRequests.length, scheduleSave]);
 
   useEffect(() => {
     return () => {
       if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     };
+  }, []);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await invoke<BackendRequest[]>("get_composer_requests");
+        if (data && data.length > 0) {
+          const converted = data.map(fromBackend);
+          setSavedRequests(converted);
+          setActiveRequestId(converted[0].id);
+          loadRequest(converted[0]);
+        } else {
+          const initial = createEmptyRequest();
+          setSavedRequests([initial]);
+          setActiveRequestId(initial.id);
+        }
+      } catch {
+        const initial = createEmptyRequest();
+        setSavedRequests([initial]);
+        setActiveRequestId(initial.id);
+      }
+      setIsLoaded(true);
+    };
+    load();
   }, []);
 
   const loadRequest = useCallback((req: SavedRequest) => {
@@ -98,6 +181,7 @@ const Composer: React.FC = () => {
   };
 
   const handleDeleteRequest = (id: string) => {
+    invoke("delete_composer_request", { id }).catch(() => {});
     setSavedRequests(prev => {
       const remaining = prev.filter(r => r.id !== id);
       if (remaining.length === 0) {
@@ -110,6 +194,11 @@ const Composer: React.FC = () => {
       }
       return remaining;
     });
+  };
+
+  const handleRenameRequest = (id: string, name: string) => {
+    setSavedRequests(prev => prev.map(r => r.id === id ? { ...r, name } : r));
+    scheduleSave();
   };
 
   const handleAddHeader = () => {
@@ -298,6 +387,7 @@ const Composer: React.FC = () => {
           activeRequestId={activeRequestId}
           onSelect={handleSelectRequest}
           onDelete={handleDeleteRequest}
+          onRename={handleRenameRequest}
           onNewRequest={handleNewRequest}
           isCompact={isSidebarCompact}
           onToggleCompact={() => setIsSidebarCompact(v => !v)}

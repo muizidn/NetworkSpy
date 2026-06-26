@@ -10,6 +10,7 @@ use std::collections::HashMap;
 use crate::traffic::viewers::{Viewer, ViewerFolder};
 use crate::traffic::bottom_pane::CustomChecker;
 use crate::traffic::sessions::{Session, SessionFolder};
+use crate::commands::composer::ComposerSavedRequest;
 
 #[derive(Serialize, Deserialize, Default, Clone)]
 pub struct AppConfig {
@@ -39,6 +40,8 @@ pub struct AppConfig {
     pub session_folders: Vec<SessionFolder>,
     #[serde(default)]
     pub extra_settings: HashMap<String, String>,
+    #[serde(default)]
+    pub composer_requests: Vec<ComposerSavedRequest>,
 }
 
 pub struct ConfigManager {
@@ -268,6 +271,32 @@ impl ConfigManager {
     pub fn set_setting(&self, key: String, value: String) -> Result<(), Box<dyn std::error::Error>> {
         self.update(|c| {
             c.extra_settings.insert(key, value);
+        })
+    }
+
+    pub fn get_composer_requests(&self) -> Vec<ComposerSavedRequest> {
+        self.config.read().unwrap().composer_requests.clone()
+    }
+
+    pub fn save_all_composer_requests(&self, requests: Vec<ComposerSavedRequest>) -> Result<(), Box<dyn std::error::Error>> {
+        self.update(|c| {
+            c.composer_requests = requests;
+        })
+    }
+
+    pub fn save_composer_request(&self, request: ComposerSavedRequest) -> Result<(), Box<dyn std::error::Error>> {
+        self.update(|c| {
+            if let Some(pos) = c.composer_requests.iter().position(|r| r.id == request.id) {
+                c.composer_requests[pos] = request;
+            } else {
+                c.composer_requests.push(request);
+            }
+        })
+    }
+
+    pub fn delete_composer_request(&self, id: String) -> Result<(), Box<dyn std::error::Error>> {
+        self.update(|c| {
+            c.composer_requests.retain(|r| r.id != id);
         })
     }
 }

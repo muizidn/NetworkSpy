@@ -106,6 +106,10 @@ macro_rules! generate_handler {
             crate::commands::launch_browser,
             crate::commands::relaunch_browser,
             crate::commands::send_composer_request,
+            crate::commands::get_composer_requests,
+            crate::commands::save_all_composer_requests,
+            crate::commands::delete_composer_request,
+            crate::commands::save_composer_request,
         ]
     };
 }

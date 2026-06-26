@@ -243,7 +243,8 @@ class TrafficListContextMenuRenderer
     globe: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,
     smartphone: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`,
     trash: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`,
-    folder: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`
+    folder: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`,
+    send: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`
   };
 
   async render(items: TrafficItemMap[], columnIndex?: number): Promise<void> {
@@ -254,7 +255,7 @@ class TrafficListContextMenuRenderer
       // Prepare icons
       const [
         iLink, iTerminal, iClipboard, iCopy, iFileText, iDatabase, iFile, iTable,
-        iRefresh, iEdit, iTool, iZap, iDownload, iGlobe, iSmartphone, iTrash, iFolder
+        iRefresh, iEdit, iTool, iZap, iDownload, iGlobe, iSmartphone, iTrash, iFolder, iSend
       ] = await Promise.all([
         this.getIcon(this.icons.link),
         this.getIcon(this.icons.terminal),
@@ -272,7 +273,8 @@ class TrafficListContextMenuRenderer
         this.getIcon(this.icons.globe),
         this.getIcon(this.icons.smartphone),
         this.getIcon(this.icons.trash),
-        this.getIcon(this.icons.folder)
+        this.getIcon(this.icons.folder),
+        this.getIcon(this.icons.send)
       ]);
 
       const menuItems = await Promise.all([
@@ -434,6 +436,30 @@ class TrafficListContextMenuRenderer
               enabled: items.length === 1,
               action: async () => {
                 await this.invoke("open_new_window", { context: `map-remote?id=${firstItem.id}`, title: "Map Remote Editor" });
+              }
+            }),
+            IconMenuItem.new({
+              id: "tool_composer",
+              text: "Add to Composer",
+              icon: iSend,
+              enabled: items.length === 1,
+              action: async () => {
+                const item = items[0];
+                const reqMethod = String(item.method || "GET");
+                const reqUrl = String(item.url || "");
+                const id = `req_${Date.now()}`;
+                await this.invoke("save_composer_request", {
+                  request: {
+                    id,
+                    name: `${reqMethod} ${reqUrl.length > 50 ? reqUrl.slice(0, 47) + "..." : reqUrl}`,
+                    method: reqMethod,
+                    url: reqUrl,
+                    headers: [],
+                    body: null,
+                    body_type: "none",
+                    timestamp: Date.now(),
+                  }
+                });
               }
             })
           ])
