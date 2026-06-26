@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { ToolBaseHeader } from "@src/packages/ui/ToolBaseHeader";
-import { FiSend, FiMaximize2, FiSidebar } from "react-icons/fi";
+import { FiSend, FiSidebar } from "react-icons/fi";
 import { invoke } from "@tauri-apps/api/core";
 import { twMerge } from "tailwind-merge";
 import { Tabs } from "./components/Tabs";
@@ -361,21 +361,6 @@ const Composer: React.FC = () => {
 
   const isJSONResponse = response?.content_type.toLowerCase().includes("json") ?? false;
 
-  const sidebarToggle = (
-    <button
-      onClick={() => setIsSidebarCompact(v => !v)}
-      className={twMerge(
-        "p-1.5 rounded-lg transition-all",
-        isSidebarCompact
-          ? "text-zinc-600 hover:text-zinc-400 hover:bg-zinc-800/50"
-          : "text-blue-500 bg-blue-600/10 hover:bg-blue-600/20"
-      )}
-      title={isSidebarCompact ? "Show request list" : "Hide request list"}
-    >
-      <FiSidebar size={16} />
-    </button>
-  );
-
   return (
     <div className="flex h-full bg-[#050505] relative overflow-hidden">
       <div className={twMerge(
@@ -390,22 +375,26 @@ const Composer: React.FC = () => {
           onRename={handleRenameRequest}
           onNewRequest={handleNewRequest}
           isCompact={isSidebarCompact}
-          onToggleCompact={() => setIsSidebarCompact(v => !v)}
         />
       </div>
 
       <div className="flex-1 min-w-0 flex flex-col min-h-0 overflow-hidden">
         <ToolBaseHeader
-          title={<div className="flex items-center gap-3">{sidebarToggle}<span>Composer</span></div>}
+          title="Composer"
           description="Build and send HTTP requests"
           icon={<FiSend size={22} className="text-blue-500" />}
           actions={
             <button
-              onClick={() => window.open("/composer", "_blank")}
-              className="p-2 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50 transition-all active:scale-95"
-              title="Open in new window"
+              onClick={() => setIsSidebarCompact(v => !v)}
+              className={twMerge(
+                "p-1.5 rounded-lg transition-all",
+                isSidebarCompact
+                  ? "text-zinc-600 hover:text-zinc-400 hover:bg-zinc-800/50"
+                  : "text-blue-500 bg-blue-600/10 hover:bg-blue-600/20"
+              )}
+              title={isSidebarCompact ? "Show request list" : "Hide request list"}
             >
-              <FiMaximize2 size={16} />
+              <FiSidebar size={16} />
             </button>
           }
         />

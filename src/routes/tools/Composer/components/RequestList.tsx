@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { FiPlus, FiTrash2, FiSend } from "react-icons/fi";
+import React, { useState, useRef, useEffect, useMemo } from "react";
+import { FiPlus, FiTrash2, FiSend, FiSearch } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import type { HttpMethod } from "./UrlBar";
 
@@ -22,7 +22,6 @@ interface RequestListProps {
   onRename: (id: string, name: string) => void;
   onNewRequest: () => void;
   isCompact: boolean;
-  onToggleCompact: () => void;
 }
 
 const methodColors: Record<string, string> = {
@@ -90,15 +89,26 @@ const RequestList: React.FC<RequestListProps> = ({
   onRename,
   onNewRequest,
   isCompact,
-  onToggleCompact,
 }) => {
+  const [search, setSearch] = useState("");
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return requests;
+    const q = search.toLowerCase();
+    return requests.filter(r =>
+      r.name.toLowerCase().includes(q) ||
+      r.url.toLowerCase().includes(q) ||
+      r.method.toLowerCase().includes(q)
+    );
+  }, [requests, search]);
+
   return (
     <div className="flex flex-col h-full select-none">
-      <div className="px-4 py-4 border-b border-zinc-900 flex items-center justify-between bg-zinc-900/10">
-        {!isCompact && (
-          <h2 className="text-xs font-black uppercase tracking-widest text-zinc-400">Requests</h2>
-        )}
-        <div className="flex items-center gap-1">
+      <div className="px-4 py-4 border-b border-zinc-900 flex flex-col gap-3 bg-zinc-900/10">
+        <div className="flex items-center justify-between">
+          {!isCompact && (
+            <h2 className="text-xs font-black uppercase tracking-widest text-zinc-400">Requests</h2>
+          )}
           <button
             onClick={onNewRequest}
             className={twMerge(
@@ -112,30 +122,23 @@ const RequestList: React.FC<RequestListProps> = ({
             <FiPlus size={12} />
             {!isCompact && <span className="text-[10px] font-bold">New</span>}
           </button>
-          <button
-            onClick={onToggleCompact}
-            className="p-1.5 rounded-md text-zinc-600 hover:text-zinc-400 hover:bg-zinc-800/50 transition-all"
-            title={isCompact ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={twMerge("transition-transform", isCompact ? "rotate-180" : "")}
-            >
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
         </div>
+        {!isCompact && (
+          <div className="relative">
+            <FiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-600" size={12} />
+            <input
+              type="text"
+              placeholder="Search requests..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-md pl-8 pr-3 py-1.5 text-[11px] text-zinc-300 focus:outline-none focus:border-blue-500/50 transition-colors"
+            />
+          </div>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-0.5">
-        {requests.map((req) => (
+        {filtered.map((req) => (
           <div
             key={req.id}
             onClick={() => onSelect(req)}
@@ -177,12 +180,14 @@ const RequestList: React.FC<RequestListProps> = ({
           </div>
         ))}
 
-        {requests.length === 0 && !isCompact && (
+        {filtered.length === 0 && !isCompact && (
           <div className="px-3 py-8 text-center">
             <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-zinc-900 flex items-center justify-center text-zinc-600">
-              <FiSend size={16} />
+              {search ? <FiSearch size={16} /> : <FiSend size={16} />}
             </div>
-            <p className="text-[10px] text-zinc-600">No requests yet. Start composing!</p>
+            <p className="text-[10px] text-zinc-600">
+              {search ? `No requests matching "${search}"` : "No requests yet. Start composing!"}
+            </p>
           </div>
         )}
       </div>
