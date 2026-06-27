@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { MonacoEditor } from "@src/packages/ui/MonacoEditor";
 import { HexView } from "@src/packages/bottom-pane/TabRenderer/HexView";
@@ -35,24 +35,43 @@ const ResponseHeadersView: React.FC<{ headers: { key: string; value: string }[] 
 const ResponseBodyView: React.FC<{
   isJSON: boolean;
   bodyString: string;
-}> = ({ isJSON, bodyString }) => (
-  <div className="h-full border-t border-zinc-800" style={{ minHeight: "100px" }}>
-    <MonacoEditor
-      height="100%"
-      language={isJSON ? "json" : "plaintext"}
-      theme="vs-dark"
-      value={bodyString}
-      options={{
-        minimap: { enabled: false },
-        fontSize: 11,
-        lineNumbers: "off",
-        scrollBeyondLastLine: false,
-        readOnly: true,
-              padding: { top: 6, bottom: 12 },
-      }}
-    />
-  </div>
-);
+}> = ({ isJSON, bodyString }) => {
+  const [isBeautified, setIsBeautified] = useState(false);
+
+  const displayBody = isJSON && isBeautified
+    ? (() => { try { return JSON.stringify(JSON.parse(bodyString), null, 2); } catch { return bodyString; } })()
+    : bodyString;
+
+  return (
+    <div className="h-full border-t border-zinc-800 relative" style={{ minHeight: "100px" }}>
+      {isJSON && (
+        <button
+          onClick={() => setIsBeautified(!isBeautified)}
+          className={`absolute top-4 right-6 z-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-md border transition-all duration-300 shadow-xl ${isBeautified
+            ? "bg-blue-600 border-blue-400 text-white shadow-blue-900/40"
+            : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700"
+          }`}
+        >
+          {isBeautified ? "Original" : "Beautify"}
+        </button>
+      )}
+      <MonacoEditor
+        height="100%"
+        language={isJSON ? "json" : "plaintext"}
+        theme="vs-dark"
+        value={displayBody}
+        options={{
+          minimap: { enabled: false },
+          fontSize: 11,
+          lineNumbers: "on",
+          scrollBeyondLastLine: false,
+          readOnly: true,
+          padding: { top: 6, bottom: 12 },
+        }}
+      />
+    </div>
+  );
+};
 
 const ResponseHexView: React.FC<{ body: number[] }> = ({ body }) => (
   <div className="p-3 h-full">
