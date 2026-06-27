@@ -24,6 +24,7 @@ export interface TableViewProps<T> {
   isAllowAutoScroll?: boolean;
   isAutoScroll?: boolean;
   renderRow?: (item: T, children: React.ReactNode) => React.ReactNode;
+  onRowClick?: (item: T) => void;
 }
 
 type SortOrder = "asc" | "desc";
@@ -119,7 +120,8 @@ export const TableView = <T,>({
   className,
   isAllowAutoScroll,
   isAutoScroll,
-  renderRow
+  renderRow,
+  onRowClick,
 }: TableViewProps<T>) => {
   const [selectedRows, setSelectedRows] = useState<{
     firstSelect?: number;
@@ -229,6 +231,10 @@ export const TableView = <T,>({
       } else {
         setSelectedRows({ firstSelect: index, rows: [index] });
       }
+    }
+
+    if (onRowClick && index < sortedData.length) {
+      onRowClick(sortedData[index]);
     }
   }
 

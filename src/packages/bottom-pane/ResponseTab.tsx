@@ -6,6 +6,7 @@ import { TableView } from "../ui/TableView";
 import { KeyValueRenderer } from "./KeyValueRenderer";
 import { decodeBody } from "./utils/bodyUtils";
 import { MonacoEditor } from "../ui/MonacoEditor";
+import { invoke } from "@tauri-apps/api/core";
 
 export type ResponsePairData = {
   headers: { key: string; value: string }[];
@@ -143,6 +144,9 @@ export const ResponseTab = (props: {
             },
           ]}
           data={data.headers}
+          onRowClick={(item) => {
+            invoke("write_to_clipboard", { text: `${item.key}: ${item.value}` });
+          }}
         />
       ),
     },

@@ -8,7 +8,7 @@ export class KeyValueRenderer implements Renderer<KeyValuePair> {
   constructor(type: KeyOrValue) {
     this.type = type;
   }
-  render({ input }: { input: KeyValuePair }): React.ReactNode {
+  render({ input }: { input: KeyValuePair; width: number }): React.ReactNode {
     return (
       <div className="select-text flex items-center h-full break-all whitespace-pre-wrap leading-relaxed py-0.5 min-w-0">
         {this.type === 'key' ? input.key : input.value}
